@@ -2,11 +2,10 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-bun scripts/install-repos.ts || true
-
 if [[ ! -d repos/tome/packages/tome-db ]]; then
-  echo "Workspace repos not present under repos/. Clone requires SSH access to GitHub."
-  echo "Run: bun run repos:install"
+  echo "Sibling repos not mounted. Clone tome and marloth-story as siblings of this repo, then reopen the devcontainer."
+  echo "  ../tome           → repos/tome"
+  echo "  ../marloth-story  → repos/marloth-story"
   exec sleep infinity
 fi
 

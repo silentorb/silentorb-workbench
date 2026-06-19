@@ -7,7 +7,6 @@
     "repos/marloth-story/packages/*"
   ],
   "scripts": {
-    "repos:install": "bun scripts/install-repos.ts",
     "editor:dev": "bun run --filter tome-editor dev"
   },
   "devDependencies": {}

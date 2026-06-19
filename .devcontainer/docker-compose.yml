@@ -1,0 +1,32 @@
+services:
+  workbench:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    volumes:
+      - ..:/workspaces/silentorb-workbench:cached
+      - ${TOME_REPO:-../tome}:/workspaces/silentorb-workbench/repos/tome:cached
+      - ${MARLOTH_REPO:-../marloth-story}:/workspaces/silentorb-workbench/repos/marloth-story:cached
+      - workbench-node-modules:/workspaces/silentorb-workbench/node_modules
+      - /var/run/docker.sock:/var/run/docker.sock
+    ulimits:
+      core: 0
+    user: vscode
+
+  marloth-story:
+    image: marloth-ci:local
+    build:
+      context: ${MARLOTH_REPO:-../marloth-story}
+      dockerfile: .devcontainer/Dockerfile
+    volumes:
+      - ${MARLOTH_REPO:-../marloth-story}:/workspaces/marloth-story:cached
+      - marloth-story-node-modules:/workspaces/marloth-story/node_modules
+    ulimits:
+      core: 0
+    user: vscode
+    working_dir: /workspaces/marloth-story
+    command: ["sleep", "infinity"]
+
+volumes:
+  workbench-node-modules:
+  marloth-story-node-modules:

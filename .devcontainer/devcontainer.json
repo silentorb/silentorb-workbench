@@ -1,25 +1,22 @@
 {
     "name": "silentorb-workbench",
-    "build": {
-        "dockerfile": "Dockerfile",
-        "context": ".."
-    },
+    "dockerComposeFile": "docker-compose.yml",
+    "service": "workbench",
+    "runServices": [
+        "workbench",
+        "marloth-story"
+    ],
     "workspaceFolder": "/workspaces/silentorb-workbench",
+    "shutdownAction": "stopCompose",
     "overrideCommand": false,
+    "features": {
+        "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
+    },
     "forwardPorts": [
         3847,
         5173
     ],
-    "runArgs": [
-        // Disable Linux core dumps when bun crashes.  The app has its own diagnostic methods.
-        "--ulimit",
-        "core=0"
-        // "--network=host"
-    ],
     "remoteUser": "vscode",
-    "mounts": [
-        "source=${localWorkspaceFolderBasename}-node_modules,target=${containerWorkspaceFolder}/node_modules,type=volume"
-    ],
     "customizations": {
         "vscode": {
             "extensions": [],

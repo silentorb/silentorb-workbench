@@ -2,14 +2,14 @@
 
 ## Workspace purpose
 
-**silentorb-workbench** is the root development workspace for Tome tooling and domain projects. It combines sibling checkouts cloned from [`workspace.repos.json`](./workspace.repos.json) into [`repos/`](./repos/) (gitignored):
+**silentorb-workbench** is the root development workspace for Tome tooling and domain projects. Sibling repositories are **bind-mounted** from the host into [`repos/`](./repos/) by [`.devcontainer/docker-compose.yml`](./.devcontainer/docker-compose.yml) (not cloned at container start):
 
-| Clone path | Repository role |
+| Mount path | Repository role |
 | ---------- | --------------- |
 | `repos/tome/` | Domain-agnostic Tome packages (`tome-db`, `tome-editor`, `tome-static-site`) and tooling docs |
 | `repos/marloth-story/` | Marloth design corpus (`content/`, domain ontology, migrations, deploy) |
 
-Install clones with `bun run repos:install` (implemented in [`scripts/install-repos.ts`](./scripts/install-repos.ts)). **marloth-story** depends on Tome packages via workspace references across the hoisted root install. The workbench root orchestrates dev scripts, tests, and the devcontainer.
+**Prerequisite:** clone `tome` and `marloth-story` as siblings of this repo on the host (`../tome`, `../marloth-story`), or set `TOME_REPO` / `MARLOTH_REPO` when opening the devcontainer. **marloth-story** depends on Tome packages via workspace references across the hoisted root install. The workbench root orchestrates dev scripts, tests, and the devcontainer.
 
 For Marloth-specific writing goals, graph editing workflow, and design corpus conventions, read [`repos/marloth-story/AGENTS.md`](./repos/marloth-story/AGENTS.md) after cloning.
 
@@ -18,11 +18,12 @@ For package-level Tome notes, read each package's `AGENTS.md` under `repos/tome/
 ## Project context
 
 - Open this folder as the VS Code / Cursor workspace root (`/workspaces/silentorb-workbench` in the devcontainer).
+- Dev setup is **Docker Compose**: `workbench` (primary) + `marloth-story` (idle sidecar, same image as marloth-story CI). See [`.devcontainer/docker-compose.yml`](./.devcontainer/docker-compose.yml).
 - **Tome tooling** lives under `repos/tome/packages/`; ephemeral build output and hoisted dependencies live at the workbench root (`./dist/`, `./node_modules/`).
 - **Design corpus** lives under `repos/marloth-story/content/` (git-tracked graph) with a local SQLite cache at `repos/marloth-story/data/tome.sqlite` (gitignored).
 - Set `TOME_CONTENT_PATH` to the content root when it is not discoverable by walking up from CWD — default: `repos/marloth-story/content` (not `content/data`).
-- All external dependencies and tooling installs should be performed within the devcontainer Dockerfile. On each container start, the image `CMD` runs [`scripts/devcontainer-start.sh`](./scripts/devcontainer-start.sh): clone repos → `bun install --frozen-lockfile` → `bun run editor:dev`. **Rebuild the container** after changing root `package.json` or `bun.lock` — do not run `bun install` manually in a terminal or on the host.
-- Cloning private repos requires SSH access to GitHub from inside the devcontainer.
+- All external dependencies and tooling installs should be performed within the devcontainer Dockerfile. On each container start, the image `CMD` runs [`scripts/devcontainer-start.sh`](./scripts/devcontainer-start.sh): verify sibling mounts → `bun install --frozen-lockfile` → `bun run editor:dev`. **Rebuild the container** after changing root `package.json` or `bun.lock` — do not run `bun install` manually in a terminal or on the host.
+- **CI simulation** (static site test + build): `bash scripts/ci-build-static-site.sh` execs into the `marloth-story` sidecar with the same commands as GitHub Actions.
 
 ## Terminology
 
