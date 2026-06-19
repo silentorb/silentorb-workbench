@@ -1,0 +1,12 @@
+{
+  "name": "silentorb-workbench",
+  "private": true,
+  "packageManager": "bun@1.3.13",
+  "workspaces": [
+    "tome/packages/*"
+  ],
+  "scripts": {
+    "editor:dev": "echo 'Link tome packages under tome/packages/ to start the editor.' && exec sleep infinity"
+  },
+  "devDependencies": {}
+}

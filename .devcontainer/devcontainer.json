@@ -1,0 +1,34 @@
+{
+    "name": "silentorb-workbench",
+    "build": {
+        "dockerfile": "Dockerfile",
+        "context": ".."
+    },
+    "workspaceFolder": "/workspaces/silentorb-workbench",
+    // "overrideCommand": false,
+    "forwardPorts": [
+        3847,
+        5173
+    ],
+    "runArgs": [
+        // Disable Linux core dumps when bun crashes.  The app has its own diagnostic methods.
+        "--ulimit",
+        "core=0"
+        // "--network=host"
+    ],
+    "remoteUser": "vscode",
+    "mounts": [
+        "source=${localWorkspaceFolderBasename}-node_modules,target=${containerWorkspaceFolder}/node_modules,type=volume"
+    ],
+    "customizations": {
+        "vscode": {
+            "extensions": [],
+            "settings": {
+                "files.eol": "\n",
+                "terminal.integrated.automationProfile.linux": {
+                    "path": "/bin/bash"
+                }
+            }
+        }
+    }
+}

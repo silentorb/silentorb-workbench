@@ -1,0 +1,22 @@
+# Large paths not needed for devcontainer dependency layer (CI + local image build).
+marloth-story/content/
+marloth-story/exports/
+dist/
+marloth-story/data/
+.git/
+.github/
+
+# Local / ephemeral (also in .gitignore)
+node_modules/
+**/.marloth/
+marloth-story/content/.obsidian/
+marloth-story/.devcontainer/notion.env
+.env
+.env.*
+
+# Editor / OS noise
+.DS_Store
+Thumbs.db
+*.md
+!tome/packages/**/*.md
+!marloth-story/**/*.md
