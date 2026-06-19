@@ -1,0 +1,15 @@
+{
+  "reposDir": "repos",
+  "repos": [
+    {
+      "name": "tome",
+      "url": "git@github.com:silentorb/tome.git",
+      "ref": "main"
+    },
+    {
+      "name": "marloth-story",
+      "url": "git@github.com:silentorb/marloth-story.git",
+      "ref": "main"
+    }
+  ]
+}

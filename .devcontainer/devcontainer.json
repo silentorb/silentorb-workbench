@@ -5,7 +5,7 @@
         "context": ".."
     },
     "workspaceFolder": "/workspaces/silentorb-workbench",
-    // "overrideCommand": false,
+    "overrideCommand": false,
     "forwardPorts": [
         3847,
         5173
