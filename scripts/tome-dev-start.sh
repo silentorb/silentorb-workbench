@@ -16,5 +16,8 @@ export TOME_CONTENT_PATH="${TOME_CONTENT_PATH:-/workspaces/marloth-story/content
 export TOME_DB_PATH="${TOME_DB_PATH:-/workspaces/marloth-story/data/tome.sqlite}"
 export TOME_EDITOR_DEV_HOST="${TOME_EDITOR_DEV_HOST:-0.0.0.0}"
 
+# shellcheck source=ensure-node-modules.sh
+source "$(dirname "$0")/ensure-node-modules.sh"
+
 bun install --frozen-lockfile
 exec bun run editor:dev

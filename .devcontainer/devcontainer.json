@@ -4,15 +4,11 @@
     "service": "workbench",
     "runServices": [
         "workbench",
-        "tome",
-        "marloth-story"
+        "tome"
     ],
     "workspaceFolder": "/workspaces/silentorb-workbench",
     "shutdownAction": "stopCompose",
     "overrideCommand": false,
-    "features": {
-        "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
-    },
     "forwardPorts": [
         3847,
         5173
