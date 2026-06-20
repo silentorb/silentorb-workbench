@@ -18,11 +18,11 @@ For package-level Tome notes, read each package's `AGENTS.md` under `repos/tome/
 ## Project context
 
 - Open this folder as the VS Code / Cursor workspace root (`/workspaces/silentorb-workbench` in the devcontainer).
-- Dev setup is **Docker Compose**: `workbench` (primary) + `marloth-story` (idle sidecar, same image as marloth-story CI). See [`.devcontainer/docker-compose.yml`](./.devcontainer/docker-compose.yml).
+- Dev setup is **Docker Compose**: `workbench` (dev shell) + `tome` (editor dev servers) + `marloth-story` (idle sidecar for CI). See [`.devcontainer/docker-compose.yml`](./.devcontainer/docker-compose.yml).
 - **Tome tooling** lives under `repos/tome/packages/`; ephemeral build output and hoisted dependencies live at the workbench root (`./dist/`, `./node_modules/`).
 - **Design corpus** lives under `repos/marloth-story/content/` (git-tracked graph) with a local SQLite cache at `repos/marloth-story/data/tome.sqlite` (gitignored).
 - Set `TOME_CONTENT_PATH` to the content root when it is not discoverable by walking up from CWD — default: `repos/marloth-story/content` (not `content/data`).
-- All external dependencies and tooling installs should be performed within the devcontainer Dockerfile. On each container start, the image `CMD` runs [`scripts/devcontainer-start.sh`](./scripts/devcontainer-start.sh): verify sibling mounts → `bun install --frozen-lockfile` → `bun run editor:dev`. **Rebuild the container** after changing root `package.json` or `bun.lock` — do not run `bun install` manually in a terminal or on the host.
+- All external dependencies and tooling installs should be performed within the devcontainer Dockerfile. On each container start, the workbench service runs [`scripts/devcontainer-start.sh`](./scripts/devcontainer-start.sh) (`bun install` only). The **`tome` Compose service** runs [`scripts/tome-dev-start.sh`](./scripts/tome-dev-start.sh) with `TOME_CONTENT_PATH` set to marloth `content/`. **Rebuild the container** after changing root `package.json` or `bun.lock` — do not run `bun install` manually in a terminal or on the host.
 - **CI simulation** (static site test + build): `bash scripts/ci-build-static-site.sh` execs into the `marloth-story` sidecar with the same commands as GitHub Actions.
 
 ## Terminology
@@ -73,7 +73,7 @@ For **design data** (what nodes mean, how they relate conceptually), read [`repo
 | Table view tabs, `views.json` | [`repos/tome/docs/features/views.md`](./repos/tome/docs/features/views.md) |
 | Type table columns, `table-schemas.json` | [`repos/tome/docs/features/table-schemas.md`](./repos/tome/docs/features/table-schemas.md) |
 | Static website generation (Astro) | [`repos/tome/docs/features/static-website.md`](./repos/tome/docs/features/static-website.md) |
-| Static website deploy (GitHub Actions → S3/CloudFront) | [`repos/tome/docs/features/static-website-deploy.md`](./repos/tome/docs/features/static-website-deploy.md) |
+| Static website deploy (GitHub Actions → S3/CloudFront) | [`repos/marloth-story/docs/features/static-website-deploy.md`](./repos/marloth-story/docs/features/static-website-deploy.md) |
 
 See also [`repos/tome/docs/features/README.md`](./repos/tome/docs/features/README.md) for the feature-doc template and how to add new features.
 

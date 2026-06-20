@@ -4,7 +4,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 COMPOSE_PROJECT="${COMPOSE_PROJECT:-silentorb-workbench}"
 COMPOSE_FILE="${ROOT}/.devcontainer/docker-compose.yml"
-CI_COMMAND='bun install --frozen-lockfile && bun run --filter tome-static-site test && bun run web:build'
+CI_COMMAND='export TOME_CONTENT_PATH=/workspaces/marloth-story/content TOME_DB_PATH=/workspaces/marloth-story/data/tome.sqlite && cd /workspaces/silentorb-workbench && bun install --frozen-lockfile && bun run --filter tome-static-site test && bun run web:build'
 
 usage() {
   cat <<EOF
@@ -39,11 +39,11 @@ run_build() {
     exit 1
   fi
 
-  echo "Building static site in marloth-story sidecar"
+  echo "Building static site in marloth-story sidecar (workbench root + tome packages)"
   compose exec -T \
     -u "$(id -u):$(id -g)" \
     -e HOME=/tmp \
-    -w /workspaces/marloth-story \
+    -w /workspaces/silentorb-workbench \
     marloth-story \
     bash -c "$CI_COMMAND"
 }

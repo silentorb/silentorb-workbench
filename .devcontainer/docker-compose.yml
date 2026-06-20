@@ -5,21 +5,48 @@ services:
       dockerfile: .devcontainer/Dockerfile
     volumes:
       - ..:/workspaces/silentorb-workbench:cached
-      - ${TOME_REPO:-../tome}:/workspaces/silentorb-workbench/repos/tome:cached
-      - ${MARLOTH_REPO:-../marloth-story}:/workspaces/silentorb-workbench/repos/marloth-story:cached
+      - ${TOME_REPO:-../../tome}:/workspaces/silentorb-workbench/repos/tome:cached
+      - ${MARLOTH_REPO:-../../marloth-story}:/workspaces/silentorb-workbench/repos/marloth-story:cached
       - workbench-node-modules:/workspaces/silentorb-workbench/node_modules
       - /var/run/docker.sock:/var/run/docker.sock
     ulimits:
       core: 0
     user: vscode
 
+  tome:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    volumes:
+      - ..:/workspaces/silentorb-workbench:cached
+      - ${TOME_REPO:-../../tome}:/workspaces/silentorb-workbench/repos/tome:cached
+      - ${MARLOTH_REPO:-../../marloth-story}:/workspaces/silentorb-workbench/repos/marloth-story:cached
+      - ${MARLOTH_REPO:-../../marloth-story}:/workspaces/marloth-story:cached
+      - workbench-node-modules:/workspaces/silentorb-workbench/node_modules
+    environment:
+      TOME_CONTENT_PATH: /workspaces/marloth-story/content
+      TOME_DB_PATH: /workspaces/marloth-story/data/tome.sqlite
+      TOME_EDITOR_DEV_HOST: "0.0.0.0"
+    ulimits:
+      core: 0
+    user: vscode
+    working_dir: /workspaces/silentorb-workbench
+    command: ["/bin/bash", "scripts/tome-dev-start.sh"]
+    ports:
+      - "3847:3847"
+      - "5173:5173"
+
   marloth-story:
     image: marloth-ci:local
     build:
-      context: ${MARLOTH_REPO:-../marloth-story}
+      context: ${MARLOTH_REPO:-../../marloth-story}
       dockerfile: .devcontainer/Dockerfile
     volumes:
-      - ${MARLOTH_REPO:-../marloth-story}:/workspaces/marloth-story:cached
+      - ${MARLOTH_REPO:-../../marloth-story}:/workspaces/marloth-story:cached
+      - ${MARLOTH_REPO:-../../marloth-story}:/workspaces/silentorb-workbench/repos/marloth-story:cached
+      - ${TOME_REPO:-../../tome}:/workspaces/silentorb-workbench/repos/tome:cached
+      - ..:/workspaces/silentorb-workbench:cached
+      - workbench-node-modules:/workspaces/silentorb-workbench/node_modules
       - marloth-story-node-modules:/workspaces/marloth-story/node_modules
     ulimits:
       core: 0

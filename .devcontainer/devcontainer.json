@@ -4,6 +4,7 @@
     "service": "workbench",
     "runServices": [
         "workbench",
+        "tome",
         "marloth-story"
     ],
     "workspaceFolder": "/workspaces/silentorb-workbench",
