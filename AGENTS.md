@@ -36,6 +36,8 @@ For package-level Tome notes, read each package's `AGENTS.md` under `repos/tome/
 | **Feature** (unqualified) | A **design node** (story/game feature idea) in the Marloth corpus, unless context clearly means a project feature. |
 | **Schema** | Git-tracked relationship rules in `repos/marloth-story/content/model/schema.json`. Not SQLite DDL. |
 | **Type table** | Any node used as an `IS_A` target and/or with `notion_schema` / `notion_database` metadata—not a permanent import label. |
+| **Extension** | Externally packaged library of Tome components, loaded at runtime from project config (project feature—not a design graph node). |
+| **Extension component** | One integration unit within an extension (`kind` + `implementationId`). |
 
 ## Working conventions
 
@@ -74,6 +76,7 @@ For **design data** (what nodes mean, how they relate conceptually), read [`repo
 | Type table columns, `table-schemas.json` | [`repos/tome/docs/features/table-schemas.md`](./repos/tome/docs/features/table-schemas.md) |
 | Static website generation (Astro) | [`repos/tome/docs/features/static-website.md`](./repos/tome/docs/features/static-website.md) |
 | Static website deploy (GitHub Actions → S3/CloudFront) | [`repos/marloth-story/docs/features/static-website-deploy.md`](./repos/marloth-story/docs/features/static-website-deploy.md) |
+| Extension system (runtime-loaded packages, page blocks) | [`repos/tome/docs/features/extensions.md`](./repos/tome/docs/features/extensions.md) |
 
 See also [`repos/tome/docs/features/README.md`](./repos/tome/docs/features/README.md) for the feature-doc template and how to add new features.
 

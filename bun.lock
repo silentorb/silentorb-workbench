@@ -9,6 +9,7 @@
       "name": "tome-db",
       "version": "0.1.0",
       "dependencies": {
+        "tome-interfaces": "workspace:*",
         "yaml": "2.8.0",
       },
       "devDependencies": {
@@ -28,6 +29,7 @@
         "react-dom": "19.0.0",
         "react-force-graph-2d": "^1.29.1",
         "tome-db": "workspace:*",
+        "tome-interfaces": "workspace:*",
       },
       "devDependencies": {
         "@happy-dom/global-registrator": "17.4.4",
@@ -37,8 +39,29 @@
         "@types/react-dom": "19.0.4",
         "@vitejs/plugin-react": "4.3.4",
         "happy-dom": "17.4.4",
+        "tome-extension-fixture": "workspace:*",
         "typescript": "5.8.2",
         "vite": "6.2.2",
+      },
+    },
+    "repos/tome/packages/tome-extension-fixture": {
+      "name": "tome-extension-fixture",
+      "version": "0.1.0",
+      "dependencies": {
+        "react": "19.0.0",
+        "tome-interfaces": "workspace:*",
+      },
+      "devDependencies": {
+        "@types/react": "19.0.12",
+        "typescript": "5.8.2",
+      },
+    },
+    "repos/tome/packages/tome-interfaces": {
+      "name": "tome-interfaces",
+      "version": "0.1.0",
+      "devDependencies": {
+        "@types/bun": "1.2.23",
+        "typescript": "5.8.2",
       },
     },
     "repos/tome/packages/tome-static-site": {
@@ -48,6 +71,8 @@
         "astro": "5.7.10",
         "marked": "15.0.12",
         "tome-db": "workspace:*",
+        "tome-extension-fixture": "workspace:*",
+        "tome-interfaces": "workspace:*",
       },
       "devDependencies": {
         "@types/bun": "1.2.23",
@@ -1081,6 +1106,10 @@
     "tome-db": ["tome-db@workspace:repos/tome/packages/tome-db"],
 
     "tome-editor": ["tome-editor@workspace:repos/tome/packages/tome-editor"],
+
+    "tome-extension-fixture": ["tome-extension-fixture@workspace:repos/tome/packages/tome-extension-fixture"],
+
+    "tome-interfaces": ["tome-interfaces@workspace:repos/tome/packages/tome-interfaces"],
 
     "tome-static-site": ["tome-static-site@workspace:repos/tome/packages/tome-static-site"],
 
