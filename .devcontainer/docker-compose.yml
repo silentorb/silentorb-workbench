@@ -20,11 +20,10 @@ services:
       - ..:/workspaces/silentorb-workbench:cached
       - ${TOME_REPO:-../../tome}:/workspaces/silentorb-workbench/repos/tome:cached
       - ${MARLOTH_REPO:-../../marloth-story}:/workspaces/silentorb-workbench/repos/marloth-story:cached
-      - ${MARLOTH_REPO:-../../marloth-story}:/workspaces/marloth-story:cached
       - workbench-node-modules:/workspaces/silentorb-workbench/node_modules
     environment:
-      TOME_CONTENT_PATH: /workspaces/marloth-story/content
-      TOME_DB_PATH: /workspaces/marloth-story/data/tome.sqlite
+      TOME_CONTENT_PATH: /workspaces/silentorb-workbench/repos/marloth-story/content
+      TOME_DB_PATH: /workspaces/silentorb-workbench/repos/marloth-story/data/tome.sqlite
       TOME_EDITOR_DEV_HOST: "0.0.0.0"
     ulimits:
       core: 0

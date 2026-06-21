@@ -1,6 +1,7 @@
 repos/
 
 node_modules/
+.bun-install.lock
 **/dist/
 .DS_Store
 Thumbs.db

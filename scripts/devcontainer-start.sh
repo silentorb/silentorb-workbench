@@ -17,6 +17,4 @@ fi
 
 # shellcheck source=ensure-node-modules.sh
 source "$(dirname "$0")/ensure-node-modules.sh"
-
-bun install --frozen-lockfile
 exec sleep infinity
