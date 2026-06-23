@@ -64,7 +64,7 @@
         "background": {
           "activeOnStart": true,
           "beginsPattern": "^",
-          "endsPattern": "Marloth static site →"
+          "endsPattern": "Static site →"
         }
       },
       "presentation": {
@@ -74,33 +74,17 @@
       }
     },
     {
-      "label": "Tome Editor: dev servers",
+      "label": "Marloth: sync content cache",
       "type": "shell",
-      "command": "bash scripts/tome-editor-start",
+      "command": "bun run content:sync",
       "options": {
-        "cwd": "${workspaceFolder}"
+        "cwd": "${workspaceFolder}/repos/marloth-story"
       },
-      "problemMatcher": [],
-      "presentation": {
-        "reveal": "silent",
-        "panel": "dedicated",
-        "showReuseMessage": false,
-        "close": true
-      }
-    },
-    {
-      "label": "Tome Editor: dev (API + webview)",
-      "type": "shell",
-      "command": "bun run editor:dev",
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "isBackground": true,
-      "problemMatcher": [],
       "presentation": {
         "reveal": "always",
-        "panel": "dedicated"
-      }
+        "panel": "shared"
+      },
+      "problemMatcher": []
     }
   ]
 }

@@ -14,4 +14,4 @@ if [[ ! -d "$TOME_CONTENT_PATH" ]]; then
 fi
 
 bun run --filter tome-static-site test
-bun run web:build
+bun run web:build -- --repo "$ROOT" --out-dir "$ROOT/dist/web"
