@@ -8,8 +8,9 @@
 | ---------- | --------------- |
 | `repos/tome/` | Domain-agnostic Tome packages (`tome-db`, `tome-editor`, `tome-static-site`) and tooling docs |
 | `repos/marloth-story/` | Marloth design corpus (`content/`, domain ontology, migrations, deploy) |
+| `repos/silentorb-web/` | Silent Orb corporate website (legacy static generator; optional) |
 
-**Prerequisite:** clone `tome` and `marloth-story` as siblings of this repo on the host (`../tome`, `../marloth-story`), or set `TOME_REPO` / `MARLOTH_REPO` when opening the devcontainer. **marloth-story** depends on Tome packages via workspace references across the hoisted root install. The workbench root orchestrates dev scripts, tests, and the devcontainer.
+**Prerequisite:** clone `tome` and `marloth-story` as siblings of this repo on the host (`../tome`, `../marloth-story`), or set `TOME_REPO` / `MARLOTH_REPO` when opening the devcontainer. Optionally clone `silentorb-web` (`../silentorb-web`, or `SILENTORB_WEB_REPO`). **marloth-story** depends on Tome packages via workspace references across the hoisted root install. The workbench root orchestrates dev scripts, tests, and the devcontainer.
 
 For Marloth-specific writing goals, graph editing workflow, and design corpus conventions, read [`repos/marloth-story/AGENTS.md`](./repos/marloth-story/AGENTS.md) after cloning.
 
@@ -18,7 +19,7 @@ For package-level Tome notes, read each package's `AGENTS.md` under `repos/tome/
 ## Project context
 
 - Open this folder as the VS Code / Cursor workspace root (`/workspaces/silentorb-workbench` in the devcontainer).
-- Dev setup is **Docker Compose**: `workbench` (dev shell) + `tome` (editor dev servers). See [`.devcontainer/docker-compose.yml`](./.devcontainer/docker-compose.yml).
+- Dev setup is **Docker Compose**: `workbench` (dev shell) + `tome` (editor dev servers) + optional `silentorb-web` (legacy corporate site, Node 16 + yarn as `node` user, Compose profile `silentorb-web`). See [`.devcontainer/docker-compose.yml`](./.devcontainer/docker-compose.yml).
 - **Tome tooling** lives under `repos/tome/packages/`; ephemeral build output and hoisted dependencies live at the workbench root (`./dist/`, `./node_modules/`).
 - **Design corpus** lives under `repos/marloth-story/content/` (git-tracked graph) with a local SQLite cache at `repos/marloth-story/data/tome.sqlite` (gitignored).
 - Set `TOME_CONTENT_PATH` to the content root when it is not discoverable by walking up from CWD — default: `repos/marloth-story/content` (not `content/data`).

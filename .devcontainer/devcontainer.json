@@ -4,16 +4,24 @@
     "service": "workbench",
     "runServices": [
         "workbench",
-        "tome"
+        "tome",
+        "silentorb-web"
     ],
+    "remoteEnv": {
+        "COMPOSE_PROFILES": "silentorb-web"
+    },
     "workspaceFolder": "/workspaces/silentorb-workbench",
     "shutdownAction": "stopCompose",
     "overrideCommand": false,
     "forwardPorts": [
         3847,
-        5173
+        5173,
+        8080
     ],
     "remoteUser": "vscode",
+    "features": {
+        "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
+    },
     "customizations": {
         "vscode": {
             "extensions": [],
