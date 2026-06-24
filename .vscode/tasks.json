@@ -87,9 +87,23 @@
       "problemMatcher": []
     },
     {
-      "label": "Silentorb Web: dev",
+      "label": "Silentorb Web: build",
       "type": "shell",
-      "command": "bash scripts/silentorb-web-compose-exec.sh yarn dev",
+      "command": "bash scripts/build-silentorb-web.sh",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Silentorb Web: serve",
+      "type": "shell",
+      "command": "bash scripts/serve-silentorb-web.sh",
       "options": {
         "cwd": "${workspaceFolder}"
       },
@@ -102,7 +116,7 @@
         "background": {
           "activeOnStart": true,
           "beginsPattern": "^",
-          "endsPattern": "Serving \"dist\" at"
+          "endsPattern": "Static site →|Serving HTTP"
         }
       },
       "presentation": {
@@ -110,20 +124,6 @@
         "panel": "dedicated",
         "showReuseMessage": false
       }
-    },
-    {
-      "label": "Silentorb Web: build",
-      "type": "shell",
-      "command": "bash scripts/silentorb-web-compose-exec.sh yarn build",
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "group": "build",
-      "presentation": {
-        "reveal": "always",
-        "panel": "shared"
-      },
-      "problemMatcher": []
     }
   ]
 }

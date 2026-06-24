@@ -36,22 +36,5 @@ services:
       - "3847:3847"
       - "5173:5173"
 
-  silentorb-web:
-    profiles: ["silentorb-web"]
-    build:
-      context: ${SILENTORB_WEB_REPO:-../../silentorb-web}
-      dockerfile: .devcontainer/Dockerfile
-    volumes:
-      - ${SILENTORB_WEB_REPO:-../../silentorb-web}:/workspaces/silentorb-web:cached
-      - silentorb-web-node-modules:/workspaces/silentorb-web/node_modules
-    working_dir: /workspaces/silentorb-web
-    command: ["/bin/bash", "scripts/devcontainer-start.sh"]
-    ports:
-      - "8080:8080"
-    ulimits:
-      core: 0
-    user: node
-
 volumes:
   workbench-node-modules:
-  silentorb-web-node-modules:

@@ -4,12 +4,8 @@
     "service": "workbench",
     "runServices": [
         "workbench",
-        "tome",
-        "silentorb-web"
+        "tome"
     ],
-    "remoteEnv": {
-        "COMPOSE_PROFILES": "silentorb-web"
-    },
     "workspaceFolder": "/workspaces/silentorb-workbench",
     "shutdownAction": "stopCompose",
     "overrideCommand": false,
