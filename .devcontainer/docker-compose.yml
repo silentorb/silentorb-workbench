@@ -8,6 +8,7 @@ services:
       - ${TOME_REPO:-../../tome}:/workspaces/silentorb-workbench/repos/tome:cached
       - ${MARLOTH_REPO:-../../marloth-story}:/workspaces/silentorb-workbench/repos/marloth-story:cached
       - ${SILENTORB_WEB_REPO:-../../silentorb-web}:/workspaces/silentorb-workbench/repos/silentorb-web:cached
+      - tome-node-modules:/workspaces/silentorb-workbench/repos/tome/node_modules
     ulimits:
       core: 0
     user: vscode
