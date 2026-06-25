@@ -26,7 +26,9 @@ Compose defaults use `../../tome`, `../../marloth-story`, and `../../silentorb-w
 
 Clone silentorb-web: `git clone git@github.com:silentorb/silentorb-web.git`
 
-On devcontainer start, `scripts/devcontainer-start.sh` runs `bun install` in the workbench service. The **`tome` service** runs `scripts/tome-dev-start.sh`, which starts the editor with `TOME_CONTENT_PATH` pointing at marloth-story `content/`. The editor webview is at http://127.0.0.1:5173 and the API at http://127.0.0.1:3847 (no VS Code task needed — servers start automatically with the devcontainer).
+On devcontainer start, the **`workbench` service** waits for sibling repo mounts (no dependency install). The **`tome` service** builds from `repos/tome/.devcontainer/Dockerfile`, runs `bun install --frozen-lockfile` from `repos/tome/bun.lock` into a Docker volume at `repos/tome/node_modules`, then starts the editor with `TOME_CONTENT_PATH` pointing at marloth-story `content/`. The editor webview is at http://127.0.0.1:5173 and the API at http://127.0.0.1:3847 (no VS Code task needed — servers start automatically with the devcontainer).
+
+Tome commands from the workbench shell: use `bash scripts/run-in-tome.sh …`, VS Code tasks, or `cd repos/tome && bun …`. The workbench root has no `bun.lock` or `node_modules`.
 
 ### Silent Orb website (optional)
 
@@ -47,12 +49,12 @@ Run **Tasks: Run Task** from the workbench workspace:
 | ---- | ------- |
 | **Test: full suite** | Run all Tome package tests |
 | **Tome Editor: build** | Production build of the editor |
-| **Tome: build static website** | Static-site tests + `web:build` → `dist/web/` |
+| **Tome: build static website** | Static-site tests + `web:build` → `repos/marloth-story/dist/web/` |
 | **Tome: serve static website** | Local preview at http://127.0.0.1:8787/ (after build) |
 | **Marloth: sync content cache** | Rebuild `repos/marloth-story/data/tome.sqlite` from git content |
 | **Silentorb Web: build** | Tome static site build → `repos/silentorb-web/dist/` |
 | **Silentorb Web: serve** | Local preview at http://127.0.0.1:8080/ (after build) |
 
-Equivalent shell commands: `bun run test`, `bun run editor:build`, `bash scripts/build-static-site.sh`, `bash scripts/serve-static-site.sh`, `cd repos/marloth-story && bun run content:sync`, `bash scripts/build-silentorb-web.sh`, and `bash scripts/serve-silentorb-web.sh`.
+Equivalent shell commands: `bash scripts/run-in-tome.sh run test`, `bash scripts/run-in-tome.sh run editor:build`, `bash scripts/build-static-site.sh`, `bash scripts/serve-static-site.sh`, `bash scripts/marloth-content-sync.sh`, `bash scripts/build-silentorb-web.sh`, and `bash scripts/serve-silentorb-web.sh`.
 
 See [`AGENTS.md`](./AGENTS.md) for agent and developer conventions.

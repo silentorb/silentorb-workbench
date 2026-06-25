@@ -10,7 +10,7 @@
 | `repos/marloth-story/` | Marloth design corpus (`content/`, domain ontology, migrations, deploy) |
 | `repos/silentorb-web/` | Silent Orb corporate website (Tome static site; optional mount) |
 
-**Prerequisite:** clone `tome` and `marloth-story` as siblings of this repo on the host (`../tome`, `../marloth-story`), or set `TOME_REPO` / `MARLOTH_REPO` when opening the devcontainer. Optionally clone `silentorb-web` (`../silentorb-web`, or `SILENTORB_WEB_REPO`). **marloth-story** depends on Tome packages via workspace references across the hoisted root install. The workbench root orchestrates dev scripts, tests, and the devcontainer.
+**Prerequisite:** clone `tome` and `marloth-story` as siblings of this repo on the host (`../tome`, `../marloth-story`), or set `TOME_REPO` / `MARLOTH_REPO` when opening the devcontainer. Optionally clone `silentorb-web` (`../silentorb-web`, or `SILENTORB_WEB_REPO`). **Tome** owns package dependencies (`repos/tome/bun.lock`, `repos/tome/node_modules`). The workbench root orchestrates dev scripts and the devcontainer.
 
 For Marloth-specific writing goals, graph editing workflow, and design corpus conventions, read [`repos/marloth-story/AGENTS.md`](./repos/marloth-story/AGENTS.md) after cloning.
 
@@ -21,11 +21,12 @@ For package-level Tome notes, read each package's `AGENTS.md` under `repos/tome/
 - Open this folder as the VS Code / Cursor workspace root (`/workspaces/silentorb-workbench` in the devcontainer).
 - Dev setup is **Docker Compose**: `workbench` (dev shell) + `tome` (editor dev servers). See [`.devcontainer/docker-compose.yml`](./.devcontainer/docker-compose.yml).
 - **Silent Orb site:** `bash scripts/build-silentorb-web.sh` → `repos/silentorb-web/dist/`; serve with `bash scripts/serve-silentorb-web.sh` (port 8080). Content: `repos/silentorb-web/content/`.
-- **Tome tooling** lives under `repos/tome/packages/`; ephemeral build output and hoisted dependencies live at the workbench root (`./dist/`, `./node_modules/`).
+- **Tome tooling** lives under `repos/tome/packages/`; `node_modules` lives at `repos/tome/node_modules` (Docker volume; gitignored in tome). Static site build output for Marloth: `repos/marloth-story/dist/web/`.
 - **Design corpus** lives under `repos/marloth-story/content/` (git-tracked graph) with a local SQLite cache at `repos/marloth-story/data/tome.sqlite` (gitignored).
 - Set `TOME_CONTENT_PATH` to the content root when it is not discoverable by walking up from CWD — default: `repos/marloth-story/content` (not `content/data`).
-- All external dependencies and tooling installs should be performed within the devcontainer Dockerfile. On each container start, the workbench service runs [`scripts/devcontainer-start.sh`](./scripts/devcontainer-start.sh) (`bun install` only). The **`tome` Compose service** runs [`scripts/tome-dev-start.sh`](./scripts/tome-dev-start.sh) with `TOME_CONTENT_PATH` set to marloth `content/`. **Rebuild the container** after changing root `package.json` or `bun.lock` — do not run `bun install` manually in a terminal or on the host.
-- **Static site build** (test + build): `bash scripts/build-static-site.sh` runs tome-static-site tests and `web:build` in the workbench container.
+- On devcontainer start, the **`tome` Compose service** runs [`repos/tome/scripts/dev-start.sh`](./repos/tome/scripts/dev-start.sh) (`bun install --frozen-lockfile` from `repos/tome/bun.lock`, then `editor:dev`) with `TOME_CONTENT_PATH` set to marloth `content/`. The workbench service only checks mounts ([`scripts/devcontainer-start.sh`](./scripts/devcontainer-start.sh)). **Rebuild the tome service image** after changing `repos/tome/.devcontainer/Dockerfile`. Re-run / restart the tome service after changing `repos/tome/bun.lock` or package dependencies.
+- **Static site build** (test + build): `bash scripts/build-static-site.sh` runs tome-static-site tests and `web:build` via `repos/tome`.
+- Run Tome package commands with `bash scripts/run-in-tome.sh …`, VS Code tasks, or from `repos/tome/` — not `bun run` at the workbench root.
 
 ## Terminology
 

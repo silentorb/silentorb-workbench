@@ -2,10 +2,11 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-cd "$ROOT"
+TOME="${ROOT}/repos/tome"
+MARLOTH="${ROOT}/repos/marloth-story"
 
-export TOME_CONTENT_PATH="${TOME_CONTENT_PATH:-${ROOT}/repos/marloth-story/content}"
-export TOME_DB_PATH="${TOME_DB_PATH:-${ROOT}/repos/marloth-story/data/tome.sqlite}"
+export TOME_CONTENT_PATH="${TOME_CONTENT_PATH:-${MARLOTH}/content}"
+export TOME_DB_PATH="${TOME_DB_PATH:-${MARLOTH}/data/tome.sqlite}"
 
 if [[ ! -d "$TOME_CONTENT_PATH" ]]; then
   echo "Content path not found: $TOME_CONTENT_PATH" >&2
@@ -13,5 +14,16 @@ if [[ ! -d "$TOME_CONTENT_PATH" ]]; then
   exit 1
 fi
 
+if [[ ! -d "${TOME}/packages/tome-static-site" ]]; then
+  echo "tome repo not found at ${TOME}" >&2
+  exit 1
+fi
+
+cd "$TOME"
+# shellcheck source=ensure-node-modules.sh
+source "${TOME}/scripts/ensure-node-modules.sh"
 bun run --filter tome-static-site test
-bun run web:build -- --repo "$ROOT" --out-dir "$ROOT/dist/web"
+exec bun run web:build -- \
+  --repo "$TOME" \
+  --content-dir "$TOME_CONTENT_PATH" \
+  --out-dir "${MARLOTH}/dist/web"

@@ -4,7 +4,7 @@
     {
       "label": "Test: full suite",
       "type": "shell",
-      "command": "bun run test",
+      "command": "bash scripts/run-in-tome.sh run test",
       "options": {
         "cwd": "${workspaceFolder}"
       },
@@ -22,7 +22,7 @@
     {
       "label": "Tome Editor: build",
       "type": "shell",
-      "command": "bun run editor:build",
+      "command": "bash scripts/run-in-tome.sh run editor:build",
       "options": {
         "cwd": "${workspaceFolder}"
       },
@@ -76,9 +76,9 @@
     {
       "label": "Marloth: sync content cache",
       "type": "shell",
-      "command": "bun run content:sync",
+      "command": "bash scripts/marloth-content-sync.sh",
       "options": {
-        "cwd": "${workspaceFolder}/repos/marloth-story"
+        "cwd": "${workspaceFolder}"
       },
       "presentation": {
         "reveal": "always",

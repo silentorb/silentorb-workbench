@@ -2,7 +2,7 @@
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 PORT="${TOME_WEB_PORT:-${MARLOTH_WEB_PORT:-8787}}"
-OUT="${TOME_WEB_OUT_DIR:-${MARLOTH_WEB_OUT_DIR:-$ROOT/dist/web}}"
+OUT="${TOME_WEB_OUT_DIR:-${MARLOTH_WEB_OUT_DIR:-${ROOT}/repos/marloth-story/dist/web}}"
 
 if [[ ! -f "$OUT/index.html" ]]; then
   echo "Missing $OUT/index.html — run: bash scripts/build-static-site.sh" >&2

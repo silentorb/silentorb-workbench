@@ -15,6 +15,4 @@ if [[ ! -d repos/marloth-story/content ]]; then
   exec sleep infinity
 fi
 
-# shellcheck source=ensure-node-modules.sh
-source "$(dirname "$0")/ensure-node-modules.sh"
 exec sleep infinity

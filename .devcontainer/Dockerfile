@@ -18,20 +18,12 @@ apt-get upgrade -y
 rm -rf /var/lib/apt/lists/*
 EOF
 
-# Bun (pin matches root package.json "packageManager"). System-wide so CI can run as bind-mount UID.
+# Bun (pin matches packageManager in repos/tome). System-wide for scripts that delegate to tome.
 ENV BUN_INSTALL=/usr/local/bun
 ENV PATH="${BUN_INSTALL}/bin:${PATH}"
 USER root
 RUN curl -fsSL https://bun.sh/install | bash -s "bun-v1.3.13"
 
-# Root scaffolding (sibling repos are bind-mounted via docker-compose at container start).
-USER root
-WORKDIR /opt/silentorb-workbench
-COPY package.json bunfig.toml ./
-COPY scripts scripts
-RUN chown -R vscode:vscode /opt/silentorb-workbench
 USER vscode
-
 WORKDIR /workspaces/silentorb-workbench
-# Bind-mounted workspace + node_modules volume; sibling repos mounted by compose; sync deps, run dev servers.
 CMD ["/bin/bash", "scripts/devcontainer-start.sh"]
