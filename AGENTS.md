@@ -69,6 +69,7 @@ For **design data** (what nodes mean, how they relate conceptually), read [`repo
 | ---------------------- | ---- |
 | Design domain model, node types, relationships, traceability | [`repos/marloth-story/docs/ontology.md`](./repos/marloth-story/docs/ontology.md) |
 | SQLite property graph, `repos/marloth-story/data/tome.sqlite`, `repos/tome/packages/tome-db/` | [`repos/tome/docs/features/tome-db.md`](./repos/tome/docs/features/tome-db.md) (+ ontology when interpreting data) |
+| Set membership (`member_of` / `members`), archive as set | [`repos/tome/docs/features/set-membership.md`](./repos/tome/docs/features/set-membership.md) |
 | Web markdown editor, `repos/tome/packages/tome-editor/` | [`repos/tome/docs/features/tome-editor.md`](./repos/tome/docs/features/tome-editor.md) |
 | Graph Explorer, LOD layers, anchor-scoped graph viz | [`repos/tome/docs/features/graph-explorer.md`](./repos/tome/docs/features/graph-explorer.md) |
 | Editing story/design content in the graph | [`repos/marloth-story/docs/ontology.md`](./repos/marloth-story/docs/ontology.md) + [`repos/tome/docs/features/tome-db.md`](./repos/tome/docs/features/tome-db.md) + [`repos/marloth-story/AGENTS.md`](./repos/marloth-story/AGENTS.md) |

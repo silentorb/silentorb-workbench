@@ -12,6 +12,29 @@ services:
     ulimits:
       core: 0
     user: vscode
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  ollama-bridge:
+    image: nginx:alpine
+    profiles: ["ollama"]
+    network_mode: host
+    restart: unless-stopped
+    volumes:
+      - ./ollama-bridge/nginx.conf.template:/etc/nginx/templates/default.conf.template:ro
+    environment:
+      OLLAMA_BRIDGE_PORT: "${OLLAMA_BRIDGE_PORT:-11435}"
+      OLLAMA_HOST_PORT: "${OLLAMA_HOST_PORT:-11434}"
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "wget -q --spider http://127.0.0.1:$${OLLAMA_BRIDGE_PORT:-11435}/api/tags || exit 1",
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
 
   tome:
     build:

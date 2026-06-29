@@ -1,0 +1,22 @@
+# Rendered by nginx:alpine entrypoint (envsubst). Escape nginx $ as $$ if needed.
+server {
+    listen ${OLLAMA_BRIDGE_PORT};
+    listen [::]:${OLLAMA_BRIDGE_PORT};
+
+    location / {
+        allow 127.0.0.1;
+        allow 172.16.0.0/12;
+        allow 192.168.65.0/24;
+        deny all;
+
+        proxy_pass http://127.0.0.1:${OLLAMA_HOST_PORT};
+        proxy_http_version 1.1;
+        proxy_set_header Host localhost;
+        proxy_set_header Connection "";
+        proxy_buffering off;
+        proxy_cache off;
+        proxy_read_timeout 600s;
+        proxy_send_timeout 600s;
+        client_max_body_size 100m;
+    }
+}
