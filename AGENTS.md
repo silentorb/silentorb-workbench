@@ -74,7 +74,6 @@ For **design data** (what nodes mean, how they relate conceptually), read [`repo
 | Web markdown editor, `repos/tome/packages/tome-editor/` | [`repos/tome/docs/features/tome-editor.md`](./repos/tome/docs/features/tome-editor.md) |
 | Graph Explorer, LOD layers, anchor-scoped graph viz | [`repos/tome/docs/features/graph-explorer.md`](./repos/tome/docs/features/graph-explorer.md) |
 | Editing story/design content in the graph | [`repos/marloth-story/docs/ontology.md`](./repos/marloth-story/docs/ontology.md) + [`repos/tome/docs/features/tome-db.md`](./repos/tome/docs/features/tome-db.md) + [`repos/marloth-story/AGENTS.md`](./repos/marloth-story/AGENTS.md) |
-| Legacy Notion import / mining `repos/marloth-story/exports/` | [`repos/tome/docs/features/notion-import.md`](./repos/tome/docs/features/notion-import.md) |
 | Ordered associations, scene order, drag-and-drop reorder | [`repos/tome/docs/features/ordered-associations.md`](./repos/tome/docs/features/ordered-associations.md) |
 | Dynamic table view fields, computed columns | [`repos/tome/docs/features/dynamic-table-fields.md`](./repos/tome/docs/features/dynamic-table-fields.md) + [`repos/tome/docs/dynamic-fields/`](./repos/tome/docs/dynamic-fields/) |
 | Table view tabs, `views.json` | [`repos/tome/docs/features/views.md`](./repos/tome/docs/features/views.md) |
