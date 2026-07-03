@@ -35,10 +35,10 @@ For package-level Tome notes, read each package's `AGENTS.md` under `repos/tome/
 | **Project feature** | A workspace capability documented in `repos/tome/docs/features/` (e.g. tome-db, tome-editor). Use this phrase when discussing tooling or agent specs—not graph nodes. |
 | **Node** | Any entity in the design graph (SQLite `nodes` table). Replaces legacy *record* / *vertex* in docs and API. |
 | **Relationship** | A link between two nodes with a **relationship type** and properties. Stored compactly in `relationships.json`; SQLite cache expands to directed projections. |
-| **Page** | UI representation of a node in the editor (`NodePageView`, page title, sections, `getNodePageDetail`). Not the same as a Notion export file. |
+| **Page** | UI representation of a node in the editor (`NodePageView`, page title, sections, `getNodePageDetail`). Not the same as a raw export file. |
 | **Feature** (unqualified) | A **design node** (story/game feature idea) in the Marloth corpus, unless context clearly means a project feature. |
 | **Schema** | Git-tracked relationship rules in `repos/marloth-story/content/model/schema.json`. Not SQLite DDL. |
-| **Type table** | Any node used as an `IS_A` target and/or with `notion_schema` / `notion_database` metadata—not a permanent import label. |
+| **Type table** | Any node used as an `IS_A` target and/or declared in `table-schemas.json`—not a permanent import label. |
 | **Extension** | Externally packaged library of Tome components, loaded at runtime from project config (project feature—not a design graph node). |
 | **Extension component** | One integration unit within an extension (`kind` + `implementationId`). |
 

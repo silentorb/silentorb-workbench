@@ -9,7 +9,7 @@ mkdir -p /workspaces/dev /workspaces/build
 chown vscode:vscode /workspaces/dev /workspaces/build
 EOF
 
-# curl/unzip: Bun install script and notion-importer zip exports; ca-certificates: HTTPS.
+# curl/unzip: Bun install script and legacy zip export archives; ca-certificates: HTTPS.
 # python3: optional one-off temporary scripts (see AGENTS.md).
 RUN <<EOF
 apt-get update
