@@ -1,4 +1,4 @@
-repos/
+repos/**
 
 node_modules/
 .bun-install.lock
