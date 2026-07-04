@@ -27,9 +27,19 @@ RUN curl -fsSL https://bun.sh/install | bash -s "bun-v1.3.13"
 USER vscode
 
 # OpenCode CLI (agent that talks to host Ollama via the ollama-bridge service).
-# Installer always targets $HOME/.opencode/bin; expose it on PATH.
+# USER does not set $HOME during build, and `docker exec` doesn't guarantee it at
+# runtime; pin it so the installer targets $HOME/.opencode/bin and config resolves.
+ENV HOME=/home/vscode
 ENV PATH="/home/vscode/.opencode/bin:${PATH}"
 RUN curl -fsSL https://opencode.ai/install | bash -s -- --no-modify-path
+
+# Pre-create OpenCode's XDG dirs as vscode. The compose bind mounts for
+# .config/opencode and .local/share/opencode would otherwise make Docker create the
+# parent dirs (~/.local, ~/.config) as root, blocking OpenCode from writing ~/.local/state.
+RUN mkdir -p /home/vscode/.config/opencode \
+             /home/vscode/.local/share/opencode \
+             /home/vscode/.local/state \
+             /home/vscode/.cache
 
 WORKDIR /workspaces/silentorb-workbench
 CMD ["/bin/bash", "scripts/devcontainer-start.sh"]
