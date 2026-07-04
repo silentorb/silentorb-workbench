@@ -9,11 +9,11 @@ mkdir -p /workspaces/dev /workspaces/build
 chown vscode:vscode /workspaces/dev /workspaces/build
 EOF
 
-# curl/unzip: Bun install script and legacy zip export archives; ca-certificates: HTTPS.
-# python3: optional one-off temporary scripts (see AGENTS.md).
+# curl/unzip: Bun + OpenCode install scripts and legacy zip export archives; ca-certificates: HTTPS.
+# git: repo operations by the OpenCode agent. python3: optional one-off temporary scripts (see AGENTS.md).
 RUN <<EOF
 apt-get update
-apt-get install -y --no-install-recommends ca-certificates curl unzip python3
+apt-get install -y --no-install-recommends ca-certificates curl unzip python3 git
 apt-get upgrade -y
 rm -rf /var/lib/apt/lists/*
 EOF
@@ -25,5 +25,11 @@ USER root
 RUN curl -fsSL https://bun.sh/install | bash -s "bun-v1.3.13"
 
 USER vscode
+
+# OpenCode CLI (agent that talks to host Ollama via the ollama-bridge service).
+# Installer always targets $HOME/.opencode/bin; expose it on PATH.
+ENV PATH="/home/vscode/.opencode/bin:${PATH}"
+RUN curl -fsSL https://opencode.ai/install | bash -s -- --no-modify-path
+
 WORKDIR /workspaces/silentorb-workbench
 CMD ["/bin/bash", "scripts/devcontainer-start.sh"]

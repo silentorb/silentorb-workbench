@@ -9,8 +9,17 @@ services:
       - ${MARLOTH_REPO:-../../marloth-story}:/workspaces/silentorb-workbench/repos/marloth-story:cached
       - ${SILENTORB_WEB_REPO:-../../silentorb-web}:/workspaces/silentorb-workbench/repos/silentorb-web:cached
       - tome-node-modules:/workspaces/silentorb-workbench/repos/tome/node_modules
+      # OpenCode agent config/state, shared with the WSL host so it persists across rebuilds.
+      # Create these host dirs before rebuilding to avoid root-owned auto-created mounts.
+      - ${OPENCODE_CONFIG_DIR:-${HOME}/.config/opencode}:/home/vscode/.config/opencode
+      - ${OPENCODE_DATA_DIR:-${HOME}/.local/share/opencode}:/home/vscode/.local/share/opencode
     ulimits:
       core: 0
+    # Lets Cursor's agent command sandbox (Landlock/Bubblewrap) initialize.
+    # Docker's default seccomp profile blocks unshare(CLONE_NEWUSER) without
+    # CAP_SYS_ADMIN, which fails on this WSL2 host (EPERM) and breaks the shell.
+    security_opt:
+      - seccomp:unconfined
     user: vscode
     extra_hosts:
       - "host.docker.internal:host-gateway"
