@@ -15,8 +15,8 @@ In each repo that may be affected, run read-only git commands and record results
 
 | Repo path | Typical changes |
 | --------- | --------------- |
-| `repos/tome/` | Packages, tests, `docs/features/` |
-| `repos/marloth-story/` | `content/`, Marloth docs |
+| `/workspaces/tome/` | Packages, tests, `docs/features/` |
+| `/workspaces/marloth-story/` | `content/`, Marloth docs |
 | Workbench root | Devcontainer, scripts, root `AGENTS.md` |
 
 Commands per repo: `git status --short`, `git diff`, `git diff --staged` (if staged), `git log -3 --oneline`.
@@ -51,12 +51,12 @@ Keep `pending` during planning and implementation unless the user asks to commit
 ## Commit strategy
 
 ### Baseline (plan created)
-- repos/tome: clean | dirty — list pre-existing files
-- repos/marloth-story: …
+- /workspaces/tome: clean | dirty — list pre-existing files
+- /workspaces/marloth-story: …
 - workbench: …
 
 ### Intended commits
-#### repos/tome
+#### /workspaces/tome (tome repo)
 - Include: …
 - Exclude: …
 - Draft message: "…"

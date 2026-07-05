@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-TOME="${ROOT}/repos/tome"
-MARLOTH="${ROOT}/repos/marloth-story"
+TOME="${TOME:-/workspaces/tome}"
+MARLOTH="${MARLOTH:-/workspaces/marloth-story}"
 
 export TOME_CONTENT_PATH="${TOME_CONTENT_PATH:-${MARLOTH}/content}"
 export TOME_DB_PATH="${TOME_DB_PATH:-${MARLOTH}/data/tome.sqlite}"

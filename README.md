@@ -4,6 +4,8 @@ Development workspace for **Marloth Story**, **Tome**, and **silentorb-web**.
 
 Dev setup uses **Docker Compose** (see [`.devcontainer/docker-compose.yml`](./.devcontainer/docker-compose.yml)): a primary `workbench` service and a `tome` service that runs the editor dev servers.
 
+Open [`silentorb-workbench.code-workspace`](./silentorb-workbench.code-workspace) (or let the devcontainer open it) for a **multi-root workspace**: workbench plus each sibling repo as its own indexed folder.
+
 ## Prerequisite: sibling repositories
 
 Clone sibling repos on the host (Compose bind-mounts them into the containers):
@@ -16,26 +18,27 @@ parent/
   silentorb-web/         # optional — corporate website
 ```
 
-| Host path | Mounted as (workbench) | Role |
-| --------- | ---------------------- | ---- |
-| `../tome` (sibling) | `repos/tome/` | Tome packages (`tome-db`, `tome-editor`, `tome-static-site`) and tooling docs |
-| `../marloth-story` (sibling) | `repos/marloth-story/` | Marloth design graph (`content/`, domain docs, migrations) |
-| `../silentorb-web` (sibling) | `repos/silentorb-web/` | Silent Orb corporate website (Tome static site; optional) |
+| Host path | Mounted as (container) | Workspace folder |
+| --------- | ---------------------- | ---------------- |
+| `../tome` (sibling) | `/workspaces/tome` | `tome` |
+| `../marloth-story` (sibling) | `/workspaces/marloth-story` | `marloth-story` |
+| `../silentorb-web` (sibling) | `/workspaces/silentorb-web` | `silentorb-web` (optional) |
+| this repo | `/workspaces/silentorb-workbench` | `workbench` |
 
 Compose defaults use `../../tome`, `../../marloth-story`, and `../../silentorb-web` relative to `.devcontainer/`. Override mount sources with `TOME_REPO`, `MARLOTH_REPO`, and `SILENTORB_WEB_REPO` when opening the devcontainer.
 
 Clone silentorb-web: `git clone git@github.com:silentorb/silentorb-web.git`
 
-On devcontainer start, the **`workbench` service** waits for sibling repo mounts (no dependency install). The **`tome` service** builds from `repos/tome/.devcontainer/Dockerfile`, runs `bun install --frozen-lockfile` from `repos/tome/bun.lock` into a Docker volume at `repos/tome/node_modules`, then starts the editor with `TOME_CONTENT_PATH` pointing at marloth-story `content/`. The editor webview is at http://127.0.0.1:5173 and the API at http://127.0.0.1:3847 (no VS Code task needed — servers start automatically with the devcontainer).
+On devcontainer start, the **`workbench` service** waits for sibling repo mounts (no dependency install). The **`tome` service** builds from `/workspaces/tome/.devcontainer/Dockerfile`, runs `bun install --frozen-lockfile` from `/workspaces/tome/bun.lock` into a Docker volume at `/workspaces/tome/node_modules`, then starts the editor with `TOME_CONTENT_PATH` pointing at marloth-story `content/`. The editor webview is at http://127.0.0.1:5173 and the API at http://127.0.0.1:3847 (no VS Code task needed — servers start automatically with the devcontainer).
 
-Tome commands from the workbench shell: use `bash scripts/run-in-tome.sh …`, VS Code tasks, or `cd repos/tome && bun …`. The workbench root has no `bun.lock` or `node_modules`.
+Tome commands from the workbench shell: use `bash scripts/run-in-tome.sh …`, VS Code tasks, or `cd /workspaces/tome && bun …`. The workbench root has no `bun.lock` or `node_modules`.
 
 ### Silent Orb website (optional)
 
-Build from the workbench root:
+Build from the workbench folder:
 
 ```bash
-bash scripts/build-silentorb-web.sh   # → repos/silentorb-web/dist/
+bash scripts/build-silentorb-web.sh   # → /workspaces/silentorb-web/dist/
 bash scripts/serve-silentorb-web.sh   # http://127.0.0.1:8080/
 ```
 
@@ -43,16 +46,16 @@ VS Code tasks: **Silentorb Web: build** / **Silentorb Web: serve**.
 
 ## VS Code tasks
 
-Run **Tasks: Run Task** from the workbench workspace:
+Run **Tasks: Run Task** from the **workbench** workspace folder:
 
 | Task | Purpose |
 | ---- | ------- |
 | **Test: full suite** | Run all Tome package tests |
 | **Tome Editor: build** | Production build of the editor |
-| **Tome: build static website** | Static-site tests + `web:build` → `repos/marloth-story/dist/web/` |
+| **Tome: build static website** | Static-site tests + `web:build` → `/workspaces/marloth-story/dist/web/` |
 | **Tome: serve static website** | Local preview at http://127.0.0.1:8787/ (after build) |
-| **Marloth: sync content cache** | Rebuild `repos/marloth-story/data/tome.sqlite` from git content |
-| **Silentorb Web: build** | Tome static site build → `repos/silentorb-web/dist/` |
+| **Marloth: sync content cache** | Rebuild `/workspaces/marloth-story/data/tome.sqlite` from git content |
+| **Silentorb Web: build** | Tome static site build → `/workspaces/silentorb-web/dist/` |
 | **Silentorb Web: serve** | Local preview at http://127.0.0.1:8080/ (after build) |
 
 Equivalent shell commands: `bash scripts/run-in-tome.sh run test`, `bash scripts/run-in-tome.sh run editor:build`, `bash scripts/build-static-site.sh`, `bash scripts/serve-static-site.sh`, `bash scripts/marloth-content-sync.sh`, `bash scripts/build-silentorb-web.sh`, and `bash scripts/serve-silentorb-web.sh`.

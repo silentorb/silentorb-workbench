@@ -6,7 +6,7 @@
       "type": "shell",
       "command": "bash scripts/run-in-tome.sh run test",
       "options": {
-        "cwd": "${workspaceFolder}"
+        "cwd": "${workspaceFolder:workbench}"
       },
       "group": {
         "kind": "test",
@@ -24,7 +24,7 @@
       "type": "shell",
       "command": "bash scripts/run-in-tome.sh run editor:build",
       "options": {
-        "cwd": "${workspaceFolder}"
+        "cwd": "${workspaceFolder:workbench}"
       },
       "group": "build",
       "presentation": {
@@ -39,7 +39,7 @@
       "type": "shell",
       "command": "bash scripts/build-static-site.sh",
       "options": {
-        "cwd": "${workspaceFolder}"
+        "cwd": "${workspaceFolder:workbench}"
       },
       "group": "build",
       "presentation": {
@@ -53,7 +53,7 @@
       "type": "shell",
       "command": "bash scripts/serve-static-site.sh",
       "options": {
-        "cwd": "${workspaceFolder}"
+        "cwd": "${workspaceFolder:workbench}"
       },
       "isBackground": true,
       "problemMatcher": {
@@ -78,7 +78,7 @@
       "type": "shell",
       "command": "bash scripts/marloth-content-sync.sh",
       "options": {
-        "cwd": "${workspaceFolder}"
+        "cwd": "${workspaceFolder:workbench}"
       },
       "presentation": {
         "reveal": "always",
@@ -91,7 +91,7 @@
       "type": "shell",
       "command": "bash scripts/build-silentorb-web.sh",
       "options": {
-        "cwd": "${workspaceFolder}"
+        "cwd": "${workspaceFolder:workbench}"
       },
       "group": "build",
       "presentation": {
@@ -105,7 +105,7 @@
       "type": "shell",
       "command": "bash scripts/serve-silentorb-web.sh",
       "options": {
-        "cwd": "${workspaceFolder}"
+        "cwd": "${workspaceFolder:workbench}"
       },
       "isBackground": true,
       "problemMatcher": {

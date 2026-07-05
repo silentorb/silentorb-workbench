@@ -6,7 +6,7 @@
         "workbench",
         "tome"
     ],
-    "workspaceFolder": "/workspaces/silentorb-workbench",
+    "workspaceFolder": "/workspaces/silentorb-workbench/silentorb-workbench.code-workspace",
     "shutdownAction": "stopCompose",
     "overrideCommand": false,
     "forwardPorts": [

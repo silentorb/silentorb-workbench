@@ -18,7 +18,7 @@ apt-get upgrade -y
 rm -rf /var/lib/apt/lists/*
 EOF
 
-# Bun (pin matches packageManager in repos/tome). System-wide for scripts that delegate to tome.
+# Bun (pin matches packageManager in tome). System-wide for scripts that delegate to tome.
 ENV BUN_INSTALL=/usr/local/bun
 ENV PATH="${BUN_INSTALL}/bin:${PATH}"
 USER root

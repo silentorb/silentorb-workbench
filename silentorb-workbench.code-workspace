@@ -1,0 +1,15 @@
+{
+  "folders": [
+    { "path": ".", "name": "workbench" },
+    { "path": "../tome", "name": "tome" },
+    { "path": "../marloth-story", "name": "marloth-story" },
+    { "path": "../silentorb-web", "name": "silentorb-web" }
+  ],
+  "settings": {
+    "files.eol": "\n",
+    "terminal.integrated.automationProfile.linux": {
+      "path": "/bin/bash"
+    },
+    "task.allowAutomaticTasks": "on"
+  }
+}
