@@ -6,7 +6,7 @@
 
 | Container path | Workspace folder | Repository role |
 | -------------- | ---------------- | --------------- |
-| `/workspaces/tome` | `tome` | Domain-agnostic Tome packages (`tome-db`, `tome-editor`, `tome-static-site`) and tooling docs |
+| `/workspaces/tome` | `tome` | Domain-agnostic Tome packages (`tome-db`, `tome-server`, `tome-http`, `tome-editor`, `tome-static-site`) and tooling docs |
 | `/workspaces/marloth-story` | `marloth-story` | Marloth design corpus (`content/`, domain ontology, migrations, deploy) |
 | `/workspaces/silentorb-web` | `silentorb-web` | Silent Orb corporate website (Tome static site; optional mount) |
 | `/workspaces/silentorb-workbench` | `workbench` | Devcontainer, scripts, this guide |
@@ -75,6 +75,7 @@ For **design data** (what nodes mean, how they relate conceptually), read `/work
 | SQLite property graph, `/workspaces/marloth-story/data/tome.sqlite`, `/workspaces/tome/packages/tome-db/` | `/workspaces/tome/docs/features/tome-db.md` (+ ontology when interpreting data) |
 | Set membership (`member_of` / `members`), archive as set | `/workspaces/tome/docs/features/set-membership.md` |
 | Web markdown editor, `/workspaces/tome/packages/tome-editor/` | `/workspaces/tome/docs/features/tome-editor.md` |
+| Config-driven API host, `/workspaces/tome/packages/tome-server/` | `/workspaces/tome/docs/features/tome-server.md` |
 | Graph Explorer, LOD layers, anchor-scoped graph viz | `/workspaces/tome/docs/features/graph-explorer.md` |
 | Editing story/design content in the graph | `/workspaces/marloth-story/docs/ontology.md` + `/workspaces/tome/docs/features/tome-db.md` + `/workspaces/marloth-story/AGENTS.md` |
 | Ordered associations, scene order, drag-and-drop reorder | `/workspaces/tome/docs/features/ordered-associations.md` |
