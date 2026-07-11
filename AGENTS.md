@@ -6,7 +6,7 @@
 
 | Container path | Workspace folder | Repository role |
 | -------------- | ---------------- | --------------- |
-| `/workspaces/tome` | `tome` | Domain-agnostic Tome packages (`tome-db`, `tome-server`, `tome-http`, `tome-editor`, `tome-static-site`) and tooling docs |
+| `/workspaces/tome` | `tome` | Domain-agnostic Tome packages (`tome-db`, `tome-store-flatfile`, `tome-cache-sqlite`, `tome-server`, `tome-http`, `tome-editor`, `tome-static-site`) and tooling docs |
 | `/workspaces/marloth-story` | `marloth-story` | Marloth design corpus (`content/`, domain ontology, migrations, deploy) |
 | `/workspaces/silentorb-web` | `silentorb-web` | Silent Orb corporate website (Tome static site; optional mount) |
 | `/workspaces/silentorb-workbench` | `workbench` | Devcontainer, scripts, this guide |
