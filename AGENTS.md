@@ -73,7 +73,7 @@ For **design data** (what nodes mean, how they relate conceptually), read `/work
 | ---------------------- | ---- |
 | Design domain model, node types, relationships, traceability | `/workspaces/marloth-story/docs/ontology.md` |
 | SQLite property graph, `/workspaces/marloth-story/data/tome.sqlite`, `/workspaces/tome/packages/tome-db/` | `/workspaces/tome/docs/features/tome-db.md` (+ ontology when interpreting data) |
-| Set membership (`member_of` / `members`), archive as set | `/workspaces/tome/docs/features/set-membership.md` |
+| Sets (`set` trait, type tables, archive hub) | `/workspaces/tome/docs/features/sets.md` |
 | Web markdown editor, `/workspaces/tome/packages/tome-editor/` | `/workspaces/tome/docs/features/tome-editor.md` |
 | Config-driven API host, `/workspaces/tome/packages/tome-server/` | `/workspaces/tome/docs/features/tome-server.md` |
 | Graph Explorer, LOD layers, anchor-scoped graph viz | `/workspaces/tome/docs/features/graph-explorer.md` |
