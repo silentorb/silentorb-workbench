@@ -79,7 +79,7 @@ For **design data** (what nodes mean, how they relate conceptually), read `/work
 | Graph Explorer, LOD layers, anchor-scoped graph viz | `/workspaces/tome/docs/features/graph-explorer.md` |
 | Editing story/design content in the graph | `/workspaces/marloth-story/docs/ontology.md` + `/workspaces/tome/docs/features/tome-db.md` + `/workspaces/marloth-story/AGENTS.md` |
 | Ordered collections, scene order, drag-and-drop reorder | `/workspaces/tome/docs/features/ordered-collections.md` |
-| Dynamic table view fields, computed columns | `/workspaces/tome/docs/features/dynamic-table-fields.md` + `/workspaces/tome/docs/dynamic-fields/` |
+| Dynamic properties, computed columns | `/workspaces/tome/docs/features/dynamic-properties.md` + `/workspaces/tome/docs/dynamic-properties/` |
 | Table view tabs, `views.json` | `/workspaces/tome/docs/features/views.md` |
 | Type table columns, `table-schemas.json` | `/workspaces/tome/docs/features/table-schemas.md` |
 | Static website generation (Astro) | `/workspaces/tome/docs/features/static-website.md` |
