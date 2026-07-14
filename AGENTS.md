@@ -35,7 +35,7 @@ For package-level Tome notes, read each package's `AGENTS.md` under `/workspaces
 | ---- | ------- |
 | **Project feature** | A workspace capability documented in `/workspaces/tome/docs/features/` (e.g. tome-db, tome-editor). Use this phrase when discussing tooling or agent specs—not graph nodes. |
 | **Node** | Any entity in the design graph (SQLite `nodes` table). Replaces legacy *record* / *vertex* in docs and API. |
-| **Relationship** | A link between two nodes with a **relationship type** and properties. Stored compactly in `relationships.json`; SQLite cache expands to directed projections. |
+| **Relationship** | A link between two nodes with a **relationship type** and properties. Stored as one JSON file per edge under `content/data/relationships/` (archive under `content/archive/relationships/`); SQLite cache expands to directed projections. |
 | **Page** | UI representation of a node in the editor (`NodePageView`, page title, sections, `getNodePageDetail`). Not the same as a raw export file. |
 | **Feature** (unqualified) | A **design node** (story/game feature idea) in the Marloth corpus, unless context clearly means a project feature. |
 | **Schema** | Git-tracked relationship rules in `/workspaces/marloth-story/content/model/schema.json`. Not SQLite DDL. |
