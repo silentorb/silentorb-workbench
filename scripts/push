@@ -1,0 +1,109 @@
+#!/usr/bin/env bash
+# Push workspace sibling repos to their remotes.
+# Site repos (marloth-story, silentorb-web) auto-deploy on push to main and are
+# skipped unless the optional `web` argument is passed.
+#
+# Usage (from workbench root, host or container):
+#   ./scripts/push
+#   ./scripts/push web
+set -euo pipefail
+
+INCLUDE_WEB=0
+
+usage() {
+  cat <<'EOF'
+Usage: ./scripts/push [web]
+
+Push current branches of workspace repos to origin.
+
+By default skips site repos that auto-deploy on push to main:
+  marloth-story, silentorb-web
+
+Pass `web` to include those repos as well.
+EOF
+}
+
+for arg in "$@"; do
+  case "$arg" in
+    web) INCLUDE_WEB=1 ;;
+    -h | --help)
+      usage
+      exit 0
+      ;;
+    *)
+      echo "Unknown argument: $arg" >&2
+      usage >&2
+      exit 1
+      ;;
+  esac
+done
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+WORKBENCH_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+
+# Resolve a repo directory. Prefers the container mount, then a sibling of the
+# workbench, then (for imp) IMP_REPO / ~/dev/imp.
+resolve_repo() {
+  local name="$1"
+  local candidates=("/workspaces/${name}" "${WORKBENCH_ROOT}/../${name}")
+  if [[ "$name" == "imp" ]]; then
+    candidates+=("${IMP_REPO:-${HOME}/dev/imp}")
+  fi
+  local candidate
+  for candidate in "${candidates[@]}"; do
+    if [[ -e "${candidate}/.git" ]]; then
+      (cd "$candidate" && pwd)
+      return 0
+    fi
+  done
+  return 1
+}
+
+push_repo() {
+  local label="$1"
+  local path="$2"
+
+  echo "==> ${label}"
+  if [[ ! -e "${path}/.git" ]]; then
+    echo "    skip: not a git repo (${path})"
+    return 0
+  fi
+
+  local branch
+  branch="$(git -C "$path" rev-parse --abbrev-ref HEAD)"
+  if [[ "$branch" == "HEAD" ]]; then
+    echo "    skip: detached HEAD (${path})"
+    return 0
+  fi
+
+  if git -C "$path" rev-parse --abbrev-ref '@{upstream}' >/dev/null 2>&1; then
+    git -C "$path" push
+  else
+    echo "    no upstream; pushing -u origin ${branch}"
+    git -C "$path" push -u origin "$branch"
+  fi
+}
+
+push_named() {
+  local name="$1"
+  local path
+  if ! path="$(resolve_repo "$name")"; then
+    echo "==> ${name}"
+    echo "    skip: not found"
+    return 0
+  fi
+  push_repo "$name" "$path"
+}
+
+# Always: tooling / non-deploying repos
+push_repo "silentorb-workbench" "$WORKBENCH_ROOT"
+push_named "tome"
+push_named "imp"
+
+if [[ "$INCLUDE_WEB" -eq 1 ]]; then
+  push_named "marloth-story"
+  push_named "silentorb-web"
+else
+  echo "==> marloth-story (skipped; pass web to include)"
+  echo "==> silentorb-web (skipped; pass web to include)"
+fi
