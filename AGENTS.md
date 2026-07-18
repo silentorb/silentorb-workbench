@@ -9,13 +9,16 @@
 | `/workspaces/tome` | `tome` | Domain-agnostic Tome packages (`tome-db`, `tome-flatfile`, `tome-sqlite`, `tome-server`, `tome-http`, `tome-editor`, `tome-static-site`) and tooling docs |
 | `/workspaces/marloth-story` | `marloth-story` | Marloth design corpus (`content/`, domain ontology, migrations, deploy) |
 | `/workspaces/silentorb-web` | `silentorb-web` | Silent Orb corporate website (Tome static site; optional mount) |
+| `/workspaces/imp` | `imp` | Imp DAG transmission format (TypeScript; optional mount; default host `~/dev/imp`) |
 | `/workspaces/silentorb-workbench` | `workbench` | Devcontainer, scripts, this guide |
 
-**Prerequisite:** clone `tome` and `marloth-story` as siblings of this repo on the host (`../tome`, `../marloth-story`), or set `TOME_REPO` / `MARLOTH_REPO` when opening the devcontainer. Optionally clone `silentorb-web` (`../silentorb-web`, or `SILENTORB_WEB_REPO`). **Tome** owns package dependencies (`/workspaces/tome/bun.lock`, `/workspaces/tome/node_modules`). The workbench root orchestrates dev scripts and the devcontainer.
+**Prerequisite:** clone `tome` and `marloth-story` as siblings of this repo on the host (`../tome`, `../marloth-story`), or set `TOME_REPO` / `MARLOTH_REPO` when opening the devcontainer. Optionally clone `silentorb-web` (`../silentorb-web`, or `SILENTORB_WEB_REPO`). Mount `imp` (`~/dev/imp`, or `IMP_REPO`) — required for the **`tome` Compose service** because tome’s Bun workspaces include `../imp/packages/*` (`tome-query`). **Tome** owns package dependencies (`/workspaces/tome/bun.lock`, `/workspaces/tome/node_modules`). The workbench root orchestrates dev scripts and the devcontainer.
 
 For Marloth-specific writing goals, graph editing workflow, and design corpus conventions, read `/workspaces/marloth-story/AGENTS.md` after cloning.
 
 For package-level Tome notes, read each package's `AGENTS.md` under `/workspaces/tome/packages/`.
+
+For Imp (universal DAG transmission format; successor to [imp-kotlin](https://github.com/silentorb/imp-kotlin), graph layer only), read `/workspaces/imp/AGENTS.md` after mounting.
 
 ## Project context
 
@@ -85,6 +88,7 @@ For **design data** (what nodes mean, how they relate conceptually), read `/work
 | Static website generation (Astro) | `/workspaces/tome/docs/features/static-website.md` |
 | Static website deploy (GitHub Actions → S3/CloudFront) | `/workspaces/marloth-story/docs/features/static-website-deploy.md` |
 | Extension system (runtime-loaded packages, page blocks) | `/workspaces/tome/docs/features/extensions.md` |
+| Imp-backed custom query table block | `/workspaces/tome/docs/features/tome-query.md` |
 
 See also `/workspaces/tome/docs/features/README.md` for the feature-doc template and how to add new features.
 

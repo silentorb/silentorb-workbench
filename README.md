@@ -16,6 +16,7 @@ parent/
   tome/
   marloth-story/
   silentorb-web/         # optional — corporate website
+~/dev/imp/               # Imp (DAG transmission; required by tome service / tome-query)
 ```
 
 | Host path | Mounted as (container) | Workspace folder |
@@ -23,9 +24,10 @@ parent/
 | `../tome` (sibling) | `/workspaces/tome` | `tome` |
 | `../marloth-story` (sibling) | `/workspaces/marloth-story` | `marloth-story` |
 | `../silentorb-web` (sibling) | `/workspaces/silentorb-web` | `silentorb-web` (optional) |
+| `~/dev/imp` | `/workspaces/imp` | `imp` (required by `tome` service) |
 | this repo | `/workspaces/silentorb-workbench` | `workbench` |
 
-Compose defaults use `../../tome`, `../../marloth-story`, and `../../silentorb-web` relative to `.devcontainer/`. Override mount sources with `TOME_REPO`, `MARLOTH_REPO`, and `SILENTORB_WEB_REPO` when opening the devcontainer.
+Compose defaults use `../../tome`, `../../marloth-story`, and `../../silentorb-web` relative to `.devcontainer/`, and `${HOME}/dev/imp` for `imp`. Override mount sources with `TOME_REPO`, `MARLOTH_REPO`, `SILENTORB_WEB_REPO`, and `IMP_REPO` when opening the devcontainer.
 
 Clone silentorb-web: `git clone git@github.com:silentorb/silentorb-web.git`
 

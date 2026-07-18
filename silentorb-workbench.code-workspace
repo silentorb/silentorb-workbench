@@ -1,9 +1,10 @@
 {
   "folders": [
     { "path": ".", "name": "workbench" },
-    { "path": "../tome", "name": "tome" },
+    { "path": "../imp", "name": "imp" },
     { "path": "../marloth-story", "name": "marloth-story" },
-    { "path": "../silentorb-web", "name": "silentorb-web" }
+    { "path": "../silentorb-web", "name": "silentorb-web" },
+    { "path": "../tome", "name": "tome" }
   ],
   "settings": {
     "files.eol": "\n",

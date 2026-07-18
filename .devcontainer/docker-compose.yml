@@ -8,6 +8,7 @@ services:
       - ${TOME_REPO:-../../tome}:/workspaces/tome:cached
       - ${MARLOTH_REPO:-../../marloth-story}:/workspaces/marloth-story:cached
       - ${SILENTORB_WEB_REPO:-../../silentorb-web}:/workspaces/silentorb-web:cached
+      - ${IMP_REPO:-${HOME}/dev/imp}:/workspaces/imp:cached
       - tome-node-modules:/workspaces/tome/node_modules
       # OpenCode agent config/state, shared with the WSL host so it persists across rebuilds.
       # Create these host dirs before rebuilding to avoid root-owned auto-created mounts.
@@ -52,6 +53,8 @@ services:
     volumes:
       - ${TOME_REPO:-../../tome}:/workspaces/tome:cached
       - ${MARLOTH_REPO:-../../marloth-story}:/workspaces/marloth-story:cached
+      # Required: tome root workspaces include ../imp/packages/* (tome-query → Imp).
+      - ${IMP_REPO:-${HOME}/dev/imp}:/workspaces/imp:cached
       - tome-node-modules:/workspaces/tome/node_modules
     environment:
       TOME_CONTENT_PATH: /workspaces/marloth-story/content
