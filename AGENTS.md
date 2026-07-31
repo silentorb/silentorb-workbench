@@ -89,6 +89,7 @@ For **design data** (what nodes mean, how they relate conceptually), read `/work
 | Static website generation (Astro) | `/workspaces/tome/docs/features/static-website.md` |
 | Static website deploy (GitHub Actions → S3/CloudFront) | `/workspaces/marloth-story/docs/features/static-website-deploy.md` |
 | Extension system (runtime-loaded packages, page blocks) | `/workspaces/tome/docs/features/extensions.md` |
+| Imp → Tome SQL binder (nodes / path hops) | `/workspaces/tome/docs/features/tome-imp-sql.md` |
 | Imp-backed custom query table block | `/workspaces/tome/docs/features/tome-query.md` |
 
 See also `/workspaces/tome/docs/features/README.md` for the feature-doc template and how to add new features.
