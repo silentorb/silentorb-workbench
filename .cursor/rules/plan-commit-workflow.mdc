@@ -29,7 +29,7 @@ Label each changed path:
 - **Plan-scoped** — will change during implementation
 - **Unrelated** — out of scope; exclude from plan commits
 
-Include related pre-existing changes in the same per-repo commit. For unrelated dirty files, note "exclude" or ask before mixing.
+**Default: greedy include.** In each affected repo, include **all pre-existing dirty files** in that repo’s planned commit unless they are clearly unrelated to the work or look like secrets. Prefer bundling prior local residue with the plan commit over leaving it uncommitted. Ask only when something is clearly unrelated or sensitive — do not default to “exclude.”
 
 ### 3. Per-repo commit plan
 
