@@ -92,6 +92,8 @@ For **design data** (what nodes mean, how they relate conceptually), read `/work
 | Extension system (runtime-loaded packages, page blocks) | `/workspaces/tome/docs/features/extensions.md` |
 | Imp → Tome SQL binder (nodes / path hops) | `/workspaces/tome/docs/features/tome-imp-sql.md` |
 | Imp-backed custom query table block | `/workspaces/tome/docs/features/tome-query.md` |
+| Relative event sequencing / timeline | `/workspaces/tome/docs/features/tome-sequencing.md` |
+| Sequencing constraint resolution | `/workspaces/tome/docs/features/tome-sequencing-resolution.md` |
 
 See also `/workspaces/tome/docs/features/README.md` for the feature-doc template and how to add new features.
 
