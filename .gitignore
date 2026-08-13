@@ -9,6 +9,9 @@ Thumbs.db
 .env.*
 !.env.example
 
+# Multi-corpus editor session SQLite (see tome docs/features/multi-corpus.md)
+data/
+
 # Python
 __pycache__/
 *.py[cod]

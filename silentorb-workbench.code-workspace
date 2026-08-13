@@ -4,7 +4,8 @@
     { "path": "../imp", "name": "imp" },
     { "path": "../marloth-story", "name": "marloth-story" },
     { "path": "../silentorb-web", "name": "silentorb-web" },
-    { "path": "../tome", "name": "tome" }
+    { "path": "../tome", "name": "tome" },
+    { "path": "../translucence", "name": "translucence" }
   ],
   "settings": {
     "files.eol": "\n",

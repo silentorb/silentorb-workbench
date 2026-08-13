@@ -87,6 +87,19 @@
       "problemMatcher": []
     },
     {
+      "label": "Translucence: sync content cache",
+      "type": "shell",
+      "command": "bash scripts/translucence-content-sync.sh",
+      "options": {
+        "cwd": "${workspaceFolder:workbench}"
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
       "label": "Silentorb Web: build",
       "type": "shell",
       "command": "bash scripts/build-silentorb-web.sh",

@@ -9,12 +9,15 @@
 | `/workspaces/tome` | `tome` | Domain-agnostic Tome packages (`tome-db`, `tome-flatfile`, `tome-sqlite`, `tome-server`, `tome-http`, `tome-editor`, `tome-static-site`) and tooling docs |
 | `/workspaces/marloth-story` | `marloth-story` | Marloth design corpus (`content/`, domain ontology, migrations, deploy) |
 | `/workspaces/silentorb-web` | `silentorb-web` | Silent Orb corporate website (Tome static site; optional mount) |
+| `/workspaces/translucence` | `translucence` | Translucence Bible-article corpus (`content/`; optional mount) |
 | `/workspaces/imp` | `imp` | Imp DAG transmission format (TypeScript; optional mount; default host `~/dev/imp`) |
 | `/workspaces/silentorb-workbench` | `workbench` | Devcontainer, scripts, this guide |
 
-**Prerequisite:** clone `tome` and `marloth-story` as siblings of this repo on the host (`../tome`, `../marloth-story`), or set `TOME_REPO` / `MARLOTH_REPO` when opening the devcontainer. Optionally clone `silentorb-web` (`../silentorb-web`, or `SILENTORB_WEB_REPO`). Mount `imp` (`~/dev/imp`, or `IMP_REPO`) — required for the **`tome` Compose service** because tome’s Bun workspaces include `../imp/packages/*` (`tome-query`). **Tome** owns package dependencies (`/workspaces/tome/bun.lock`, `/workspaces/tome/node_modules`). The workbench root orchestrates dev scripts and the devcontainer.
+**Prerequisite:** clone `tome` and `marloth-story` as siblings of this repo on the host (`../tome`, `../marloth-story`), or set `TOME_REPO` / `MARLOTH_REPO` when opening the devcontainer. Optionally clone `silentorb-web` (`../silentorb-web`, or `SILENTORB_WEB_REPO`) and `translucence` (`../translucence`, or `TRANSLUCENCE_REPO`). Mount `imp` (`~/dev/imp`, or `IMP_REPO`) — required for the **`tome` Compose service** because tome’s Bun workspaces include `../imp/packages/*` (`tome-query`). **Tome** owns package dependencies (`/workspaces/tome/bun.lock`, `/workspaces/tome/node_modules`). The workbench root orchestrates dev scripts and the devcontainer.
 
 For Marloth-specific writing goals, graph editing workflow, and design corpus conventions, read `/workspaces/marloth-story/AGENTS.md` after cloning.
+
+For Translucence (interconnected Bible articles and modular arguments), read `/workspaces/translucence/AGENTS.md` after cloning.
 
 For package-level Tome notes, read each package's `AGENTS.md` under `/workspaces/tome/packages/`.
 
@@ -26,9 +29,9 @@ For Imp (universal DAG transmission format; successor to [imp-kotlin](https://gi
 - Dev setup is **Docker Compose**: `workbench` (dev shell) + `tome` (editor dev servers). See [`.devcontainer/docker-compose.yml`](./.devcontainer/docker-compose.yml).
 - **Silent Orb site:** `bash scripts/build-silentorb-web.sh` → `/workspaces/silentorb-web/dist/`; serve with `bash scripts/serve-silentorb-web.sh` (port 8080). Content: `/workspaces/silentorb-web/content/`.
 - **Tome tooling** lives under `/workspaces/tome/packages/`; `node_modules` lives at `/workspaces/tome/node_modules` (Docker volume; gitignored in tome). Static site build output for Marloth: `/workspaces/marloth-story/dist/web/`.
-- **Design corpus** lives under `/workspaces/marloth-story/content/` (git-tracked graph) with a local SQLite cache at `/workspaces/marloth-story/data/tome.sqlite` (gitignored).
-- Set `TOME_CONTENT_PATH` to the content root when it is not discoverable by walking up from CWD — default: `/workspaces/marloth-story/content` (not `content/data`).
-- On devcontainer start, the **`tome` Compose service** runs `/workspaces/tome/scripts/dev-start.sh` (`bun install --frozen-lockfile` from `/workspaces/tome/bun.lock`, then `editor:dev`) with `TOME_CONTENT_PATH` set to marloth `content/`. The workbench service only checks mounts ([`scripts/devcontainer-start.sh`](./scripts/devcontainer-start.sh)). **Rebuild the tome service image** after changing `/workspaces/tome/.devcontainer/Dockerfile`. Re-run / restart the tome service after changing `/workspaces/tome/bun.lock` or package dependencies.
+- **Design corpus** lives under `/workspaces/marloth-story/content/` (git-tracked graph) with a local SQLite cache at `/workspaces/marloth-story/data/tome.sqlite` (gitignored). Translucence is a second corpus at `/workspaces/translucence/content/` (cache: `/workspaces/translucence/data/tome.sqlite`).
+- Set `TOME_CONTENT_PATH` to the content root when it is not discoverable by walking up from CWD — default: `/workspaces/marloth-story/content` (not `content/data`). Override `TOME_CONTENT_PATH` / `TOME_DB_PATH` when opening the devcontainer to point the editor at another corpus (e.g. translucence). For an opt-in **multi-corpus** editor session, set `TOME_CORPORA` and a dedicated session `TOME_DB_PATH` — see `/workspaces/tome/docs/features/multi-corpus.md` (default remains Marloth-only).
+- On devcontainer start, the **`tome` Compose service** runs `/workspaces/tome/scripts/dev-start.sh` (`bun install --frozen-lockfile` from `/workspaces/tome/bun.lock`, then `editor:dev`) with `TOME_CONTENT_PATH` set to marloth `content/` unless overridden. The workbench service only checks mounts ([`scripts/devcontainer-start.sh`](./scripts/devcontainer-start.sh)). **Rebuild the tome service image** after changing `/workspaces/tome/.devcontainer/Dockerfile`. Re-run / restart the tome service after changing `/workspaces/tome/bun.lock` or package dependencies.
 - **Static site build** (test + build): `bash scripts/build-static-site.sh` runs tome-static-site tests and `web:build` via `/workspaces/tome`.
 - Run Tome package commands with `bash scripts/run-in-tome.sh …`, VS Code tasks, or from `/workspaces/tome/` — not `bun run` at the workbench root.
 
@@ -53,7 +56,7 @@ For Imp (universal DAG transmission format; successor to [imp-kotlin](https://gi
 - Prefer small, incremental edits that are easy to review.
 - **Prototypal stage — no backwards compatibility.** These repos are pre-release; there are no external consumers to protect. When you change an interface or format, **delete** the old path rather than preserving or widening it — no dual-format validators, case-insensitive fallbacks, normalization shims, deprecation warnings, or legacy code branches. Backwards-compatibility scaffolding only adds noise and convolution at this stage. Migrate existing data/content in the same change instead of supporting both shapes.
 - **Prototypal stage — lock-step interfaces.** The workspace repos must stay mutually compatible at all times. Any interface change is applied to **every** dependent consumer in the same change so no repo is left on the old interface. The "Propagate tome breaking changes" bullet below is the concrete instance of this rule.
-- **Propagate tome breaking changes to all dependent repos:** This workspace exists to develop interrelated repos in unison. When a change in `/workspaces/tome/` breaks an upstream interface that dependents rely on — content-model schema or version bumps (e.g. `views.json`, `workspace.json`, `schema.json`, `associations.json`), package/API signatures, CLI flags, or build/output contracts — update **every dependent repo in the same change**, not just the one in front of you. Dependents are at least `/workspaces/marloth-story/` and `/workspaces/silentorb-web/` (both consume tome as the static-site generator). Verify each still builds (`bash scripts/build-static-site.sh` for marloth, `bash scripts/build-silentorb-web.sh` for silentorb-web) before considering the tome change complete. A tome breaking change is not done while a neighboring repo is left on the old interface.
+- **Propagate tome breaking changes to all dependent repos:** This workspace exists to develop interrelated repos in unison. When a change in `/workspaces/tome/` breaks an upstream interface that dependents rely on — content-model schema or version bumps (e.g. `views.json`, `workspace.json`, `schema.json`, `associations.json`), package/API signatures, CLI flags, or build/output contracts — update **every dependent repo in the same change**, not just the one in front of you. Dependents are at least `/workspaces/marloth-story/`, `/workspaces/silentorb-web/`, and `/workspaces/translucence/` (content corpora / static-site consumers). Verify marloth and silentorb-web still build (`bash scripts/build-static-site.sh` for marloth, `bash scripts/build-silentorb-web.sh` for silentorb-web) before considering the tome change complete. A tome breaking change is not done while a neighboring repo is left on the old interface.
 - **Regression tests:** When fixing a bug in table views (database tables, relation tables, Properties section, composed/grouped table presentations, dynamic fields, or related API endpoints), add a regression test in the same change that would have failed before the fix. Seed test relationships using **composite types** from `content/model/associations.json` (via `ContentStore` / `seedTestCompositeRelationships`) when the bug involves graph traversals — do not rely only on direct `db.upsertRelationship` with legacy unidirectional types. Do not close a bug fix without a test unless the user explicitly waives it.
 - **UI tests (Tome React):** New or changed React UI in `/workspaces/tome` (editor, interactive page blocks, extension components) should use **`bun:test` + `@testing-library/react` + happy-dom** — see `/workspaces/tome/AGENTS.md` § Project context.
 - **Script language:** agentic scripts should use **TypeScript** (Bun) by default — place durable tooling under `/workspaces/tome/packages/` with tests and a shell wrapper in `scripts/` when appropriate. **One-off temporary scripts** (exploratory, throwaway, not intended to be maintained) may still be written in Python.
@@ -63,7 +66,7 @@ For Imp (universal DAG transmission format; successor to [imp-kotlin](https://gi
 - Read existing files before editing to preserve intent and style.
 - Keep assumptions explicit in commit or PR notes when behavior is unclear.
 - Run relevant checks or tests when changing code, if such checks are available.
-- Add self-documentation to files under `/workspaces/tome/docs/` or `/workspaces/marloth-story/docs/` when making agent-relevant updates.
+- Add self-documentation to files under `/workspaces/tome/docs/`, `/workspaces/marloth-story/docs/`, or `/workspaces/translucence/docs/` when making agent-relevant updates.
 
 ## Feature documentation
 
@@ -71,11 +74,11 @@ Authoritative design specs for **project features** live in `/workspaces/tome/do
 
 **Do not read all feature docs by default.** When your task matches a row, read only that file (and the package `AGENTS.md` if editing that package). Treat the feature doc as the source of truth over implementation when they disagree—update code or the doc explicitly.
 
-For **design data** (what nodes mean, how they relate conceptually), read `/workspaces/marloth-story/docs/ontology.md` **in addition to** schema-specific docs below (after cloning).
+For **design data** (what nodes mean, how they relate conceptually), read `/workspaces/marloth-story/docs/ontology.md` or `/workspaces/translucence/docs/ontology.md` **in addition to** schema-specific docs below (after cloning).
 
 | If your task involves… | Read |
 | ---------------------- | ---- |
-| Design domain model, node types, relationships, traceability | `/workspaces/marloth-story/docs/ontology.md` |
+| Design domain model, node types, relationships, traceability | `/workspaces/marloth-story/docs/ontology.md` or `/workspaces/translucence/docs/ontology.md` |
 | SQLite property graph, `/workspaces/marloth-story/data/tome.sqlite`, `/workspaces/tome/packages/tome-db/` | `/workspaces/tome/docs/features/tome-db.md` (+ ontology when interpreting data) |
 | Sets (`set` trait, type tables, archive hub) | `/workspaces/tome/docs/features/sets.md` |
 | Web markdown editor, `/workspaces/tome/packages/tome-editor/` | `/workspaces/tome/docs/features/tome-editor.md` |
@@ -94,6 +97,7 @@ For **design data** (what nodes mean, how they relate conceptually), read `/work
 | Imp-backed custom query table block | `/workspaces/tome/docs/features/tome-query.md` |
 | Relative event sequencing / timeline | `/workspaces/tome/docs/features/tome-sequencing.md` |
 | Sequencing constraint resolution | `/workspaces/tome/docs/features/tome-sequencing-resolution.md` |
+| Multi-corpus editor sessions | `/workspaces/tome/docs/features/multi-corpus.md` |
 
 See also `/workspaces/tome/docs/features/README.md` for the feature-doc template and how to add new features.
 
