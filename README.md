@@ -35,14 +35,16 @@ Clone silentorb-web: `git clone git@github.com:silentorb/silentorb-web.git`
 
 On devcontainer start, the **`workbench` service** waits for sibling repo mounts (no dependency install). The **`tome` service** builds from `/workspaces/tome/.devcontainer/Dockerfile`, runs `bun install --frozen-lockfile` from `/workspaces/tome/bun.lock` into a Docker volume at `/workspaces/tome/node_modules`, then starts the editor with `TOME_CONTENT_PATH` pointing at marloth-story `content/` (override `TOME_CONTENT_PATH` / `TOME_DB_PATH` to point at another corpus). The editor webview is at http://127.0.0.1:5173 and the API at http://127.0.0.1:3847 (no VS Code task needed — servers start automatically with the devcontainer).
 
-**Multi-corpus (opt-in):** leave the default Marloth-only session alone for day-to-day work. To open several corpora in one editor session, set `TOME_CORPORA` (and a dedicated session `TOME_DB_PATH` that is **not** any corpus’s own sqlite file), for example:
+**Multi-corpus (opt-in):** leave the default Marloth-only session alone for day-to-day work. To open several corpora in one editor session, set `TOME_CORPORA` (and a dedicated session `TOME_DB_PATH` that is **not** any corpus’s own sqlite file), for example in a gitignored `.devcontainer/.env`:
 
 ```bash
 TOME_CORPORA=marloth=/workspaces/marloth-story/content,translucence=/workspaces/translucence/content:readonly
-TOME_DB_PATH=/workspaces/silentorb-workbench/data/tome-session.sqlite
+TOME_DB_PATH=/workspaces/tome/data/tome-session.sqlite
 ```
 
-See [`/workspaces/tome/docs/features/multi-corpus.md`](../tome/docs/features/multi-corpus.md). The `tome` Compose service mounts Marloth, Translucence, and silentorb-web so those paths are available when configured.
+Rebuild or reopen the devcontainer so Compose applies the change. The session cache must live in a tree the **`tome` service** mounts — it mounts Marloth, Translucence, silentorb-web, tome, and imp, but **not this repo**, so a `/workspaces/silentorb-workbench/…` cache path makes the API die at boot with `EACCES`.
+
+See [`/workspaces/tome/docs/features/multi-corpus.md`](../tome/docs/features/multi-corpus.md).
 
 Tome commands from the workbench shell: use `bash scripts/run-in-tome.sh …`, VS Code tasks, or `cd /workspaces/tome && bun …`. The workbench root has no `bun.lock` or `node_modules`.
 
