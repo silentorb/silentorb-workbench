@@ -46,6 +46,14 @@ Rebuild or reopen the devcontainer so Compose applies the change. The session ca
 
 See [`/workspaces/tome/docs/features/multi-corpus.md`](../tome/docs/features/multi-corpus.md).
 
+**WSL launcher (Marloth + Translucence):** from a WSL host shell (outside the devcontainer), run:
+
+```bash
+bash scripts/tome-multi-corpus.sh
+```
+
+This stops any running `tome` Compose service and starts a fresh one with both corpora (read/write). No WSL environment variables are required — the script sets `TOME_CORPORA` and `TOME_DB_PATH` inline. Requires `../translucence` cloned alongside the other sibling repos. Pass `-d` to run detached. Reopening the devcontainer without this script restores the default Marloth-only `tome` service unless you configure `.devcontainer/.env` separately.
+
 Tome commands from the workbench shell: use `bash scripts/run-in-tome.sh …`, VS Code tasks, or `cd /workspaces/tome && bun …`. The workbench root has no `bun.lock` or `node_modules`.
 
 ### Silent Orb website (optional)
