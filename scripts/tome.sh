@@ -7,7 +7,7 @@ cd "$(dirname "$0")/.."
 #
 # Run from the WSL host (not inside a devcontainer). No shell env vars required.
 if [[ -f /.dockerenv ]]; then
-  echo "Run scripts/tome-multi-corpus.sh from the WSL host, not inside a devcontainer." >&2
+  echo "Run scripts/tome.sh from the WSL host, not inside a devcontainer." >&2
   exit 1
 fi
 

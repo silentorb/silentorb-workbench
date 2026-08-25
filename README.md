@@ -49,7 +49,7 @@ See [`/workspaces/tome/docs/features/multi-corpus.md`](../tome/docs/features/mul
 **WSL launcher (Marloth + Translucence):** from a WSL host shell (outside the devcontainer), run:
 
 ```bash
-bash scripts/tome-multi-corpus.sh
+bash scripts/tome.sh
 ```
 
 This stops any running `tome` Compose service and starts a fresh one with both corpora (read/write). No WSL environment variables are required — the script sets `TOME_CORPORA` and `TOME_DB_PATH` inline. Requires `../translucence` cloned alongside the other sibling repos. Pass `-d` to run detached. Reopening the devcontainer without this script restores the default Marloth-only `tome` service unless you configure `.devcontainer/.env` separately.
