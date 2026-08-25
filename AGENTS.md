@@ -98,6 +98,7 @@ For **design data** (what nodes mean, how they relate conceptually), read `/work
 | Relative event sequencing / timeline | `/workspaces/tome/docs/features/tome-sequencing.md` |
 | Sequencing constraint resolution | `/workspaces/tome/docs/features/tome-sequencing-resolution.md` |
 | Multi-corpus editor sessions | `/workspaces/tome/docs/features/multi-corpus.md` |
+| Graph store API (Base / Queryable, executeImp) | `/workspaces/tome/docs/features/graph-store.md` |
 
 See also `/workspaces/tome/docs/features/README.md` for the feature-doc template and how to add new features.
 
