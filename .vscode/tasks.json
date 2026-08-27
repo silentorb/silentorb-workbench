@@ -20,6 +20,21 @@
       "problemMatcher": []
     },
     {
+      "label": "Typecheck: all packages",
+      "type": "shell",
+      "command": "bash scripts/run-in-tome.sh run typecheck",
+      "options": {
+        "cwd": "${workspaceFolder:workbench}"
+      },
+      "group": "test",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "focus": true
+      },
+      "problemMatcher": []
+    },
+    {
       "label": "Tome Editor: build",
       "type": "shell",
       "command": "bash scripts/run-in-tome.sh run editor:build",
