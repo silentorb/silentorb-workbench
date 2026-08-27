@@ -77,7 +77,8 @@ Run **Tasks: Run Task** from the **workbench** workspace folder:
 
 | Task | Purpose |
 | ---- | ------- |
-| **Test: full suite** | Run all Tome package tests |
+| **Test: full suite** | Workspace typecheck, then all Tome package tests |
+| **Typecheck: all packages** | `tsc --noEmit` across tome (+ Imp) workspace packages |
 | **Tome Editor: build** | Production build of the editor |
 | **Tome: build static website** | Static-site tests + `web:build` → `/workspaces/marloth-story/dist/web/` |
 | **Tome: serve static website** | Local preview at http://127.0.0.1:8787/ (after build) |
@@ -86,6 +87,6 @@ Run **Tasks: Run Task** from the **workbench** workspace folder:
 | **Silentorb Web: build** | Tome static site build → `/workspaces/silentorb-web/dist/` |
 | **Silentorb Web: serve** | Local preview at http://127.0.0.1:8080/ (after build) |
 
-Equivalent shell commands: `bash scripts/run-in-tome.sh run test`, `bash scripts/run-in-tome.sh run editor:build`, `bash scripts/build-static-site.sh`, `bash scripts/serve-static-site.sh`, `bash scripts/marloth-content-sync.sh`, `bash scripts/translucence-content-sync.sh`, `bash scripts/build-silentorb-web.sh`, and `bash scripts/serve-silentorb-web.sh`.
+Equivalent shell commands: `bash scripts/run-in-tome.sh run test`, `bash scripts/run-in-tome.sh run typecheck`, `bash scripts/run-in-tome.sh run editor:build`, `bash scripts/build-static-site.sh`, `bash scripts/serve-static-site.sh`, `bash scripts/marloth-content-sync.sh`, `bash scripts/translucence-content-sync.sh`, `bash scripts/build-silentorb-web.sh`, and `bash scripts/serve-silentorb-web.sh`.
 
 See [`AGENTS.md`](./AGENTS.md) for agent and developer conventions.
