@@ -41,13 +41,15 @@ done
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 WORKBENCH_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
-# Resolve a repo directory. Prefers the container mount, then a sibling of the
-# workbench, then (for imp) IMP_REPO / ~/dev/imp.
+# shellcheck source=mnt-paths.sh
+source "${SCRIPT_DIR}/mnt-paths.sh"
+
+# Resolve a repo directory. Prefers .mnt/<name>, then a sibling of the workbench.
 resolve_repo() {
   local name="$1"
-  local candidates=("/workspaces/${name}" "${WORKBENCH_ROOT}/../${name}")
-  if [[ "$name" == "imp" ]]; then
-    candidates+=("${IMP_REPO:-${HOME}/dev/imp}")
+  local candidates=("${MNT}/${name}" "${WORKBENCH_ROOT}/../${name}")
+  if [[ "$name" == "imp-ts" ]]; then
+    candidates+=("${IMP_REPO:-${WORKBENCH_ROOT}/../imp-ts}")
   fi
   local candidate
   for candidate in "${candidates[@]}"; do
@@ -98,7 +100,9 @@ push_named() {
 # Always: tooling / non-deploying repos
 push_repo "silentorb-workbench" "$WORKBENCH_ROOT"
 push_named "tome"
-push_named "imp"
+push_named "imp-ts"
+push_named "imp-rust"
+push_named "imp-spec"
 
 if [[ "$INCLUDE_WEB" -eq 1 ]]; then
   push_named "marloth-story"

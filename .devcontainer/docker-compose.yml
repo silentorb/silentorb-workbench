@@ -1,20 +1,30 @@
+x-workbench-volumes: &workbench-volumes
+  - ..:/workspaces/silentorb-workbench:cached
+  - ${TOME_REPO:-../../tome}:${MNT:-/workspaces/silentorb-workbench/.mnt}/tome:cached
+  - ${MARLOTH_REPO:-../../marloth-story}:${MNT:-/workspaces/silentorb-workbench/.mnt}/marloth-story:cached
+  - ${TRANSLUCENCE_REPO:-../../translucence}:${MNT:-/workspaces/silentorb-workbench/.mnt}/translucence:cached
+  - ${SILENTORB_WEB_REPO:-../../silentorb-web}:${MNT:-/workspaces/silentorb-workbench/.mnt}/silentorb-web:cached
+  - ${IMP_REPO:-../../imp-ts}:${MNT:-/workspaces/silentorb-workbench/.mnt}/imp-ts:cached
+  - ${IMP_RUST_REPO:-../../imp-rust}:${MNT:-/workspaces/silentorb-workbench/.mnt}/imp-rust:cached
+  - ${IMP_SPEC_REPO:-../../imp-spec}:${MNT:-/workspaces/silentorb-workbench/.mnt}/imp-spec:cached
+  - tome-node-modules:${MNT:-/workspaces/silentorb-workbench/.mnt}/tome/node_modules
+  - ${OPENCODE_CONFIG_DIR:-${HOME}/.config/opencode}:/home/vscode/.config/opencode
+  - ${OPENCODE_DATA_DIR:-${HOME}/.local/share/opencode}:/home/vscode/.local/share/opencode
+
+x-tome-volumes: &tome-volumes
+  - ${TOME_REPO:-../../tome}:${MNT:-/workspaces/silentorb-workbench/.mnt}/tome:cached
+  - ${MARLOTH_REPO:-../../marloth-story}:${MNT:-/workspaces/silentorb-workbench/.mnt}/marloth-story:cached
+  - ${TRANSLUCENCE_REPO:-../../translucence}:${MNT:-/workspaces/silentorb-workbench/.mnt}/translucence:cached
+  - ${SILENTORB_WEB_REPO:-../../silentorb-web}:${MNT:-/workspaces/silentorb-workbench/.mnt}/silentorb-web:cached
+  - ${IMP_REPO:-../../imp-ts}:${MNT:-/workspaces/silentorb-workbench/.mnt}/imp-ts:cached
+  - tome-node-modules:${MNT:-/workspaces/silentorb-workbench/.mnt}/tome/node_modules
+
 services:
   workbench:
     build:
       context: ..
       dockerfile: .devcontainer/Dockerfile
-    volumes:
-      - ..:/workspaces/silentorb-workbench:cached
-      - ${TOME_REPO:-../../tome}:/workspaces/tome:cached
-      - ${MARLOTH_REPO:-../../marloth-story}:/workspaces/marloth-story:cached
-      - ${SILENTORB_WEB_REPO:-../../silentorb-web}:/workspaces/silentorb-web:cached
-      - ${TRANSLUCENCE_REPO:-../../translucence}:/workspaces/translucence:cached
-      - ${IMP_REPO:-${HOME}/dev/imp}:/workspaces/imp:cached
-      - tome-node-modules:/workspaces/tome/node_modules
-      # OpenCode agent config/state, shared with the WSL host so it persists across rebuilds.
-      # Create these host dirs before rebuilding to avoid root-owned auto-created mounts.
-      - ${OPENCODE_CONFIG_DIR:-${HOME}/.config/opencode}:/home/vscode/.config/opencode
-      - ${OPENCODE_DATA_DIR:-${HOME}/.local/share/opencode}:/home/vscode/.local/share/opencode
+    volumes: *workbench-volumes
     ulimits:
       core: 0
     # Lets Cursor's agent command sandbox (Landlock/Bubblewrap) initialize.
@@ -51,27 +61,20 @@ services:
     build:
       context: ${TOME_REPO:-../../tome}
       dockerfile: .devcontainer/Dockerfile
-    volumes:
-      - ${TOME_REPO:-../../tome}:/workspaces/tome:cached
-      - ${MARLOTH_REPO:-../../marloth-story}:/workspaces/marloth-story:cached
-      - ${TRANSLUCENCE_REPO:-../../translucence}:/workspaces/translucence:cached
-      - ${SILENTORB_WEB_REPO:-../../silentorb-web}:/workspaces/silentorb-web:cached
-      # Required: tome root workspaces include ../imp/packages/* (tome-query → Imp).
-      - ${IMP_REPO:-${HOME}/dev/imp}:/workspaces/imp:cached
-      - tome-node-modules:/workspaces/tome/node_modules
+    volumes: *tome-volumes
     environment:
       # Default: solo Marloth corpus. For a multi-corpus session, set e.g.:
-      # TOME_CORPORA=marloth=/workspaces/marloth-story/content,translucence=/workspaces/translucence/content:readonly
-      # TOME_DB_PATH=/workspaces/tome/data/tome-session.sqlite
+      # TOME_CORPORA=marloth=/workspaces/silentorb-workbench/.mnt/marloth-story/content,translucence=/workspaces/silentorb-workbench/.mnt/translucence/content:readonly
+      # TOME_DB_PATH=/workspaces/silentorb-workbench/.mnt/tome/data/tome-session.sqlite
       # (and unset or ignore TOME_CONTENT_PATH). See tome docs/features/multi-corpus.md.
-      TOME_CONTENT_PATH: ${TOME_CONTENT_PATH:-/workspaces/marloth-story/content}
-      TOME_DB_PATH: ${TOME_DB_PATH:-/workspaces/marloth-story/data/tome.sqlite}
+      TOME_CONTENT_PATH: ${TOME_CONTENT_PATH:-/workspaces/silentorb-workbench/.mnt/marloth-story/content}
+      TOME_DB_PATH: ${TOME_DB_PATH:-/workspaces/silentorb-workbench/.mnt/marloth-story/data/tome.sqlite}
       TOME_CORPORA: ${TOME_CORPORA:-}
       TOME_EDITOR_DEV_HOST: "0.0.0.0"
     ulimits:
       core: 0
     user: vscode
-    working_dir: /workspaces/tome
+    working_dir: /workspaces/silentorb-workbench/.mnt/tome
     command: ["/bin/bash", "scripts/dev-start.sh"]
     ports:
       - "3847:3847"

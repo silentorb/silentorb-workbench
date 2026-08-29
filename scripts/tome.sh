@@ -14,16 +14,22 @@ fi
 ROOT="$(pwd)"
 DEVCONTAINER="$ROOT/.devcontainer"
 COMPOSE_FILE="$DEVCONTAINER/docker-compose.yml"
+MNT_CONTAINER="/workspaces/silentorb-workbench/.mnt"
 
 resolve_default_repo() {
-  local rel="$1"
+  local name="$1"
+  local rel="$2"
+  if [[ -e "$ROOT/.mnt/$name" ]]; then
+    echo "$ROOT/.mnt/$name"
+    return 0
+  fi
   cd "$DEVCONTAINER/$rel" && pwd
 }
 
-TOME_REPO="${TOME_REPO:-$(resolve_default_repo ../../tome)}"
-MARLOTH_REPO="${MARLOTH_REPO:-$(resolve_default_repo ../../marloth-story)}"
-TRANSLUCENCE_REPO="${TRANSLUCENCE_REPO:-$(resolve_default_repo ../../translucence)}"
-IMP_REPO="${IMP_REPO:-${HOME}/dev/imp}"
+TOME_REPO="${TOME_REPO:-$(resolve_default_repo tome ../../tome)}"
+MARLOTH_REPO="${MARLOTH_REPO:-$(resolve_default_repo marloth-story ../../marloth-story)}"
+TRANSLUCENCE_REPO="${TRANSLUCENCE_REPO:-$(resolve_default_repo translucence ../../translucence)}"
+IMP_REPO="${IMP_REPO:-$(resolve_default_repo imp-ts ../../imp-ts)}"
 
 require_path() {
   local label="$1"
@@ -38,12 +44,12 @@ missing=0
 require_path "tome repo (tome-db)" "$TOME_REPO/packages/tome-db" || missing=1
 require_path "marloth-story content" "$MARLOTH_REPO/content" || missing=1
 require_path "translucence content" "$TRANSLUCENCE_REPO/content" || missing=1
-require_path "imp repo" "$IMP_REPO" || missing=1
+require_path "imp-ts repo" "$IMP_REPO" || missing=1
 
 if [[ "$missing" -ne 0 ]]; then
   echo >&2
   echo "Clone sibling repos on the host (see README.md):" >&2
-  echo "  ../tome, ../marloth-story, ../translucence, ~/dev/imp" >&2
+  echo "  ../tome, ../marloth-story, ../translucence, ../imp-ts" >&2
   exit 1
 fi
 
@@ -80,6 +86,6 @@ echo
 
 export TOME_REPO MARLOTH_REPO TRANSLUCENCE_REPO IMP_REPO
 exec env \
-  TOME_CORPORA='marloth=/workspaces/marloth-story/content,translucence=/workspaces/translucence/content' \
-  TOME_DB_PATH='/workspaces/tome/data/tome-session.sqlite' \
+  TOME_CORPORA="marloth=${MNT_CONTAINER}/marloth-story/content,translucence=${MNT_CONTAINER}/translucence/content" \
+  TOME_DB_PATH="${MNT_CONTAINER}/tome/data/tome-session.sqlite" \
   docker compose -f "$COMPOSE_FILE" up "${DETACHED[@]}" tome

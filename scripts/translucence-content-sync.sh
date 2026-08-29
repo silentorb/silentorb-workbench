@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-TRANSLUCENCE="${TRANSLUCENCE:-/workspaces/translucence}"
-TOME="${TOME:-/workspaces/tome}"
+# shellcheck source=mnt-paths.sh
+source "$(dirname "$0")/mnt-paths.sh"
 
 if [[ ! -d "${TRANSLUCENCE}/content" ]]; then
   echo "translucence content not found at ${TRANSLUCENCE}/content" >&2

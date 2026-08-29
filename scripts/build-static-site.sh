@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-TOME="${TOME:-/workspaces/tome}"
-MARLOTH="${MARLOTH:-/workspaces/marloth-story}"
+# shellcheck source=mnt-paths.sh
+source "$(dirname "$0")/mnt-paths.sh"
 
 export TOME_CONTENT_PATH="${TOME_CONTENT_PATH:-${MARLOTH}/content}"
 export TOME_DB_PATH="${TOME_DB_PATH:-${MARLOTH}/data/tome.sqlite}"

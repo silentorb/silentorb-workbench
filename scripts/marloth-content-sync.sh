@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-MARLOTH="${MARLOTH:-/workspaces/marloth-story}"
-TOME="${TOME:-/workspaces/tome}"
+# shellcheck source=mnt-paths.sh
+source "$(dirname "$0")/mnt-paths.sh"
 
 if [[ ! -d "${MARLOTH}/content" ]]; then
   echo "marloth-story content not found at ${MARLOTH}/content" >&2

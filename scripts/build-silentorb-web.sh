@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-SILENTORB="${SILENTORB:-/workspaces/silentorb-web}"
+# shellcheck source=mnt-paths.sh
+source "$(dirname "$0")/mnt-paths.sh"
 
 if [[ ! -d "$SILENTORB/content" ]]; then
   echo "silentorb-web content not found: $SILENTORB/content" >&2
