@@ -1,0 +1,22 @@
+---
+description: Run and report imp-rust test coverage after modifying Rust source or tests
+globs: .mnt/imp-rust/**/*
+alwaysApply: false
+---
+
+# imp-rust coverage
+
+When you modify imp-rust implementation or tests under `.mnt/imp-rust/`:
+
+1. Run **`bash scripts/coverage-imp-rust.sh --changed`** from the silentorb-workbench root (one batched container: test + llvm-cov).
+2. Include the printed **coverage summary** in your final response.
+3. If changed files or their crate are below **`line_target`** in `.mnt/imp-rust/coverage-targets.toml`, add or extend **integration tests** under `crates/<crate>/tests/` before finishing (unless the user explicitly waives tests).
+4. Prefer **`coverage-imp-rust.sh`** over separate `run-in-imp-rust.sh test` and `run-in-imp-rust.sh llvm-cov` calls (avoids extra ephemeral container spin-ups).
+5. Tests use the crate **public API** only — see `.mnt/imp-rust/docs/rust-style.md`.
+
+Commands:
+
+- `bash scripts/run-in-imp-rust.sh test` — cargo only (ephemeral container when workbench has no local rust)
+- `bash scripts/coverage-imp-rust.sh --changed` — batched test + coverage + report (preferred after edits)
+
+Targets and baseline: `.mnt/imp-rust/docs/coverage.md`

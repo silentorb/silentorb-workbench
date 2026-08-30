@@ -31,6 +31,7 @@ For Imp (universal DAG transmission format; successor to [imp-kotlin](https://gi
 | --- | --- |
 | Language-neutral specs (data model, operators, behavior) | `.mnt/imp-spec/AGENTS.md` → package spec under `docs/packages/` |
 | TypeScript binding (implementation, tests, versioning) | `.mnt/imp-ts/AGENTS.md` + package `AGENTS.md` |
+| Rust binding (foundation crates) | `.mnt/imp-rust/AGENTS.md` — `bash scripts/run-in-imp-rust.sh test`; coverage: `bash scripts/coverage-imp-rust.sh` |
 
 ## Project context
 
@@ -43,6 +44,7 @@ For Imp (universal DAG transmission format; successor to [imp-kotlin](https://gi
 - On devcontainer start, the **`tome` Compose service** runs `.mnt/tome/scripts/dev-start.sh` (`bun install --frozen-lockfile` from `.mnt/tome/bun.lock`, then `editor:dev`) with `TOME_CONTENT_PATH` set to marloth `content/` unless overridden. The workbench service only checks mounts ([`scripts/devcontainer-start.sh`](./scripts/devcontainer-start.sh)). **Rebuild the tome service image** after changing `.mnt/tome/.devcontainer/Dockerfile`. Re-run / restart the tome service after changing `.mnt/tome/bun.lock` or package dependencies.
 - **Static site build** (test + build): `bash scripts/build-static-site.sh` runs tome-static-site tests and `web:build` via `.mnt/tome`.
 - Run Tome package commands with `bash scripts/run-in-tome.sh …`, VS Code tasks, or from `.mnt/tome/` — not `bun run` at the workbench root.
+- **imp-rust:** optional mount; `bash scripts/run-in-imp-rust.sh …` and `bash scripts/coverage-imp-rust.sh` use the profile-gated **`imp-rust` Compose service** (`compose run --rm`) when the workbench shell has no local `cargo`. Host path: `IMP_RUST_HOST_REPO` (set at devcontainer open) or inferred from the bind mount.
 
 ## Terminology
 
@@ -69,7 +71,7 @@ For Imp (universal DAG transmission format; successor to [imp-kotlin](https://gi
 - **Regression tests:** When fixing a bug in table views (database tables, relation tables, Properties section, composed/grouped table presentations, dynamic fields, or related API endpoints), add a regression test in the same change that would have failed before the fix. Seed test relationships using **composite types** from `content/model/associations.json` (via `ContentStore` / `seedTestCompositeRelationships`) when the bug involves graph traversals — do not rely only on direct `db.upsertRelationship` with legacy unidirectional types. Do not close a bug fix without a test unless the user explicitly waives it.
 - **UI tests (Tome React):** New or changed React UI in `.mnt/tome` (editor, interactive page blocks, extension components) should use **`bun:test` + `@testing-library/react` + happy-dom** — see `.mnt/tome/AGENTS.md` § Project context.
 - **Script language:** agentic scripts should use **TypeScript** (Bun) by default — place durable tooling under `.mnt/tome/packages/` with tests and a shell wrapper in `scripts/` when appropriate. **One-off temporary scripts** (exploratory, throwaway, not intended to be maintained) may still be written in Python.
-- **Imp package versioning:** When imp-ts package epochs change, refresh lockfiles in both `.mnt/imp-ts` and `.mnt/tome` (tome's lockfile resolves imp workspaces). After imp `MINOR` bumps, run `bun scripts/bump-version.ts` from the tome repo to cascade dependent package versions. See [plan-commit-workflow.mdc](./.cursor/rules/plan-commit-workflow.mdc).
+- **Imp package versioning:** Run `bash scripts/bump-version.sh <package> <minor|patch> [--install]` from the workbench root (scans `.mnt/imp-ts` and `.mnt/tome` packages, refreshes both lockfiles with `--install`). Reconcile bump levels at commit time — see [plan-commit-workflow.mdc](./.cursor/rules/plan-commit-workflow.mdc).
 
 ## Implementation expectations
 

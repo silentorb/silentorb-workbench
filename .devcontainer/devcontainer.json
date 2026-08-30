@@ -15,6 +15,9 @@
         8080
     ],
     "remoteUser": "vscode",
+    "remoteEnv": {
+        "IMP_RUST_HOST_REPO": "${localWorkspaceFolder}/../imp-rust"
+    },
     "features": {
         "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
             "moby": false

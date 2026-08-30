@@ -80,5 +80,15 @@ services:
       - "3847:3847"
       - "5173:5173"
 
+  imp-rust:
+    profiles: ["imp-rust"]
+    build:
+      context: ${IMP_RUST_HOST_REPO:-${IMP_RUST_REPO:-../../imp-rust}}
+      dockerfile: .devcontainer/Dockerfile
+    volumes:
+      - ${IMP_RUST_HOST_REPO:-${IMP_RUST_REPO:-../../imp-rust}}:/workspace:cached
+    working_dir: /workspace
+    user: root
+
 volumes:
   tome-node-modules:
