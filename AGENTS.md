@@ -25,7 +25,12 @@ For Translucence (interconnected Bible articles and modular arguments), read `.m
 
 For package-level Tome notes, read each package's `AGENTS.md` under `.mnt/tome/packages/`.
 
-For Imp (universal DAG transmission format; successor to [imp-kotlin](https://github.com/silentorb/imp-kotlin), graph layer only), read `.mnt/imp-ts/AGENTS.md` after mounting.
+For Imp (universal DAG transmission format; successor to [imp-kotlin](https://github.com/silentorb/imp-kotlin), graph layer only):
+
+| Task | Read |
+| --- | --- |
+| Language-neutral specs (data model, operators, behavior) | `.mnt/imp-spec/AGENTS.md` → package spec under `docs/packages/` |
+| TypeScript binding (implementation, tests, versioning) | `.mnt/imp-ts/AGENTS.md` + package `AGENTS.md` |
 
 ## Project context
 
@@ -64,6 +69,7 @@ For Imp (universal DAG transmission format; successor to [imp-kotlin](https://gi
 - **Regression tests:** When fixing a bug in table views (database tables, relation tables, Properties section, composed/grouped table presentations, dynamic fields, or related API endpoints), add a regression test in the same change that would have failed before the fix. Seed test relationships using **composite types** from `content/model/associations.json` (via `ContentStore` / `seedTestCompositeRelationships`) when the bug involves graph traversals — do not rely only on direct `db.upsertRelationship` with legacy unidirectional types. Do not close a bug fix without a test unless the user explicitly waives it.
 - **UI tests (Tome React):** New or changed React UI in `.mnt/tome` (editor, interactive page blocks, extension components) should use **`bun:test` + `@testing-library/react` + happy-dom** — see `.mnt/tome/AGENTS.md` § Project context.
 - **Script language:** agentic scripts should use **TypeScript** (Bun) by default — place durable tooling under `.mnt/tome/packages/` with tests and a shell wrapper in `scripts/` when appropriate. **One-off temporary scripts** (exploratory, throwaway, not intended to be maintained) may still be written in Python.
+- **Imp package versioning:** When imp-ts package epochs change, refresh lockfiles in both `.mnt/imp-ts` and `.mnt/tome` (tome's lockfile resolves imp workspaces). After imp `MINOR` bumps, run `bun scripts/bump-version.ts` from the tome repo to cascade dependent package versions. See [plan-commit-workflow.mdc](./.cursor/rules/plan-commit-workflow.mdc).
 
 ## Implementation expectations
 
@@ -98,6 +104,8 @@ For **design data** (what nodes mean, how they relate conceptually), read `.mnt/
 | Static website deploy (GitHub Actions → S3/CloudFront) | `.mnt/marloth-story/docs/features/static-website-deploy.md` |
 | Extension system (runtime-loaded packages, page blocks) | `.mnt/tome/docs/features/extensions.md` |
 | Imp → Tome SQL binder (nodes / path hops) | `.mnt/tome/docs/features/tome-imp-sql.md` |
+| Imp data model / operators (language-neutral) | `.mnt/imp-spec/AGENTS.md` → `docs/packages/` |
+| Imp TypeScript binding | `.mnt/imp-ts/AGENTS.md` + package `AGENTS.md` |
 | Imp-backed custom query table block | `.mnt/tome/docs/features/tome-query.md` |
 | Relative event sequencing / timeline | `.mnt/tome/docs/features/tome-sequencing.md` |
 | Sequencing constraint resolution | `.mnt/tome/docs/features/tome-sequencing-resolution.md` |

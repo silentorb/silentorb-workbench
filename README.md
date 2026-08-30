@@ -30,7 +30,7 @@ parent/
 | `../translucence` (sibling) | `.mnt/translucence` (optional) |
 | `../imp-ts` (sibling) | `.mnt/imp-ts` (required by `tome` service) |
 | `../imp-rust` (sibling) | `.mnt/imp-rust` (optional) |
-| `../imp-spec` (sibling) | `.mnt/imp-spec` (optional; docs-only for agents) |
+| `../imp-spec` (sibling) | `.mnt/imp-spec` (optional; language-neutral Imp specs for agents) |
 | this repo | `/workspaces/silentorb-workbench` |
 
 Compose defaults use `../../tome`, `../../marloth-story`, `../../silentorb-web`, `../../translucence`, and `../../imp-ts` relative to `.devcontainer/`. Override mount sources with `TOME_REPO`, `MARLOTH_REPO`, `SILENTORB_WEB_REPO`, `TRANSLUCENCE_REPO`, `IMP_REPO`, `IMP_RUST_REPO`, and `IMP_SPEC_REPO` when opening the devcontainer.
