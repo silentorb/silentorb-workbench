@@ -75,3 +75,14 @@ Only when the user explicitly says "commit" / "go ahead and commit" / "commit pe
 4. Repeat per affected repo. Never force-push or amend unless user rules allow.
 
 Do **not** auto-commit when implementation finishes.
+
+## Version bumps (reconcile at commit time)
+
+Plans may include draft bump levels and lockfile notes — treat these as **starting points**, not contracts. The same tension applies as commit scope:
+
+- Complex plans cannot list every file change.
+- The user may request additional changes after implementation and **before** committing — expected, not plan failure.
+- **At commit time**, re-snapshot the full diff, re-classify bump levels (`minor` vs `patch`) for each touched package, run `bun scripts/bump-version.ts` as needed, refresh lockfiles (`bun install` in each repo root whose lockfile resolves affected dependents), and include version + lockfile changes in the commit.
+- Version bumps happen **after** the change set is settled, not when the plan is written.
+
+Lockfile refresh rule: any imp-ts package change → refresh both `.mnt/imp-ts` and `.mnt/tome` lockfiles; tome-only changes → `.mnt/tome` only.

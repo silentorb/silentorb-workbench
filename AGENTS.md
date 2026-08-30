@@ -12,7 +12,7 @@
 | `.mnt/translucence` | Translucence Bible-article corpus (`content/`; optional mount) |
 | `.mnt/imp-ts` | Imp DAG transmission format (TypeScript; required by `tome` service) |
 | `.mnt/imp-rust` | Imp Rust implementation (optional mount; workbench only) |
-| `.mnt/imp-spec` | Standalone language-neutral Imp spec docs (optional; workbench only). Not imp-ts/packages/imp-spec (TypeScript binding). For agent read/write only — no tooling or startup checks. |
+| `.mnt/imp-spec` | Standalone language-neutral Imp spec docs (optional; workbench only). Not imp-ts/packages/imp-core-types (TypeScript binding). For agent read/write only — no tooling or startup checks. |
 | `/workspaces/silentorb-workbench` | Devcontainer, scripts, this guide |
 
 **Prerequisite:** clone `tome` and `marloth-story` as siblings of this repo on the host (`../tome`, `../marloth-story`), or set `TOME_REPO` / `MARLOTH_REPO` when opening the devcontainer. Optionally clone `silentorb-web` (`../silentorb-web`, or `SILENTORB_WEB_REPO`) and `translucence` (`../translucence`, or `TRANSLUCENCE_REPO`). Mount `imp-ts` (`../imp-ts`, or `IMP_REPO`) — required for the **`tome` Compose service** because tome’s Bun workspaces include `../imp-ts/packages/*` (`tome-query`). **Tome** owns package dependencies (`.mnt/tome/bun.lock`, `.mnt/tome/node_modules`). The workbench root orchestrates dev scripts and the devcontainer.
