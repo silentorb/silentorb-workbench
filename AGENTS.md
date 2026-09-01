@@ -12,7 +12,7 @@
 | `.mnt/translucence` | Translucence Bible-article corpus (`content/`; optional mount) |
 | `.mnt/imp-ts` | Imp DAG transmission format (TypeScript; required by `tome` service) |
 | `.mnt/imp-rust` | Imp Rust implementation (optional mount; workbench only) |
-| `.mnt/imp-spec` | Standalone language-neutral Imp spec docs (optional; workbench only). Not imp-ts/packages/imp-core-types (TypeScript binding). For agent read/write only — no tooling or startup checks. |
+| `.mnt/imp-spec` | Standalone language-neutral Imp spec docs — graph IR, NodeLibrary catalogs, registry, typecheck, graph-resolve (optional; workbench only). Not imp-ts/packages/imp-core-types (TypeScript binding). Imp Translator and runtime specs live in `.mnt/imp-ts/docs/features/`. |
 | `/workspaces/silentorb-workbench` | Devcontainer, scripts, this guide |
 
 **Prerequisite:** clone `tome` and `marloth-story` as siblings of this repo on the host (`../tome`, `../marloth-story`), or set `TOME_REPO` / `MARLOTH_REPO` when opening the devcontainer. Optionally clone `silentorb-web` (`../silentorb-web`, or `SILENTORB_WEB_REPO`) and `translucence` (`../translucence`, or `TRANSLUCENCE_REPO`). Mount `imp-ts` (`../imp-ts`, or `IMP_REPO`) — required for the **`tome` Compose service** because tome’s Bun workspaces include `../imp-ts/packages/*` (`tome-query`). **Tome** owns package dependencies (`.mnt/tome/bun.lock`, `.mnt/tome/node_modules`). The workbench root orchestrates dev scripts and the devcontainer.
@@ -29,7 +29,8 @@ For Imp (universal DAG transmission format; successor to [imp-kotlin](https://gi
 
 | Task | Read |
 | --- | --- |
-| Language-neutral specs (data model, operators, behavior) | `.mnt/imp-spec/AGENTS.md` → package spec under `docs/packages/` |
+| Language-neutral specs (graph IR, NodeLibrary catalogs, typecheck) | `.mnt/imp-spec/AGENTS.md` → package spec under `docs/packages/` |
+| Imp Translators (SQL, React Flow) and runtime (execution) | `.mnt/imp-ts/docs/features/` |
 | TypeScript binding (implementation, tests, versioning) | `.mnt/imp-ts/AGENTS.md` + package `AGENTS.md` |
 | Rust binding (foundation crates) | `.mnt/imp-rust/AGENTS.md` — `bash scripts/run-in-imp-rust.sh test`; coverage: `bash scripts/coverage-imp-rust.sh` |
 
@@ -106,7 +107,8 @@ For **design data** (what nodes mean, how they relate conceptually), read `.mnt/
 | Static website deploy (GitHub Actions → S3/CloudFront) | `.mnt/marloth-story/docs/features/static-website-deploy.md` |
 | Extension system (runtime-loaded packages, page blocks) | `.mnt/tome/docs/features/extensions.md` |
 | Imp → Tome SQL binder (nodes / path hops) | `.mnt/tome/docs/features/tome-imp-sql.md` |
-| Imp data model / operators (language-neutral) | `.mnt/imp-spec/AGENTS.md` → `docs/packages/` |
+| Imp data model / NodeLibrary catalogs (language-neutral) | `.mnt/imp-spec/AGENTS.md` → `docs/packages/` |
+| Imp Translators and runtime (SQL, React Flow, execution) | `.mnt/imp-ts/docs/features/` |
 | Imp TypeScript binding | `.mnt/imp-ts/AGENTS.md` + package `AGENTS.md` |
 | Imp-backed custom query table block | `.mnt/tome/docs/features/tome-query.md` |
 | Relative event sequencing / timeline | `.mnt/tome/docs/features/tome-sequencing.md` |
