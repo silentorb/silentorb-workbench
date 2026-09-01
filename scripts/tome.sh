@@ -16,20 +16,29 @@ DEVCONTAINER="$ROOT/.devcontainer"
 COMPOSE_FILE="$DEVCONTAINER/docker-compose.yml"
 MNT_CONTAINER="/workspaces/silentorb-workbench/.mnt"
 
+# Host-side: sibling repos live next to workbench (../tome). .mnt/ is the in-container
+# mount target and may exist as empty stubs on the host when no container is running.
 resolve_default_repo() {
   local name="$1"
-  local rel="$2"
-  if [[ -e "$ROOT/.mnt/$name" ]]; then
-    echo "$ROOT/.mnt/$name"
+  local marker="$2"
+  local rel="$3"
+  local sibling=""
+  sibling="$(cd "$DEVCONTAINER/$rel" 2>/dev/null && pwd || true)"
+
+  local candidate
+  for candidate in "$sibling" "$ROOT/.mnt/$name"; do
+    [[ -n "$candidate" && -e "$candidate/$marker" ]] || continue
+    echo "$candidate"
     return 0
-  fi
-  cd "$DEVCONTAINER/$rel" && pwd
+  done
+
+  echo "${sibling:-$ROOT/.mnt/$name}"
 }
 
-TOME_REPO="${TOME_REPO:-$(resolve_default_repo tome ../../tome)}"
-MARLOTH_REPO="${MARLOTH_REPO:-$(resolve_default_repo marloth-story ../../marloth-story)}"
-TRANSLUCENCE_REPO="${TRANSLUCENCE_REPO:-$(resolve_default_repo translucence ../../translucence)}"
-IMP_REPO="${IMP_REPO:-$(resolve_default_repo imp-ts ../../imp-ts)}"
+TOME_REPO="${TOME_REPO:-$(resolve_default_repo tome packages/tome-db ../../tome)}"
+MARLOTH_REPO="${MARLOTH_REPO:-$(resolve_default_repo marloth-story content ../../marloth-story)}"
+TRANSLUCENCE_REPO="${TRANSLUCENCE_REPO:-$(resolve_default_repo translucence content ../../translucence)}"
+IMP_REPO="${IMP_REPO:-$(resolve_default_repo imp-ts . ../../imp-ts)}"
 
 require_path() {
   local label="$1"
@@ -48,8 +57,14 @@ require_path "imp-ts repo" "$IMP_REPO" || missing=1
 
 if [[ "$missing" -ne 0 ]]; then
   echo >&2
-  echo "Clone sibling repos on the host (see README.md):" >&2
+  echo "Clone sibling repos on the host next to silentorb-workbench (see README.md):" >&2
   echo "  ../tome, ../marloth-story, ../translucence, ../imp-ts" >&2
+  echo >&2
+  echo "Resolved paths:" >&2
+  echo "  TOME_REPO=$TOME_REPO" >&2
+  echo "  MARLOTH_REPO=$MARLOTH_REPO" >&2
+  echo "  TRANSLUCENCE_REPO=$TRANSLUCENCE_REPO" >&2
+  echo "  IMP_REPO=$IMP_REPO" >&2
   exit 1
 fi
 
