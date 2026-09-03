@@ -1,10 +1,14 @@
 #!/usr/bin/env bun
 /**
- * Workbench bump script — scans imp-ts and tome workspace packages.
+ * Workbench bump script — scans imp-ts and tome workspace packages + repo roots.
  *
  * Usage (from silentorb-workbench root):
  *   bash scripts/bump-version.sh <package-name> <minor|patch> [--install]
  *   bash scripts/bump-version.sh --baseline [--install]
+ *
+ * Workspace packages (`packages/*`) rewrite dependents' `workspace:` ranges and
+ * cascade on minor. Repo-root packages (e.g. `tome`) bump version only — no
+ * range rewrites, no cascade.
  */
 
 import { readdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -27,6 +31,8 @@ type PackageEntry = {
   manifestPath: string;
   manifest: Manifest;
   repoRoot: string;
+  /** Repo-root release package — bump version only; no workspace cascade. */
+  isRepoRoot: boolean;
 };
 
 function loadPackages(root: string, repoRoot: string): PackageEntry[] {
@@ -43,8 +49,14 @@ function loadPackages(root: string, repoRoot: string): PackageEntry[] {
     const manifestPath = join(root, dirName, "package.json");
     try {
       const manifest = JSON.parse(readFileSync(manifestPath, "utf8")) as Manifest;
-      if (manifest.name) {
-        entries.push({ dir: join(root, dirName), manifestPath, manifest, repoRoot });
+      if (manifest.name && manifest.version) {
+        entries.push({
+          dir: join(root, dirName),
+          manifestPath,
+          manifest,
+          repoRoot,
+          isRepoRoot: false,
+        });
       }
     } catch {
       /* skip */
@@ -53,15 +65,40 @@ function loadPackages(root: string, repoRoot: string): PackageEntry[] {
   return entries;
 }
 
+function loadRepoRoot(repoRoot: string): PackageEntry | null {
+  const manifestPath = join(repoRoot, "package.json");
+  try {
+    const manifest = JSON.parse(readFileSync(manifestPath, "utf8")) as Manifest;
+    if (!manifest.name || !manifest.version) return null;
+    return {
+      dir: repoRoot,
+      manifestPath,
+      manifest,
+      repoRoot,
+      isRepoRoot: true,
+    };
+  } catch {
+    return null;
+  }
+}
+
 function allPackages(): PackageEntry[] {
-  return [
+  const entries = [
     ...loadPackages(join(impTsRoot, "packages"), impTsRoot),
     ...loadPackages(join(tomeRoot, "packages"), tomeRoot),
   ];
+  const tomeRepoRoot = loadRepoRoot(tomeRoot);
+  if (tomeRepoRoot) entries.push(tomeRepoRoot);
+  return entries;
+}
+
+/** Workspace packages only — used for range rewrites and cascade. */
+function workspacePackages(): PackageEntry[] {
+  return allPackages().filter((p) => !p.isRepoRoot);
 }
 
 function internalPackageNames(): Set<string> {
-  return new Set(allPackages().map((p) => p.manifest.name));
+  return new Set(workspacePackages().map((p) => p.manifest.name));
 }
 
 function parseVersion(version: string): { major: number; minor: number; patch: number } {
@@ -113,7 +150,7 @@ function savePackage(entry: PackageEntry): void {
 
 function findDependents(targetName: string): PackageEntry[] {
   const internal = internalPackageNames();
-  return allPackages().filter((pkg) => {
+  return workspacePackages().filter((pkg) => {
     for (const section of depSections(pkg.manifest)) {
       for (const [dep, spec] of Object.entries(section)) {
         if (dep === targetName && internal.has(dep) && spec.startsWith("workspace:")) return true;
@@ -136,9 +173,13 @@ function bumpPackage(name: string, level: "minor" | "patch", visited = new Set<s
   savePackage(pkg);
 
   const touched = [name];
-  console.log(`  ${name}: ${oldVersion} → ${newVersion} (${level})`);
+  console.log(`  ${name}: ${oldVersion} → ${newVersion} (${level})${pkg.isRepoRoot ? " (repo root)" : ""}`);
 
-  for (const dependent of allPackages()) {
+  if (pkg.isRepoRoot) {
+    return touched;
+  }
+
+  for (const dependent of workspacePackages()) {
     if (updateRangesForDependency(dependent, name, newVersion)) {
       savePackage(dependent);
     }
@@ -155,7 +196,7 @@ function bumpPackage(name: string, level: "minor" | "patch", visited = new Set<s
 }
 
 function baselineInternalRanges(): void {
-  const packages = allPackages();
+  const packages = workspacePackages();
   const versions = new Map(packages.map((p) => [p.manifest.name, p.manifest.version]));
   const internal = internalPackageNames();
   let changed = 0;

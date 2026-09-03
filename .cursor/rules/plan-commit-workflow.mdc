@@ -62,7 +62,7 @@ Keep `pending` during planning and implementation unless the user asks to commit
 - Draft message: "…"
 
 ### User trigger
-Say **commit** (or **commit per the plan**) after review.
+Say **commit** (or **commit per the plan**) after review. Say **commit and tag tome** when the tome commit should also get a local `v*` release tag.
 ```
 
 ## Commit execution
@@ -76,6 +76,19 @@ Only when the user explicitly says "commit" / "go ahead and commit" / "commit pe
 
 Do **not** auto-commit when implementation finishes.
 
+## Commit and tag
+
+When the user says **commit and tag \<repo\>** (today: **commit and tag tome**):
+
+1. Run the normal commit execution above for the named repo (and any other planned repos), including workspace package bumps.
+2. **Also** bump the **repo-root** package for that repo (`bash scripts/bump-version.sh tome <minor|patch>`), classify `minor` vs `patch` like other packages, and include the root `package.json` version change in that repo's commit.
+3. After a successful clean commit in that repo, create a **local** annotated tag: `bash scripts/git-tag-version.sh tome` (tag `v<version>` matching root `package.json`).
+4. **Do not push** the commit or the tag. Report the tag name so the user can push when ready (e.g. for GHCR semver).
+
+Ordinary **commit** / **commit per the plan** never bumps the root release version and never creates git tags.
+
+Supported tag repos today: `tome` → `.mnt/tome`.
+
 ## Version bumps (reconcile at commit time)
 
 Plans may include draft bump levels and lockfile notes — treat these as **starting points**, not contracts. The same tension applies as commit scope:
@@ -84,5 +97,6 @@ Plans may include draft bump levels and lockfile notes — treat these as **star
 - The user may request additional changes after implementation and **before** committing — expected, not plan failure.
 - **At commit time**, re-snapshot the full diff, re-classify bump levels (`minor` vs `patch`) for each touched package, run `bash scripts/bump-version.sh` from the workbench root as needed, refresh lockfiles (`bun install` in each repo root whose lockfile resolves affected dependents), and include version + lockfile changes in the commit.
 - Version bumps happen **after** the change set is settled, not when the plan is written.
+- Root release versions (e.g. `tome`) bump only on **commit and tag \<repo\>**, not on ordinary commits.
 
 Lockfile refresh rule: any imp-ts package change → refresh both `.mnt/imp-ts` and `.mnt/tome` lockfiles; tome-only changes → `.mnt/tome` only.
