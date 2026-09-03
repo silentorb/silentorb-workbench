@@ -10,4 +10,6 @@ if [[ ! -d "${TOME}/packages/tome-db" ]] || [[ ! -d "${TOME}/packages/tome-flatf
 fi
 
 cd "$TOME"
+# shellcheck source=/dev/null
+source "${TOME}/scripts/ensure-node-modules.sh"
 exec bun "$@"

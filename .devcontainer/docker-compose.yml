@@ -60,7 +60,7 @@ services:
   tome:
     build:
       context: ${TOME_REPO:-../../tome}
-      dockerfile: .devcontainer/Dockerfile
+      dockerfile: docker/Dockerfile.dev
     volumes: *tome-volumes
     environment:
       # Default: solo Marloth corpus. For a multi-corpus session, set e.g.:
@@ -71,6 +71,7 @@ services:
       TOME_DB_PATH: ${TOME_DB_PATH:-/workspaces/silentorb-workbench/.mnt/marloth-story/data/tome.sqlite}
       TOME_CORPORA: ${TOME_CORPORA:-}
       TOME_EDITOR_DEV_HOST: "0.0.0.0"
+      IMP_ROOT: ${IMP_ROOT:-/workspaces/silentorb-workbench/.mnt/imp-ts}
     ulimits:
       core: 0
     user: vscode
