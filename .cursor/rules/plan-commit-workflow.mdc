@@ -65,6 +65,27 @@ Keep `pending` during planning and implementation unless the user asks to commit
 Say **commit** (or **commit per the plan**) after review. Say **commit and tag tome** when the tome commit should also get a local `v*` release tag.
 ```
 
+## After plan implementation (before awaiting commit)
+
+When implementation and verification finish — and **before** stopping on `commit-await-approval` — print a short **post-implementation summary** that includes:
+
+1. **Commit scope refresh** — re-run `git status --short` per affected repo; note drift from the plan’s include/exclude list (do not commit yet).
+2. **Tag bump preview** — if any planned commit is in a taggable repo (today: `tome`), analyze the **settled** diff and print what would be bumped **if** the user later says **commit and tag \<repo\>**. Do **not** run bump scripts or create tags yet.
+
+Tag bump preview must list, for that repo:
+
+| Item | What to print |
+| ---- | ------------- |
+| Workspace packages | Each touched package: current version → proposed `minor` or `patch` next version, one-line why |
+| Cascades | Dependents that would move because of a `minor` bump / `workspace:` range rewrite |
+| Root release package | e.g. `tome` root: current → proposed next version + level (only applies on **commit and tag**, not ordinary commit) |
+| Resulting git tag | e.g. `v0.3.0` matching the proposed root version |
+| Ordinary commit note | Remind that plain **commit** still bumps workspace packages as needed at commit time, but **does not** bump the root release version or create a tag |
+
+Classify `minor` vs `patch` using that repo’s versioning rules (tome: 0.x — `MINOR` = API epoch / new functionality or breaking; `PATCH` = backwards-compatible fixes). Treat the preview as advisory; **re-classify at commit/tag time** if the diff changed.
+
+Plans do not need a full version matrix in the Commit strategy section — the end-of-implementation preview is the source of truth for “what tagging would do.”
+
 ## Commit execution
 
 Only when the user explicitly says "commit" / "go ahead and commit" / "commit per the plan":
@@ -72,7 +93,8 @@ Only when the user explicitly says "commit" / "go ahead and commit" / "commit pe
 1. Re-snapshot git state in each affected repo.
 2. Compare to the plan; if scope differs materially, pause and confirm.
 3. Follow the user's `committing-changes-with-git` rule: status + diff + log in parallel, stage only planned files, HEREDOC message, verify after.
-4. Repeat per affected repo. Never force-push or amend unless user rules allow.
+4. Re-classify and apply **workspace** package bumps (`bash scripts/bump-version.sh` from workbench root) + lockfile refresh as in **Version bumps** below. Do **not** bump the repo-root release version or create tags.
+5. Repeat per affected repo. Never force-push or amend unless user rules allow.
 
 Do **not** auto-commit when implementation finishes.
 
@@ -98,5 +120,6 @@ Plans may include draft bump levels and lockfile notes — treat these as **star
 - **At commit time**, re-snapshot the full diff, re-classify bump levels (`minor` vs `patch`) for each touched package, run `bash scripts/bump-version.sh` from the workbench root as needed, refresh lockfiles (`bun install` in each repo root whose lockfile resolves affected dependents), and include version + lockfile changes in the commit.
 - Version bumps happen **after** the change set is settled, not when the plan is written.
 - Root release versions (e.g. `tome`) bump only on **commit and tag \<repo\>**, not on ordinary commits.
+- The end-of-implementation **tag bump preview** is advisory; always re-run the classification when executing commit or commit-and-tag.
 
 Lockfile refresh rule: any imp-ts package change → refresh both `.mnt/imp-ts` and `.mnt/tome` lockfiles; tome-only changes → `.mnt/tome` only.
