@@ -2,6 +2,7 @@
 # Push workspace sibling repos to their remotes.
 # Site repos (marloth-story, silentorb-web) auto-deploy on push to main and are
 # skipped unless the optional `web` argument is passed.
+# tome also pushes annotated release tags (v*) for GHCR semver publish.
 #
 # Usage (from workbench root, host or container):
 #   ./scripts/push
@@ -15,6 +16,8 @@ usage() {
 Usage: ./scripts/push [web]
 
 Push current branches of workspace repos to origin.
+
+tome also pushes annotated release tags (follow-tags) for GHCR semver.
 
 By default skips site repos that auto-deploy on push to main:
   marloth-story, silentorb-web
@@ -64,6 +67,7 @@ resolve_repo() {
 push_repo() {
   local label="$1"
   local path="$2"
+  local follow_tags="${3:-0}"
 
   echo "==> ${label}"
   if [[ ! -e "${path}/.git" ]]; then
@@ -78,28 +82,35 @@ push_repo() {
     return 0
   fi
 
+  local -a push_args=()
+  if [[ "$follow_tags" -eq 1 ]]; then
+    push_args+=(--follow-tags)
+  fi
+
   if git -C "$path" rev-parse --abbrev-ref '@{upstream}' >/dev/null 2>&1; then
-    git -C "$path" push
+    git -C "$path" push "${push_args[@]}"
   else
     echo "    no upstream; pushing -u origin ${branch}"
-    git -C "$path" push -u origin "$branch"
+    git -C "$path" push "${push_args[@]}" -u origin "$branch"
   fi
 }
 
 push_named() {
   local name="$1"
+  local follow_tags="${2:-0}"
   local path
   if ! path="$(resolve_repo "$name")"; then
     echo "==> ${name}"
     echo "    skip: not found"
     return 0
   fi
-  push_repo "$name" "$path"
+  push_repo "$name" "$path" "$follow_tags"
 }
 
 # Always: tooling / non-deploying repos
 push_repo "silentorb-workbench" "$WORKBENCH_ROOT"
-push_named "tome"
+# tome: branch + annotated v* tags (from git-tag-version) for GHCR
+push_named "tome" 1
 push_named "imp-ts"
 push_named "imp-rust"
 push_named "imp-spec"

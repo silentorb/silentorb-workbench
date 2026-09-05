@@ -7,6 +7,10 @@
  *   bash scripts/git-tag-version.sh <repo-key>
  *
  * Repo keys: tome → .mnt/tome
+ *
+ * Agents run this as the last step of **bump** / **commit and bump** after the
+ * dedicated version commit — not on plain **commit**.
+ * See `.cursor/rules/plan-commit-workflow.mdc`.
  */
 
 import { readFileSync } from "node:fs";
