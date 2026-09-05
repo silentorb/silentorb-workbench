@@ -1,20 +1,39 @@
 #!/usr/bin/env bash
 set -euo pipefail
-cd "$(dirname "$0")/.."
 
 # Start the Tome editor/API with Marloth + Translucence (both read/write) via the
-# Compose `tome` service. Stops any running tome container first, then starts fresh.
+# Compose `tome` service. Uses the same Compose project as the Dev Containers IDE
+# stack so host launcher and Cursor share one tome container.
 #
-# Run from the WSL host (not inside a devcontainer). No shell env vars required.
+# Run from the WSL host (not inside a devcontainer). Works from any cwd when
+# invoked with a path to this script. No shell env vars required.
 if [[ -f /.dockerenv ]]; then
   echo "Run scripts/tome.sh from the WSL host, not inside a devcontainer." >&2
   exit 1
 fi
 
-ROOT="$(pwd)"
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 DEVCONTAINER="$ROOT/.devcontainer"
 COMPOSE_FILE="$DEVCONTAINER/docker-compose.yml"
 MNT_CONTAINER="/workspaces/silentorb-workbench/.mnt"
+DEFAULT_COMPOSE_PROJECT="silentorb-workbench_devcontainer"
+
+# Prefer the project already used by a running workbench/tome container (IDE).
+resolve_compose_project() {
+  local id project
+  id="$(docker ps -q --filter label=com.docker.compose.service=workbench | head -n1)"
+  if [[ -z "$id" ]]; then
+    id="$(docker ps -q --filter label=com.docker.compose.service=tome | head -n1)"
+  fi
+  if [[ -n "$id" ]]; then
+    project="$(docker inspect -f '{{index .Config.Labels "com.docker.compose.project"}}' "$id" 2>/dev/null || true)"
+    if [[ -n "$project" ]]; then
+      echo "$project"
+      return 0
+    fi
+  fi
+  echo "$DEFAULT_COMPOSE_PROJECT"
+}
 
 # Host-side: sibling repos live next to workbench (../tome). .mnt/ is the in-container
 # mount target and may exist as empty stubs on the host when no container is running.
@@ -78,6 +97,8 @@ while [[ $# -gt 0 ]]; do
     -h | --help)
       echo "Usage: $0 [-d]" >&2
       echo "  Start Tome with Marloth + Translucence (read/write). -d runs detached." >&2
+      echo "  Uses the same Compose project as the Dev Containers IDE stack." >&2
+      echo "  Works from any cwd when given a path to this script." >&2
       exit 0
       ;;
     *)
@@ -87,14 +108,10 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-tome_ids="$(docker ps -q --filter label=com.docker.compose.service=tome || true)"
-if [[ -n "$tome_ids" ]]; then
-  echo "Stopping existing tome service container(s)..."
-  # shellcheck disable=SC2086
-  docker stop $tome_ids
-fi
+COMPOSE_PROJECT="$(resolve_compose_project)"
 
 echo "Starting Tome (Marloth + Translucence, read/write)..."
+echo "  Compose project → $COMPOSE_PROJECT"
 echo "  Editor → http://127.0.0.1:5173"
 echo "  API    → http://127.0.0.1:3847"
 echo
@@ -103,4 +120,4 @@ export TOME_REPO MARLOTH_REPO TRANSLUCENCE_REPO IMP_REPO
 exec env \
   TOME_CORPORA="marloth=${MNT_CONTAINER}/marloth-story/content,translucence=${MNT_CONTAINER}/translucence/content" \
   TOME_DB_PATH="${MNT_CONTAINER}/tome/data/tome-session.sqlite" \
-  docker compose -f "$COMPOSE_FILE" up "${DETACHED[@]}" tome
+  docker compose -p "$COMPOSE_PROJECT" -f "$COMPOSE_FILE" up "${DETACHED[@]}" tome

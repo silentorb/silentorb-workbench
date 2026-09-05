@@ -1,3 +1,7 @@
+# Match Dev Containers' project name so host scripts (e.g. scripts/tome.sh) and
+# the IDE share one stack (volumes, networks, tome/workbench containers).
+name: silentorb-workbench_devcontainer
+
 x-workbench-volumes: &workbench-volumes
   - ..:/workspaces/silentorb-workbench:cached
   - ${TOME_REPO:-../../tome}:${MNT:-/workspaces/silentorb-workbench/.mnt}/tome:cached

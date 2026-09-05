@@ -50,13 +50,17 @@ Rebuild or reopen the devcontainer so Compose applies the change. The session ca
 
 See [`.mnt/tome/docs/features/multi-corpus.md`](./.mnt/tome/docs/features/multi-corpus.md) when the tome repo is mounted.
 
-**WSL launcher (Marloth + Translucence):** from a WSL host shell (outside the devcontainer), run:
+**WSL launcher (Marloth + Translucence):** from a WSL host shell (outside the devcontainer), run from the workbench folder or via an absolute path from any cwd:
 
 ```bash
 bash scripts/tome.sh
+# or from anywhere:
+bash /path/to/silentorb-workbench/scripts/tome.sh
 ```
 
-This stops any running `tome` Compose service and starts a fresh one with both corpora (read/write). No WSL environment variables are required — the script sets `TOME_CORPORA` and `TOME_DB_PATH` inline. Requires `../translucence` cloned alongside the other sibling repos. Pass `-d` to run detached. Reopening the devcontainer without this script restores the default Marloth-only `tome` service unless you configure `.devcontainer/.env` separately.
+This brings up the Compose `tome` service with both corpora (read/write) on the **same Compose project** as the Dev Containers IDE stack (`silentorb-workbench_devcontainer`), so the host launcher and Cursor share one `tome` container. No WSL environment variables are required — the script sets `TOME_CORPORA` and `TOME_DB_PATH` inline. Requires `../translucence` cloned alongside the other sibling repos. Pass `-d` to run detached. Reopening the devcontainer without this script restores the default Marloth-only `tome` service unless you configure `.devcontainer/.env` separately.
+
+If Compose warns about orphan containers named `devcontainer-marloth-*`, those are leftovers from renamed/removed services under an old project name — not new tome containers piling up. Remove them once with `docker rm` (or `docker compose -p devcontainer -f .devcontainer/docker-compose.yml down --remove-orphans` when that old project is unused).
 
 Tome commands from the workbench shell: use `bash scripts/run-in-tome.sh …`, VS Code tasks, or `cd .mnt/tome && bun …`. The workbench root has no `bun.lock` or `node_modules`.
 
