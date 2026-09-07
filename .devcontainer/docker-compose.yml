@@ -68,7 +68,7 @@ services:
     volumes: *tome-volumes
     environment:
       # Default: solo Marloth corpus. For a multi-corpus session, set e.g.:
-      # TOME_CORPORA=marloth=/workspaces/silentorb-workbench/.mnt/marloth-story/content,translucence=/workspaces/silentorb-workbench/.mnt/translucence/content:readonly
+      # TOME_CORPORA=marloth=/workspaces/silentorb-workbench/.mnt/marloth-story/content,translucence=/workspaces/silentorb-workbench/.mnt/translucence/content,silentorb-web=/workspaces/silentorb-workbench/.mnt/silentorb-web/content
       # TOME_DB_PATH=/workspaces/silentorb-workbench/.mnt/tome/data/tome-session.sqlite
       # (and unset or ignore TOME_CONTENT_PATH). See tome docs/features/multi-corpus.md.
       TOME_CONTENT_PATH: ${TOME_CONTENT_PATH:-/workspaces/silentorb-workbench/.mnt/marloth-story/content}

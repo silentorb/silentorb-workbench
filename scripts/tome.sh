@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Start the Tome editor/API with Marloth + Translucence (both read/write) via the
-# Compose `tome` service. Uses the same Compose project as the Dev Containers IDE
-# stack so host launcher and Cursor share one tome container.
+# Start the Tome editor/API with Marloth + Translucence + Silent Orb (all read/write)
+# via the Compose `tome` service. Uses the same Compose project as the Dev Containers
+# IDE stack so host launcher and Cursor share one tome container.
 #
 # Run from the WSL host (not inside a devcontainer). Works from any cwd when
 # invoked with a path to this script. No shell env vars required.
@@ -57,6 +57,7 @@ resolve_default_repo() {
 TOME_REPO="${TOME_REPO:-$(resolve_default_repo tome packages/tome-db ../../tome)}"
 MARLOTH_REPO="${MARLOTH_REPO:-$(resolve_default_repo marloth-story content ../../marloth-story)}"
 TRANSLUCENCE_REPO="${TRANSLUCENCE_REPO:-$(resolve_default_repo translucence content ../../translucence)}"
+SILENTORB_WEB_REPO="${SILENTORB_WEB_REPO:-$(resolve_default_repo silentorb-web content ../../silentorb-web)}"
 IMP_REPO="${IMP_REPO:-$(resolve_default_repo imp-ts . ../../imp-ts)}"
 
 require_path() {
@@ -72,17 +73,19 @@ missing=0
 require_path "tome repo (tome-db)" "$TOME_REPO/packages/tome-db" || missing=1
 require_path "marloth-story content" "$MARLOTH_REPO/content" || missing=1
 require_path "translucence content" "$TRANSLUCENCE_REPO/content" || missing=1
+require_path "silentorb-web content" "$SILENTORB_WEB_REPO/content" || missing=1
 require_path "imp-ts repo" "$IMP_REPO" || missing=1
 
 if [[ "$missing" -ne 0 ]]; then
   echo >&2
   echo "Clone sibling repos on the host next to silentorb-workbench (see README.md):" >&2
-  echo "  ../tome, ../marloth-story, ../translucence, ../imp-ts" >&2
+  echo "  ../tome, ../marloth-story, ../translucence, ../silentorb-web, ../imp-ts" >&2
   echo >&2
   echo "Resolved paths:" >&2
   echo "  TOME_REPO=$TOME_REPO" >&2
   echo "  MARLOTH_REPO=$MARLOTH_REPO" >&2
   echo "  TRANSLUCENCE_REPO=$TRANSLUCENCE_REPO" >&2
+  echo "  SILENTORB_WEB_REPO=$SILENTORB_WEB_REPO" >&2
   echo "  IMP_REPO=$IMP_REPO" >&2
   exit 1
 fi
@@ -96,7 +99,7 @@ while [[ $# -gt 0 ]]; do
       ;;
     -h | --help)
       echo "Usage: $0 [-d]" >&2
-      echo "  Start Tome with Marloth + Translucence (read/write). -d runs detached." >&2
+      echo "  Start Tome with Marloth + Translucence + Silent Orb (read/write). -d runs detached." >&2
       echo "  Uses the same Compose project as the Dev Containers IDE stack." >&2
       echo "  Works from any cwd when given a path to this script." >&2
       exit 0
@@ -110,14 +113,14 @@ done
 
 COMPOSE_PROJECT="$(resolve_compose_project)"
 
-echo "Starting Tome (Marloth + Translucence, read/write)..."
+echo "Starting Tome (Marloth + Translucence + Silent Orb, read/write)..."
 echo "  Compose project → $COMPOSE_PROJECT"
 echo "  Editor → http://127.0.0.1:5173"
 echo "  API    → http://127.0.0.1:3847"
 echo
 
-export TOME_REPO MARLOTH_REPO TRANSLUCENCE_REPO IMP_REPO
+export TOME_REPO MARLOTH_REPO TRANSLUCENCE_REPO SILENTORB_WEB_REPO IMP_REPO
 exec env \
-  TOME_CORPORA="marloth=${MNT_CONTAINER}/marloth-story/content,translucence=${MNT_CONTAINER}/translucence/content" \
+  TOME_CORPORA="marloth=${MNT_CONTAINER}/marloth-story/content,translucence=${MNT_CONTAINER}/translucence/content,silentorb-web=${MNT_CONTAINER}/silentorb-web/content" \
   TOME_DB_PATH="${MNT_CONTAINER}/tome/data/tome-session.sqlite" \
   docker compose -p "$COMPOSE_PROJECT" -f "$COMPOSE_FILE" up "${DETACHED[@]}" tome

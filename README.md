@@ -42,7 +42,7 @@ On devcontainer start, the **`workbench` service** waits for sibling repo mounts
 **Multi-corpus (opt-in):** leave the default Marloth-only session alone for day-to-day work. To open several corpora in one editor session, set `TOME_CORPORA` (and a dedicated session `TOME_DB_PATH` that is **not** any corpus’s own sqlite file), for example in a gitignored `.devcontainer/.env`:
 
 ```bash
-TOME_CORPORA=marloth=/workspaces/silentorb-workbench/.mnt/marloth-story/content,translucence=/workspaces/silentorb-workbench/.mnt/translucence/content:readonly
+TOME_CORPORA=marloth=/workspaces/silentorb-workbench/.mnt/marloth-story/content,translucence=/workspaces/silentorb-workbench/.mnt/translucence/content,silentorb-web=/workspaces/silentorb-workbench/.mnt/silentorb-web/content
 TOME_DB_PATH=/workspaces/silentorb-workbench/.mnt/tome/data/tome-session.sqlite
 ```
 
@@ -50,7 +50,7 @@ Rebuild or reopen the devcontainer so Compose applies the change. The session ca
 
 See [`.mnt/tome/docs/features/multi-corpus.md`](./.mnt/tome/docs/features/multi-corpus.md) when the tome repo is mounted.
 
-**WSL launcher (Marloth + Translucence):** from a WSL host shell (outside the devcontainer), run from the workbench folder or via an absolute path from any cwd:
+**WSL launcher (Marloth + Translucence + Silent Orb):** from a WSL host shell (outside the devcontainer), run from the workbench folder or via an absolute path from any cwd:
 
 ```bash
 bash scripts/tome.sh
@@ -58,7 +58,7 @@ bash scripts/tome.sh
 bash /path/to/silentorb-workbench/scripts/tome.sh
 ```
 
-This brings up the Compose `tome` service with both corpora (read/write) on the **same Compose project** as the Dev Containers IDE stack (`silentorb-workbench_devcontainer`), so the host launcher and Cursor share one `tome` container. No WSL environment variables are required — the script sets `TOME_CORPORA` and `TOME_DB_PATH` inline. Requires `../translucence` cloned alongside the other sibling repos. Pass `-d` to run detached. Reopening the devcontainer without this script restores the default Marloth-only `tome` service unless you configure `.devcontainer/.env` separately.
+This brings up the Compose `tome` service with all three corpora (read/write) on the **same Compose project** as the Dev Containers IDE stack (`silentorb-workbench_devcontainer`), so the host launcher and Cursor share one `tome` container. No WSL environment variables are required — the script sets `TOME_CORPORA` and `TOME_DB_PATH` inline. Requires `../translucence` and `../silentorb-web` cloned alongside the other sibling repos. Pass `-d` to run detached. Reopening the devcontainer without this script restores the default Marloth-only `tome` service unless you configure `.devcontainer/.env` separately.
 
 If Compose warns about orphan containers named `devcontainer-marloth-*`, those are leftovers from renamed/removed services under an old project name — not new tome containers piling up. Remove them once with `docker rm` (or `docker compose -p devcontainer -f .devcontainer/docker-compose.yml down --remove-orphans` when that old project is unused).
 
