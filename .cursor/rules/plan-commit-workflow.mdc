@@ -62,7 +62,7 @@ Keep `pending` during planning and implementation unless the user asks to commit
 - Draft message: "…"
 
 ### User trigger
-Say **commit** (or **commit per the plan**) after review. Say **commit and bump** when a tome release tag is wanted. Say **bump** alone if work is already committed and only a release is needed.
+Say **commit** (or **commit per the plan**) after review. Say **preview bump** to see what a release would bump (advisory). Say **commit and preview bump** to commit then print that preview. Say **bump** alone when ready to release (work already committed). Say **commit and bump** when a tome release tag is wanted in one go.
 ```
 
 ## After plan implementation (before awaiting commit)
@@ -70,21 +70,10 @@ Say **commit** (or **commit per the plan**) after review. Say **commit and bump*
 When implementation and verification finish — and **before** stopping on `commit-await-approval` — print a short **post-implementation summary** that includes:
 
 1. **Commit scope refresh** — re-run `git status --short` per affected repo; note drift from the plan’s include/exclude list (do not commit yet).
-2. **Bump preview** — if any planned commit is in a taggable repo (today: `tome`), analyze the **settled** diff (or commits since the last tome `v*` tag) and print what would be bumped **if** the user later says **bump** or **commit and bump**. Do **not** run bump scripts or create tags yet.
 
-Bump preview must list, for that repo:
+**Do not** print a bump preview automatically after implementation (or after plain **commit**). Preview only when the user says **preview bump** or **commit and preview bump**.
 
-| Item | What to print |
-| ---- | ------------- |
-| Workspace packages | Each touched package: current version → proposed `minor` or `patch` next version, one-line why |
-| Cascades | Dependents that would move because of a `minor` bump / `workspace:` range rewrite |
-| Root release package | e.g. `tome` root: current → proposed next version + level |
-| Resulting git tag | e.g. `v0.3.0` matching the proposed root version |
-| Ordinary commit note | Remind that plain **commit** does **not** bump versions or create tags; only **bump** / **commit and bump** do |
-
-Classify `minor` vs `patch` using that repo’s versioning rules (tome: 0.x — `MINOR` = API epoch / new functionality or breaking; `PATCH` = backwards-compatible fixes). Treat the preview as advisory; **re-classify at bump time** if the diff changed.
-
-Plans do not need a full version matrix in the Commit strategy section — the end-of-implementation preview is the source of truth for “what bumping would do.”
+Plans do not need a full version matrix in the Commit strategy section — run **preview bump** when a release classification is wanted.
 
 ## Commit execution
 
@@ -96,8 +85,36 @@ Only when the user explicitly says "commit" / "go ahead and commit" / "commit pe
 4. Repeat per affected repo. Never force-push or amend unless user rules allow.
 
 **Do not** run `bump-version`, refresh lockfiles for versioning, bump the repo-root release version, or create git tags on plain **commit**.
+**Do not** print a bump preview after plain **commit**.
 
 Do **not** auto-commit when implementation finishes.
+
+## Preview bump
+
+When the user says **preview bump** (alone, or after other work):
+
+1. Find the latest local tome tag matching `v*` (e.g. `git describe --tags --match 'v*' --abbrev=0` in `.mnt/tome`). If none, treat the full history / settled range as in-scope.
+2. Analyze packages touched **since that tag…HEAD** in `.mnt/tome` and `.mnt/imp-ts` (include uncommitted changes only if they are part of the settled release range the user is previewing — prefer committed history; note dirty trees if present).
+3. Print the advisory preview. Do **not** run bump scripts, refresh lockfiles for versioning, create tags, or commit.
+
+Preview must list:
+
+| Item | What to print |
+| ---- | ------------- |
+| Workspace packages | Each touched package: current version → proposed `minor` or `patch` next version, one-line why |
+| Cascades | Dependents that would move because of a `minor` bump / `workspace:` range rewrite |
+| Root release package | e.g. `tome` root: current → proposed next version + level |
+| Resulting git tag | e.g. `v0.3.0` matching the proposed root version |
+| Ordinary commit note | Remind that plain **commit** does **not** bump versions or create tags; only **bump** / **commit and bump** do |
+
+Classify `minor` vs `patch` using that repo’s versioning rules (tome: 0.x — `MINOR` = API epoch / new functionality or breaking; `PATCH` = backwards-compatible fixes). Treat the preview as advisory; **re-classify at bump time** if the diff changed.
+
+## Commit and preview bump
+
+When the user says **commit and preview bump**:
+
+1. Run **commit** execution for all planned repos (work commits as-is; no version bumps).
+2. Then run **preview bump** (advisory only — no bump scripts or tags).
 
 ## Bump
 
@@ -105,7 +122,7 @@ When the user says **bump** (tome release; today the only taggable repo):
 
 1. Require **clean** working trees in every repo that will receive a version commit (at least `.mnt/tome`; also `.mnt/imp-ts` when imp packages will bump). If dirty, refuse and tell the user to **commit** or **commit and bump** first.
 2. Find the latest local tome tag matching `v*` (e.g. `git describe --tags --match 'v*' --abbrev=0` in `.mnt/tome`). If none, treat the full history / settled range as in-scope.
-3. Classify packages touched **since that tag…HEAD** in `.mnt/tome` and `.mnt/imp-ts` (`minor` vs `patch` per 0.x rules).
+3. Classify packages touched **since that tag…HEAD** in `.mnt/tome` and `.mnt/imp-ts` (`minor` vs `patch` per 0.x rules). Do **not** require a prior **preview bump**; if one was printed earlier, still re-classify from current HEAD.
 4. Run `bash scripts/bump-version.sh <package> <level>` for each touched **workspace** package (cascades/ranges as the script already does), then bump root `tome` (`minor` if any workspace minor / release-worthy API epoch; else `patch`). Refresh lockfiles as in **Version bumps** below.
 5. Commit **version + lockfile only** changes — one commit per affected repo — with messages matching recent `git log` style (why-focused).
 6. Create a **local** annotated tag: `bash scripts/git-tag-version.sh tome` (`v<version>` matching root `package.json`).
@@ -122,6 +139,8 @@ When the user says **commit and bump**:
 
 This is always a **two-step** history: work commit(s) first, then bump commit(s) + tag — never fold the root version bump into the feature commit.
 
+**Do not** print a bump preview as part of **commit and bump** unless the user also asked for preview.
+
 ## Version bumps (reconcile at bump time)
 
 Plans may include draft bump levels and lockfile notes — treat these as **starting points**, not contracts. The same tension applies as commit scope:
@@ -131,6 +150,6 @@ Plans may include draft bump levels and lockfile notes — treat these as **star
 - **At bump time**, re-snapshot commits since the last `v*` tag (or the settled range), re-classify bump levels (`minor` vs `patch`) for each touched package, run `bash scripts/bump-version.sh` from the workbench root as needed, refresh lockfiles (`bun install` in each repo root whose lockfile resolves affected dependents), and include version + lockfile changes in the **bump** commit(s).
 - Version bumps happen **after** the change set is settled and **committed**, not when the plan is written and not during plain **commit**.
 - Root release versions (e.g. `tome`) bump only on **bump** / **commit and bump**, never on ordinary commits.
-- The end-of-implementation **bump preview** is advisory; always re-run the classification when executing bump.
+- A **preview bump** is advisory; always re-run the classification when executing bump.
 
 Lockfile refresh rule: any imp-ts package change → refresh both `.mnt/imp-ts` and `.mnt/tome` lockfiles; tome-only changes → `.mnt/tome` only.
