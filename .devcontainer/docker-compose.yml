@@ -75,6 +75,8 @@ services:
       TOME_DB_PATH: ${TOME_DB_PATH:-/workspaces/silentorb-workbench/.mnt/marloth-story/data/tome.sqlite}
       TOME_CORPORA: ${TOME_CORPORA:-}
       TOME_EDITOR_DEV_HOST: "0.0.0.0"
+      TOME_PROFILE: ${TOME_PROFILE:-}
+      TOME_SLOW_MS: ${TOME_SLOW_MS:-}
       IMP_ROOT: ${IMP_ROOT:-/workspaces/silentorb-workbench/.mnt/imp-ts}
     ulimits:
       core: 0
