@@ -37,13 +37,15 @@ Default: **one commit per affected repo** (not one squashed commit across repos)
 
 For each affected repo specify: files to include, files to exclude, draft commit message (1–2 sentences, why not what; match recent `git log` style).
 
-### 4. Final todo (always last)
+### 4. Final todos (verification then commit await)
 
-Add frontmatter todo `commit-await-approval` as the **last** item:
+Add frontmatter todo `verify-full-suites` immediately before `commit-await-approval` (commit await remains **last**):
 
-> Commit (await user approval) — After implementation and verification, re-run git status/diff per repo, reconcile with this strategy, commit only when the user explicitly requests it.
+> Full-suite verification — After implementation, run full verify for every plan-affected repo and its direct dependents (see workbench `AGENTS.md` § Plan verification). Fix failures or get an explicit user waiver before await-commit. Reason about CI; never defer suite confidence to a future Actions run.
 
-Keep `pending` during planning and implementation unless the user asks to commit.
+> Commit (await user approval) — After full-suite verification for affected + dependents (incl. CI considered), re-run git status/diff per repo, reconcile with this strategy, commit only when the user explicitly requests it.
+
+Keep both `pending` during planning and implementation unless the user asks to commit.
 
 ### 5. Commit strategy section template
 
@@ -65,11 +67,25 @@ Keep `pending` during planning and implementation unless the user asks to commit
 Say **commit** (or **commit per the plan**) after review. Say **preview bump** to see what a release would bump (advisory). Say **commit and preview bump** to commit then print that preview. Say **bump** alone when ready to release (work already committed). Say **commit and bump** when a tome release tag is wanted in one go.
 ```
 
+## Full-suite verification (plan completion gate)
+
+Surgical / package-scoped tests are fine **while iterating**. Plan completion is gated on full verify.
+
+**Before `commit-await-approval`:**
+
+1. Build the **verify set**: union of plan-affected repos (Commit strategy / actual edits) + each repo’s **direct dependents** from workbench `AGENTS.md` § Plan verification. Deduplicate. Skip mounts that are not present.
+2. Run each repo’s **full verify** command from that matrix (not surgical subsets).
+3. Fix failures before await-commit, or get an explicit user waiver. Do **not** stop on `commit-await-approval` with failing gates.
+4. **CI dependent:** always reason about each affected repo’s GitHub Actions workflows. If the change set touches CI inputs (Docker, test scripts, deploy contracts, package `test`/`typecheck` entrypoints), include the relevant `.github/workflows/*` (and container/deploy feature docs) in plan scope — read them, update if commands/paths drift. Never treat “CI will catch it after push/tag” as verification. Agents do not push tags as part of ordinary plan completion.
+
+Command matrix and dependency edges live in workbench `AGENTS.md` — do not duplicate long lists here.
+
 ## After plan implementation (before awaiting commit)
 
-When implementation and verification finish — and **before** stopping on `commit-await-approval` — print a short **post-implementation summary** that includes:
+When implementation and **full-suite verification** finish — and **before** stopping on `commit-await-approval` — print a short **post-implementation summary** that includes:
 
 1. **Commit scope refresh** — re-run `git status --short` per affected repo; note drift from the plan’s include/exclude list (do not commit yet).
+2. **Suite gate** — commands run and pass/fail per repo in the verify set, plus one-line **CI impact** (workflows considered; unchanged / updated / N/A).
 
 **Do not** print a bump preview automatically after implementation (or after plain **commit**). Preview only when the user says **preview bump** or **commit and preview bump**.
 

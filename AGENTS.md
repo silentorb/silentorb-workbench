@@ -68,7 +68,8 @@ For Imp (universal DAG transmission format; successor to [imp-kotlin](https://gi
 - Prefer small, incremental edits that are easy to review.
 - **Prototypal stage — no backwards compatibility.** These repos are pre-release; there are no external consumers to protect. When you change an interface or format, **delete** the old path rather than preserving or widening it — no dual-format validators, case-insensitive fallbacks, normalization shims, deprecation warnings, or legacy code branches. Backwards-compatibility scaffolding only adds noise and convolution at this stage. Migrate existing data/content in the same change instead of supporting both shapes.
 - **Prototypal stage — lock-step interfaces.** The workspace repos must stay mutually compatible at all times. Any interface change is applied to **every** dependent consumer in the same change so no repo is left on the old interface. The "Propagate tome breaking changes" bullet below is the concrete instance of this rule.
-- **Propagate tome breaking changes to all dependent repos:** This workspace exists to develop interrelated repos in unison. When a change in `.mnt/tome/` breaks an upstream interface that dependents rely on — content-model schema or version bumps (e.g. `views.json`, `workspace.json`, `schema.json`, `associations.json`), package/API signatures, CLI flags, or build/output contracts — update **every dependent repo in the same change**, not just the one in front of you. Dependents are at least `.mnt/marloth-story/`, `.mnt/silentorb-web/`, and `.mnt/translucence/` (content corpora / static-site consumers). Verify marloth and silentorb-web still build (`bash scripts/build-static-site.sh` for marloth, `bash scripts/build-silentorb-web.sh` for silentorb-web) before considering the tome change complete. A tome breaking change is not done while a neighboring repo is left on the old interface.
+- **Propagate tome breaking changes to all dependent repos:** This workspace exists to develop interrelated repos in unison. When a change in `.mnt/tome/` breaks an upstream interface that dependents rely on — content-model schema or version bumps (e.g. `views.json`, `workspace.json`, `schema.json`, `associations.json`), package/API signatures, CLI flags, or build/output contracts — update **every dependent repo in the same change**, not just the one in front of you. Dependents are at least `.mnt/marloth-story/`, `.mnt/silentorb-web/`, and `.mnt/translucence/` (content corpora / static-site consumers), plus each repo’s **CI workflows** (see § Plan verification). Before considering the tome change complete, run full verify for tome and those dependents per the matrix below (`bash scripts/run-in-tome.sh run test`, `bash scripts/build-static-site.sh`, `bash scripts/build-silentorb-web.sh`, translucence `validate:workspace` when mounted). A tome breaking change is not done while a neighboring repo is left on the old interface.
+- **CI is a dependent:** Treat GitHub Actions as a first-class consumer of package scripts, Dockerfiles, and deploy contracts. Tome release CI (`.mnt/tome/.github/workflows/container.yml`) runs the full weighted test suite in the release image; corpus repos have deploy workflows under `.github/workflows/`. Reason about workflows for every affected repo; when CI inputs change, check and update workflows (and related feature docs) in the same change if paths or commands drift. Local full verify must pass so CI is not the first place failures appear — do not defer confidence to a future Actions run.
 - **Regression tests:** When fixing a bug in table views (database tables, relation tables, Properties section, composed/grouped table presentations, dynamic fields, or related API endpoints), add a regression test in the same change that would have failed before the fix. Seed test relationships using **composite types** from `content/model/associations.json` (via `ContentStore` / `seedTestCompositeRelationships`) when the bug involves graph traversals — do not rely only on direct `db.upsertRelationship` with legacy unidirectional types. Do not close a bug fix without a test unless the user explicitly waives it.
 - **UI tests (Tome React):** New or changed React UI in `.mnt/tome` (editor, interactive page blocks, extension components) should use **`bun:test` + `@testing-library/react` + happy-dom** — prefer essential, durable tests; see `.mnt/tome/AGENTS.md` § Robust UI testing and `.mnt/tome/docs/features/testing.md`.
 - **Script language:** agentic scripts should use **TypeScript** (Bun) by default — place durable tooling under `.mnt/tome/packages/` with tests and a shell wrapper in `scripts/` when appropriate. **One-off temporary scripts** (exploratory, throwaway, not intended to be maintained) may still be written in Python.
@@ -78,8 +79,25 @@ For Imp (universal DAG transmission format; successor to [imp-kotlin](https://gi
 
 - Read existing files before editing to preserve intent and style.
 - Keep assumptions explicit in commit or PR notes when behavior is unclear.
-- Run relevant checks or tests when changing code, if such checks are available.
+- **Tests while iterating:** surgical / package-scoped checks are fine during development.
+- **Plan / change completion:** treating work as done requires the full verify set in § Plan verification (affected repos + direct dependents, including CI considered). Cursor plans enforce this via [plan-commit-workflow.mdc](./.cursor/rules/plan-commit-workflow.mdc) before `commit-await-approval`.
 - Add self-documentation to files under `.mnt/tome/docs/`, `.mnt/marloth-story/docs/`, or `.mnt/translucence/docs/` when making agent-relevant updates.
+
+## Plan verification / test commands
+
+Full verify for a repo is that row’s command (not a surgical subset). **Verify set** = each plan-affected repo ∪ its **direct dependents** (dedupe; skip unmounted paths). Local full verify must cover what CI would run for that repo; agents do not push tags or rely on Actions as the first catcher.
+
+| Repo | Full verify (from workbench root unless noted) | Direct dependents to also verify |
+| --- | --- | --- |
+| `.mnt/tome` | `bash scripts/run-in-tome.sh run test` (weighted full suite; includes typecheck — same entrypoint release CI runs in-container) | marloth-story, silentorb-web, translucence (if mounted); **CI:** `.mnt/tome/.github/workflows/container.yml` |
+| `.mnt/imp-ts` | `cd .mnt/imp-ts && bun run test` | tome (and thus tome CI / corpora when tome verify runs) |
+| `.mnt/imp-rust` | `bash scripts/coverage-imp-rust.sh --changed` (see [imp-rust-coverage.mdc](./.cursor/rules/imp-rust-coverage.mdc)) | none (note any imp-rust CI if present when editing) |
+| `.mnt/marloth-story` | `bash scripts/build-static-site.sh` | **CI:** `.mnt/marloth-story/.github/workflows/deploy-static-site.yml` |
+| `.mnt/silentorb-web` | `bash scripts/build-silentorb-web.sh` | **CI:** `.mnt/silentorb-web/.github/workflows/deploy-static-site.yml` |
+| `.mnt/translucence` | `cd .mnt/translucence && bun run validate:workspace` | any translucence workflow if present |
+| workbench root | no package suite (usually N/A) | none |
+
+**CI column / CI rows:** “also verify” for CI means *reason about and update workflows when inputs drift* — not that the agent must trigger GitHub Actions. See Working conventions § CI is a dependent.
 
 ## Feature documentation
 
@@ -132,5 +150,4 @@ Multi-session migration specs (agent-oriented). Start at the overview; do not re
 ## Future expansion
 
 - Architecture overview
-- Standard test and validation commands
 - Language/framework-specific coding conventions
