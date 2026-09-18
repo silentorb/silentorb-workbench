@@ -115,7 +115,7 @@ For **design data** (what nodes mean, how they relate conceptually), read `.mnt/
 | Web markdown editor, `.mnt/tome/packages/tome-editor/` | `.mnt/tome/docs/features/tome-editor.md` |
 | Tome HTTP / editor API shape (use-case endpoints, no client fan-out transforms) | `.mnt/tome/docs/features/web-api-design.md` |
 | Config-driven API host, `.mnt/tome/packages/tome-server/` | `.mnt/tome/docs/features/tome-server.md` |
-| Opt-in API/SQL profiling (`TOME_PROFILE`, `/api/debug/profile`) | `.mnt/tome/docs/features/tome-server.md` (§ Request / SQL profiling) + `.mnt/tome/docs/features/container.md` |
+| Opt-in API/SQL profiling (`TOME_PROFILING`, `/api/debug/profiling`) | `.mnt/tome/docs/features/tome-server.md` (§ Request / SQL profiling) + `.mnt/tome/docs/features/container.md` |
 | Graph Explorer, LOD layers, anchor-scoped graph viz | `.mnt/tome/docs/features/graph-explorer.md` |
 | Editing story/design content in the graph | `.mnt/marloth-story/docs/ontology.md` + `.mnt/tome/docs/features/tome-db.md` + `.mnt/marloth-story/AGENTS.md` |
 | Table presentation: scope tabs, row groups, drag-and-drop reorder | `.mnt/tome/docs/features/table-presentation.md` |
