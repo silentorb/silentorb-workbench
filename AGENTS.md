@@ -133,6 +133,7 @@ For **design data** (what nodes mean, how they relate conceptually), read `.mnt/
 | Relative event sequencing / timeline | `.mnt/tome/docs/features/tome-sequencing.md` |
 | Sequencing constraint resolution | `.mnt/tome/docs/features/tome-sequencing-resolution.md` |
 | Multi-corpus editor sessions | `.mnt/tome/docs/features/multi-corpus.md` |
+| Imp sync wiring + dataStores | `.mnt/tome/docs/features/tome-sync.md` |
 | Graph store API (Base / Queryable, executeImp) | `.mnt/tome/docs/features/graph-store.md` |
 | Tome dev / release containers (GHCR) | `.mnt/tome/docs/features/container.md` |
 | Test tiers and weighted gating | `.mnt/tome/docs/features/testing.md` |
