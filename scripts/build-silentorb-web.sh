@@ -9,4 +9,5 @@ if [[ ! -d "$SILENTORB/content" ]]; then
   exit 1
 fi
 
+export TOME_ROOT="${TOME_ROOT:-$TOME}"
 bash "${SILENTORB}/scripts/build-static-site.sh"
