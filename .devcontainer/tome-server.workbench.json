@@ -1,4 +1,5 @@
 {
+  "_comment": "Canonical copy lives under the tome mount (readable by the tome Compose service): packages/tome-server/config/tome-server.workbench.json. Solo Marloth only — for multi-corpus leave TOME_SERVER_CONFIG unset and use TOME_CORPORA (normalize auto-injects FTS).",
   "version": 2,
   "dataStores": {
     "marloth": {
