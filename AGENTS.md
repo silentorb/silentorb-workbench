@@ -114,6 +114,7 @@ For **design data** (what nodes mean, how they relate conceptually), read `.mnt/
 | Design domain model, node types, relationships, traceability | `.mnt/marloth-story/docs/ontology.md` or `.mnt/translucence/docs/ontology.md` |
 | SQLite property graph, `.mnt/marloth-story/data/tome.sqlite`, `.mnt/tome/packages/tome-db/` | `.mnt/tome/docs/features/tome-db.md` (+ ontology when interpreting data) |
 | Sets (`set` trait, type tables, archive hub) | `.mnt/tome/docs/features/sets.md` |
+| Ontology runtime (predicates + patterns; schema vs ontology wording) | `.mnt/tome/docs/features/ontology.md` |
 | Web markdown editor, `.mnt/tome/packages/tome-editor/` | `.mnt/tome/docs/features/tome-editor.md` |
 | Tome HTTP / editor API shape (use-case endpoints, no client fan-out transforms) | `.mnt/tome/docs/features/web-api-design.md` |
 | Config-driven API host, `.mnt/tome/packages/tome-server/` | `.mnt/tome/docs/features/tome-server.md` |
