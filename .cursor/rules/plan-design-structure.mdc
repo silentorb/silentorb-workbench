@@ -1,0 +1,74 @@
+---
+description: Structure Cursor plans for dual audiences — brief broad user-facing design and analysis, then agent-facing implementation
+alwaysApply: true
+---
+
+# Plan design structure (Cursor-specific)
+
+Personal flow optimization — not project documentation. Do not add this to `AGENTS.md` or feature docs.
+
+When creating or updating a Cursor plan, write for **two audiences** and keep this order:
+
+1. User request
+2. High-level design (Problem / Solution)
+3. Objective analysis
+4. Low-level design
+5. Commit strategy (per `plan-commit-workflow.mdc`)
+
+| Section | Primary audience | Job |
+| ------- | ---------------- | --- |
+| User request + High-level + Objective analysis | **User** | Vet the design and whether the ask is worth doing |
+| Low-level design (+ Commit strategy mechanics) | **Agents** | Execute the approved design |
+
+Write each section for its primary audience. Secondary skim is fine; do not optimize user sections for agent executability, and do not treat low-level as the user’s review surface.
+
+## User request
+
+Short restatement of intent and in/out of scope. Not a design.
+
+## High-level design (user-primary)
+
+Two subsections: **Problem**, then **Solution**. Keep them cleanly split.
+
+### User concern layers (defines breadth)
+
+Breadth is over what the user cares about for design review — not every stack layer equally.
+
+**Default interest** (cover when touched): UX, modeling, semantics, package-level organization.
+
+**Usually lower interest** (assume “just works” unless the change is about them or they threaten layers above): web API wiring and similar plumbing — note *when* and *what* at a glance; other internals (SQL pipelines, serializers, etc.). Dive deeper only when implementation debt starts harming UX/modeling/semantics/package boundaries (including multi-session cleanup campaigns).
+
+### Constraints
+
+- **Breadth without depth (default).** Brief coverage of the full *user-relevant* width. Name every major user-relevant part; keep straightforward parts thin. Routine plumbing depth belongs in low-level.
+- **Risk-scaled depth.** Go deeper where an area is troublesome, ambiguous, carries cons, or is implementation harming user-interest layers. Danger-free changes stay thin.
+- **No truncated halves.** If the user-relevant domain has two large halves (e.g. modeling + UX), both appear in Problem and Solution. Do not require a full tour of lower-interest layers — a one-line API note is enough when incidental.
+- **Little/no code** unless pivotal to the design decision. Prefer concepts, boundaries, and how parts fit together.
+- **Vettable without low-level.** User request + High-level + Objective analysis must be enough to approve or reject.
+- Scale depth by **risk and user concern**, not stack completeness.
+
+## Objective analysis (user-primary)
+
+After high-level, before low-level. Critical appraisal of the **request** and proposed changes — not a sales pitch.
+
+- Pros, cons (**when real**), and value/worth (is this worth the cost/risk?).
+- **Run the check; don’t force the shape.** Outcome may range from short “looks sound” to strong “back up.” Do not invent cons for balance theater; do not omit pushback when warranted.
+- **Pushback is extra free here:** wrong problem, weak value, better framing, shrink scope, or “do not do this as asked.” Candor over agreeableness.
+- Decision support, not an undecided Option A vs B menu. Solution stays the concrete approach unless analysis says refuse or reframe — then say so clearly.
+- Real cons cue deeper high-level Solution detail on those areas.
+
+## Low-level design (agent-primary)
+
+Files, symbols, steps, tests. Routine granularity lives here. Problem framing stays light. Todos and verify/commit gating live here (with commit strategy). Do not let this section replace user-facing breadth, analysis, or risk-focused high-level depth.
+
+## Anti-patterns
+
+- Writing the whole plan as if only agents will read it
+- Leading with file lists or “change X then Y” before Problem/Solution
+- Omitting a user-relevant half while expanding lower-interest plumbing
+- Forcing equal high-level depth across incidental stack layers
+- Making every high-level part granular when the change is mostly straightforward
+- Skipping Objective analysis, or cheerleading with no real cons/value/pushback when warranted
+- Inventing cons or padding a beefy Cons section when few real downsides exist — the check matters; “everything looks fine” is valid when earned
+- Mixing problem diagnosis into Solution or Low-level without a Problem subsection
+- Treating “brief” as license to omit a major user-relevant part or hide a known con
