@@ -11,6 +11,7 @@ x-workbench-volumes: &workbench-volumes
   - ${IMP_REPO:-../../imp-ts}:${MNT:-/workspaces/silentorb-workbench/.mnt}/imp-ts:cached
   - ${IMP_RUST_REPO:-../../imp-rust}:${MNT:-/workspaces/silentorb-workbench/.mnt}/imp-rust:cached
   - ${IMP_SPEC_REPO:-../../imp-spec}:${MNT:-/workspaces/silentorb-workbench/.mnt}/imp-spec:cached
+  - ${TOME_NEO4J_REPO:-../../tome-neo4j}:${MNT:-/workspaces/silentorb-workbench/.mnt}/tome-neo4j:cached
   - tome-node-modules:${MNT:-/workspaces/silentorb-workbench/.mnt}/tome/node_modules
   - ${OPENCODE_CONFIG_DIR:-${HOME}/.config/opencode}:/home/vscode/.config/opencode
   - ${OPENCODE_DATA_DIR:-${HOME}/.local/share/opencode}:/home/vscode/.local/share/opencode

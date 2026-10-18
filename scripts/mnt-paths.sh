@@ -8,6 +8,7 @@ TRANSLUCENCE="${TRANSLUCENCE:-${MNT}/translucence}"
 IMP_TS="${IMP_TS:-${MNT}/imp-ts}"
 IMP_RUST="${IMP_RUST:-${MNT}/imp-rust}"
 IMP_SPEC="${IMP_SPEC:-${MNT}/imp-spec}"
+TOME_NEO4J="${TOME_NEO4J:-${MNT}/tome-neo4j}"
 
 # Host-side imp-rust path for docker-outside-of-docker compose (see devcontainer remoteEnv).
 resolve_imp_rust_host_repo() {

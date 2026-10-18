@@ -13,9 +13,10 @@
 | `.mnt/imp-ts` | Imp DAG transmission format (TypeScript; required by `tome` service) |
 | `.mnt/imp-rust` | Imp Rust implementation (optional mount; workbench only) |
 | `.mnt/imp-spec` | Standalone language-neutral Imp spec docs — graph IR, NodeLibrary catalogs, registry, typecheck, graph-resolve (optional; workbench only). Not imp-ts/packages/imp-core-types (TypeScript binding). Imp Translator and runtime specs live in `.mnt/imp-ts/docs/features/`. |
+| `.mnt/tome-neo4j` | Neo4j graph backend packages for Tome (optional mount; workbench only) |
 | `/workspaces/silentorb-workbench` | Devcontainer, scripts, this guide |
 
-**Prerequisite:** clone `tome` and `marloth-story` as siblings of this repo on the host (`../tome`, `../marloth-story`), or set `TOME_REPO` / `MARLOTH_REPO` when opening the devcontainer. Optionally clone `silentorb-web` (`../silentorb-web`, or `SILENTORB_WEB_REPO`) and `translucence` (`../translucence`, or `TRANSLUCENCE_REPO`). Mount `imp-ts` (`../imp-ts`, or `IMP_REPO`) — required for the **`tome` Compose service** because tome’s Bun workspaces include `../imp-ts/packages/*` (`tome-query`). **Tome** owns package dependencies (`.mnt/tome/bun.lock`, `.mnt/tome/node_modules`). The workbench root orchestrates dev scripts and the devcontainer.
+**Prerequisite:** clone `tome` and `marloth-story` as siblings of this repo on the host (`../tome`, `../marloth-story`), or set `TOME_REPO` / `MARLOTH_REPO` when opening the devcontainer. Optionally clone `silentorb-web` (`../silentorb-web`, or `SILENTORB_WEB_REPO`), `translucence` (`../translucence`, or `TRANSLUCENCE_REPO`), and `tome-neo4j` (`../tome-neo4j`, or `TOME_NEO4J_REPO`). Mount `imp-ts` (`../imp-ts`, or `IMP_REPO`) — required for the **`tome` Compose service** because tome’s Bun workspaces include `../imp-ts/packages/*` (`tome-query`). **Tome** owns package dependencies (`.mnt/tome/bun.lock`, `.mnt/tome/node_modules`). The workbench root orchestrates dev scripts and the devcontainer.
 
 Scripts resolve mount paths via [`scripts/mnt-paths.sh`](./scripts/mnt-paths.sh).
 
@@ -46,6 +47,7 @@ For Imp (universal DAG transmission format; successor to [imp-kotlin](https://gi
 - **Static site build** (test + build): `bash scripts/build-static-site.sh` runs tome-static-site tests and `web:build` via `.mnt/tome`.
 - Run Tome package commands with `bash scripts/run-in-tome.sh …`, VS Code tasks, or from `.mnt/tome/` — not `bun run` at the workbench root.
 - **imp-rust:** optional mount; `bash scripts/run-in-imp-rust.sh …` and `bash scripts/coverage-imp-rust.sh` use the profile-gated **`imp-rust` Compose service** (`compose run --rm`) when the workbench shell has no local `cargo`. Host path: `IMP_RUST_HOST_REPO` (set at devcontainer open) or inferred from the bind mount.
+- **tome-neo4j:** optional mount; `bash scripts/run-in-tome-neo4j.sh …` (requires sibling `.mnt/tome`). Local Neo4j Community via that repo’s `docker compose`; not started by default workbench `runServices`.
 
 ## Terminology
 
@@ -95,6 +97,7 @@ Full verify for a repo is that row’s command (not a surgical subset). **Verify
 | `.mnt/tome` | `bash scripts/run-in-tome.sh run test` (weighted full suite; includes typecheck — same entrypoint release CI runs in-container) | marloth-story, silentorb-web, translucence (if mounted); **CI:** `.mnt/tome/.github/workflows/container.yml` |
 | `.mnt/imp-ts` | `cd .mnt/imp-ts && bun run test` | tome (and thus tome CI / corpora when tome verify runs) |
 | `.mnt/imp-rust` | `bash scripts/coverage-imp-rust.sh --changed` (see [imp-rust-coverage.mdc](./.cursor/rules/imp-rust-coverage.mdc)) | none (note any imp-rust CI if present when editing) |
+| `.mnt/tome-neo4j` | `bash scripts/run-in-tome-neo4j.sh run test` (skip if unmounted; needs sibling tome) | none (heavy Neo4j CI lives in that repo: `.mnt/tome-neo4j/.github/workflows/ci.yml`) |
 | `.mnt/marloth-story` | `bash scripts/build-static-site.sh` | **CI:** `.mnt/marloth-story/.github/workflows/deploy-static-site.yml` |
 | `.mnt/silentorb-web` | `bash scripts/build-silentorb-web.sh` | **CI:** `.mnt/silentorb-web/.github/workflows/deploy-static-site.yml` |
 | `.mnt/translucence` | `cd .mnt/translucence && bun run validate:workspace` | any translucence workflow if present |
@@ -137,7 +140,7 @@ For **design data** (what nodes mean, how they relate conceptually), read `.mnt/
 | Relative event sequencing / timeline | `.mnt/tome/docs/features/tome-sequencing.md` |
 | Sequencing constraint resolution | `.mnt/tome/docs/features/tome-sequencing-resolution.md` |
 | Multi-corpus editor sessions | `.mnt/tome/docs/features/multi-corpus.md` |
-| Multi-user (use cases, Account/authn/authz charter, user corpora + local flatfile identity / remote auth specialty SQL) | `.mnt/tome/docs/features/multi-user.md` |
+| Multi-user (use cases, Account/authn/authz charter, user corpora + local flatfile identity / remote Neo4j + auth specialty store) | `.mnt/tome/docs/features/multi-user.md` |
 | Imp sync wiring + dataStores | `.mnt/tome/docs/features/tome-sync.md` |
 | Node search (searchers / FTS) | `.mnt/tome/docs/features/search.md` |
 | Graph store API (Base / Queryable, executeImp) | `.mnt/tome/docs/features/graph-store.md` |
