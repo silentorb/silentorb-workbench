@@ -11,12 +11,12 @@
 | `.mnt/silentorb-web` | Silent Orb corporate website (Tome static site; optional mount) |
 | `.mnt/translucence` | Translucence Bible-article corpus (`content/`; optional mount) |
 | `.mnt/imp-ts` | Imp DAG transmission format (TypeScript; required by `tome` service) |
-| `.mnt/imp-rust` | Imp Rust implementation (optional mount; workbench only) |
 | `.mnt/imp-spec` | Standalone language-neutral Imp spec docs — graph IR, NodeLibrary catalogs, registry, typecheck, graph-resolve (optional; workbench only). Not imp-ts/packages/imp-core-types (TypeScript binding). Imp Translator and runtime specs live in `.mnt/imp-ts/docs/features/`. |
+| `.mnt/imp-cypher` | Imp → Cypher translator (optional mount; workbench only) |
 | `.mnt/tome-neo4j` | Neo4j graph backend packages for Tome (optional mount; workbench only) |
 | `/workspaces/silentorb-workbench` | Devcontainer, scripts, this guide |
 
-**Prerequisite:** clone `tome` and `marloth-story` as siblings of this repo on the host (`../tome`, `../marloth-story`), or set `TOME_REPO` / `MARLOTH_REPO` when opening the devcontainer. Optionally clone `silentorb-web` (`../silentorb-web`, or `SILENTORB_WEB_REPO`), `translucence` (`../translucence`, or `TRANSLUCENCE_REPO`), and `tome-neo4j` (`../tome-neo4j`, or `TOME_NEO4J_REPO`). Mount `imp-ts` (`../imp-ts`, or `IMP_REPO`) — required for the **`tome` Compose service** because tome’s Bun workspaces include `../imp-ts/packages/*` (`tome-query`). **Tome** owns package dependencies (`.mnt/tome/bun.lock`, `.mnt/tome/node_modules`). The workbench root orchestrates dev scripts and the devcontainer.
+**Prerequisite:** clone `tome` and `marloth-story` as siblings of this repo on the host (`../tome`, `../marloth-story`), or set `TOME_REPO` / `MARLOTH_REPO` when opening the devcontainer. Optionally clone `silentorb-web` (`../silentorb-web`, or `SILENTORB_WEB_REPO`), `translucence` (`../translucence`, or `TRANSLUCENCE_REPO`), `imp-cypher` (`../imp-cypher`, or `IMP_CYPHER_REPO`), and `tome-neo4j` (`../tome-neo4j`, or `TOME_NEO4J_REPO`). Mount `imp-ts` (`../imp-ts`, or `IMP_REPO`) — required for the **`tome` Compose service** because tome’s Bun workspaces include `../imp-ts/packages/*` (`tome-query`). **Tome** owns package dependencies (`.mnt/tome/bun.lock`, `.mnt/tome/node_modules`). The workbench root orchestrates dev scripts and the devcontainer.
 
 Scripts resolve mount paths via [`scripts/mnt-paths.sh`](./scripts/mnt-paths.sh).
 
@@ -33,7 +33,6 @@ For Imp (universal DAG transmission format; successor to [imp-kotlin](https://gi
 | Language-neutral specs (graph IR, NodeLibrary catalogs, typecheck) | `.mnt/imp-spec/AGENTS.md` → package spec under `docs/packages/` |
 | Imp Translators (SQL, React Flow) and runtime (execution) | `.mnt/imp-ts/docs/features/` |
 | TypeScript binding (implementation, tests, versioning) | `.mnt/imp-ts/AGENTS.md` + package `AGENTS.md` |
-| Rust binding (foundation crates) | `.mnt/imp-rust/AGENTS.md` — `bash scripts/run-in-imp-rust.sh test`; coverage: `bash scripts/coverage-imp-rust.sh` |
 
 ## Project context
 
@@ -46,7 +45,6 @@ For Imp (universal DAG transmission format; successor to [imp-kotlin](https://gi
 - On devcontainer start, the **`tome` Compose service** builds from [`.mnt/tome/docker/Dockerfile.dev`](./.mnt/tome/docker/Dockerfile.dev), runs `bun install --frozen-lockfile` from `.mnt/tome/bun.lock` into a Docker volume at `.mnt/tome/node_modules`, then starts `editor:dev` with `TOME_CONTENT_PATH` set to marloth `content/` unless overridden. The workbench service only checks mounts ([`scripts/devcontainer-start.sh`](./scripts/devcontainer-start.sh)). **Rebuild the tome service image** after changing `.mnt/tome/docker/Dockerfile.dev` or `docker/install-runtime.sh`. Restart the tome service after changing `.mnt/tome/bun.lock` or package dependencies (dev installs at runtime — no image rebuild required for lockfile-only changes). The **release** image (`docker/Dockerfile.release`, published to GHCR) is separate — see `.mnt/tome/docs/features/container.md`.
 - **Static site build** (test + build): `bash scripts/build-static-site.sh` runs tome-static-site tests and `web:build` via `.mnt/tome`.
 - Run Tome package commands with `bash scripts/run-in-tome.sh …`, VS Code tasks, or from `.mnt/tome/` — not `bun run` at the workbench root.
-- **imp-rust:** optional mount; `bash scripts/run-in-imp-rust.sh …` and `bash scripts/coverage-imp-rust.sh` use the profile-gated **`imp-rust` Compose service** (`compose run --rm`) when the workbench shell has no local `cargo`. Host path: `IMP_RUST_HOST_REPO` (set at devcontainer open) or inferred from the bind mount.
 - **tome-neo4j:** optional mount; `bash scripts/run-in-tome-neo4j.sh …` (requires sibling `.mnt/tome`). Local Neo4j Community via that repo’s `docker compose`; not started by default workbench `runServices`.
 
 ## Terminology
@@ -96,7 +94,6 @@ Full verify for a repo is that row’s command (not a surgical subset). **Verify
 | --- | --- | --- |
 | `.mnt/tome` | `bash scripts/run-in-tome.sh run test` (weighted full suite; includes typecheck — same entrypoint release CI runs in-container) | marloth-story, silentorb-web, translucence (if mounted); **CI:** `.mnt/tome/.github/workflows/container.yml` |
 | `.mnt/imp-ts` | `cd .mnt/imp-ts && bun run test` | tome (and thus tome CI / corpora when tome verify runs) |
-| `.mnt/imp-rust` | `bash scripts/coverage-imp-rust.sh --changed` (see [imp-rust-coverage.mdc](./.cursor/rules/imp-rust-coverage.mdc)) | none (note any imp-rust CI if present when editing) |
 | `.mnt/tome-neo4j` | `bash scripts/run-in-tome-neo4j.sh run test` (skip if unmounted; needs sibling tome) | none (heavy Neo4j CI lives in that repo: `.mnt/tome-neo4j/.github/workflows/ci.yml`) |
 | `.mnt/marloth-story` | `bash scripts/build-static-site.sh` | **CI:** `.mnt/marloth-story/.github/workflows/deploy-static-site.yml` |
 | `.mnt/silentorb-web` | `bash scripts/build-silentorb-web.sh` | **CI:** `.mnt/silentorb-web/.github/workflows/deploy-static-site.yml` |

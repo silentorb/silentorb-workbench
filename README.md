@@ -18,8 +18,8 @@ parent/
   silentorb-web/         # optional — corporate website
   translucence/          # optional — Bible-article corpus
   imp-ts/                # Imp (DAG transmission; required by tome service / tome-query)
-  imp-rust/              # optional
   imp-spec/              # optional
+  imp-cypher/            # optional — Imp → Cypher translator
   tome-neo4j/            # optional — Neo4j graph backend packages for Tome
 ```
 
@@ -30,12 +30,12 @@ parent/
 | `../silentorb-web` (sibling) | `.mnt/silentorb-web` (optional) |
 | `../translucence` (sibling) | `.mnt/translucence` (optional) |
 | `../imp-ts` (sibling) | `.mnt/imp-ts` (required by `tome` service) |
-| `../imp-rust` (sibling) | `.mnt/imp-rust` (optional) |
 | `../imp-spec` (sibling) | `.mnt/imp-spec` (optional; language-neutral Imp specs for agents) |
+| `../imp-cypher` (sibling) | `.mnt/imp-cypher` (optional; Imp → Cypher translator) |
 | `../tome-neo4j` (sibling) | `.mnt/tome-neo4j` (optional) |
 | this repo | `/workspaces/silentorb-workbench` |
 
-Compose defaults use `../../tome`, `../../marloth-story`, `../../silentorb-web`, `../../translucence`, and `../../imp-ts` relative to `.devcontainer/`. Override mount sources with `TOME_REPO`, `MARLOTH_REPO`, `SILENTORB_WEB_REPO`, `TRANSLUCENCE_REPO`, `IMP_REPO`, `IMP_RUST_REPO`, `IMP_SPEC_REPO`, and `TOME_NEO4J_REPO` when opening the devcontainer.
+Compose defaults use `../../tome`, `../../marloth-story`, `../../silentorb-web`, `../../translucence`, and `../../imp-ts` relative to `.devcontainer/`. Override mount sources with `TOME_REPO`, `MARLOTH_REPO`, `SILENTORB_WEB_REPO`, `TRANSLUCENCE_REPO`, `IMP_REPO`, `IMP_SPEC_REPO`, `IMP_CYPHER_REPO`, and `TOME_NEO4J_REPO` when opening the devcontainer.
 
 Clone silentorb-web: `git clone git@github.com:silentorb/silentorb-web.git`
 

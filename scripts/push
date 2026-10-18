@@ -112,8 +112,8 @@ push_repo "silentorb-workbench" "$WORKBENCH_ROOT"
 # tome: branch + annotated v* tags (from git-tag-version) for GHCR
 push_named "tome" 1
 push_named "imp-ts"
-push_named "imp-rust"
 push_named "imp-spec"
+push_named "imp-cypher"
 push_named "tome-neo4j"
 
 if [[ "$INCLUDE_WEB" -eq 1 ]]; then
