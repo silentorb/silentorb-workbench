@@ -14,5 +14,15 @@ if [[ ! -d "${TOME}/packages/tome-graph-interfaces" ]]; then
   exit 1
 fi
 
+if [[ ! -f "${IMP_CYPHER}/package.json" ]]; then
+  echo "imp-cypher repo not found at ${IMP_CYPHER} (tome-neo4j workspaces require sibling imp-cypher)" >&2
+  exit 1
+fi
+
+if [[ ! -d "${IMP_TS}/packages/imp-core-types" ]]; then
+  echo "imp-ts repo not found at ${IMP_TS} (tome-neo4j workspaces require sibling imp-ts packages)" >&2
+  exit 1
+fi
+
 cd "$TOME_NEO4J"
 exec bun "$@"

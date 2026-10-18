@@ -32,6 +32,7 @@ For Imp (universal DAG transmission format; successor to [imp-kotlin](https://gi
 | --- | --- |
 | Language-neutral specs (graph IR, NodeLibrary catalogs, typecheck) | `.mnt/imp-spec/AGENTS.md` → package spec under `docs/packages/` |
 | Imp Translators (SQL, React Flow) and runtime (execution) | `.mnt/imp-ts/docs/features/` |
+| Imp → Cypher translator | `.mnt/imp-cypher/docs/features/cypher.md` (+ `.mnt/imp-cypher/AGENTS.md`) |
 | TypeScript binding (implementation, tests, versioning) | `.mnt/imp-ts/AGENTS.md` + package `AGENTS.md` |
 
 ## Project context
@@ -45,7 +46,8 @@ For Imp (universal DAG transmission format; successor to [imp-kotlin](https://gi
 - On devcontainer start, the **`tome` Compose service** builds from [`.mnt/tome/docker/Dockerfile.dev`](./.mnt/tome/docker/Dockerfile.dev), runs `bun install --frozen-lockfile` from `.mnt/tome/bun.lock` into a Docker volume at `.mnt/tome/node_modules`, then starts `editor:dev` with `TOME_CONTENT_PATH` set to marloth `content/` unless overridden. The workbench service only checks mounts ([`scripts/devcontainer-start.sh`](./scripts/devcontainer-start.sh)). **Rebuild the tome service image** after changing `.mnt/tome/docker/Dockerfile.dev` or `docker/install-runtime.sh`. Restart the tome service after changing `.mnt/tome/bun.lock` or package dependencies (dev installs at runtime — no image rebuild required for lockfile-only changes). The **release** image (`docker/Dockerfile.release`, published to GHCR) is separate — see `.mnt/tome/docs/features/container.md`.
 - **Static site build** (test + build): `bash scripts/build-static-site.sh` runs tome-static-site tests and `web:build` via `.mnt/tome`.
 - Run Tome package commands with `bash scripts/run-in-tome.sh …`, VS Code tasks, or from `.mnt/tome/` — not `bun run` at the workbench root.
-- **tome-neo4j:** optional mount; `bash scripts/run-in-tome-neo4j.sh …` (requires sibling `.mnt/tome`). Local Neo4j Community via that repo’s `docker compose`; not started by default workbench `runServices`.
+- **imp-cypher:** optional mount; `bash scripts/run-in-imp-cypher.sh …` (requires sibling `.mnt/imp-ts`). Compile-only tests — no Neo4j.
+- **tome-neo4j:** optional mount; `bash scripts/run-in-tome-neo4j.sh …` (requires siblings `.mnt/tome`, `.mnt/imp-ts`, `.mnt/imp-cypher`). Local Neo4j Community via that repo’s `docker compose`; not started by default workbench `runServices`.
 
 ## Terminology
 
@@ -94,7 +96,8 @@ Full verify for a repo is that row’s command (not a surgical subset). **Verify
 | --- | --- | --- |
 | `.mnt/tome` | `bash scripts/run-in-tome.sh run test` (weighted full suite; includes typecheck — same entrypoint release CI runs in-container) | marloth-story, silentorb-web, translucence (if mounted); **CI:** `.mnt/tome/.github/workflows/container.yml` |
 | `.mnt/imp-ts` | `cd .mnt/imp-ts && bun run test` | tome (and thus tome CI / corpora when tome verify runs) |
-| `.mnt/tome-neo4j` | `bash scripts/run-in-tome-neo4j.sh run test` (skip if unmounted; needs sibling tome) | none (heavy Neo4j CI lives in that repo: `.mnt/tome-neo4j/.github/workflows/ci.yml`) |
+| `.mnt/imp-cypher` | `bash scripts/run-in-imp-cypher.sh run test` (skip if unmounted; needs sibling imp-ts) | none (light CI: `.mnt/imp-cypher/.github/workflows/ci.yml` — no Neo4j) |
+| `.mnt/tome-neo4j` | `bash scripts/run-in-tome-neo4j.sh run test` (skip if unmounted; needs siblings tome, imp-ts, imp-cypher) | none (heavy Neo4j CI lives in that repo: `.mnt/tome-neo4j/.github/workflows/ci.yml`) |
 | `.mnt/marloth-story` | `bash scripts/build-static-site.sh` | **CI:** `.mnt/marloth-story/.github/workflows/deploy-static-site.yml` |
 | `.mnt/silentorb-web` | `bash scripts/build-silentorb-web.sh` | **CI:** `.mnt/silentorb-web/.github/workflows/deploy-static-site.yml` |
 | `.mnt/translucence` | `cd .mnt/translucence && bun run validate:workspace` | any translucence workflow if present |
@@ -132,6 +135,8 @@ For **design data** (what nodes mean, how they relate conceptually), read `.mnt/
 | Imp → Tome SQL binder (nodes / path hops) | `.mnt/tome/docs/features/tome-imp-sql.md` |
 | Imp data model / NodeLibrary catalogs (language-neutral) | `.mnt/imp-spec/AGENTS.md` → `docs/packages/` |
 | Imp Translators and runtime (SQL, React Flow, execution) | `.mnt/imp-ts/docs/features/` |
+| Imp → Cypher | `.mnt/imp-cypher/docs/features/cypher.md` |
+| Imp → Cypher (Tome Neo4j binder) | `.mnt/tome-neo4j/packages/tome-imp-cypher/` |
 | Imp TypeScript binding | `.mnt/imp-ts/AGENTS.md` + package `AGENTS.md` |
 | Imp-backed custom query table block | `.mnt/tome/docs/features/tome-query.md` |
 | Relative event sequencing / timeline | `.mnt/tome/docs/features/tome-sequencing.md` |
