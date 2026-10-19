@@ -12,6 +12,7 @@ x-workbench-volumes: &workbench-volumes
   - ${IMP_SPEC_REPO:-../../imp-spec}:${MNT:-/workspaces/silentorb-workbench/.mnt}/imp-spec:cached
   - ${IMP_CYPHER_REPO:-../../imp-cypher}:${MNT:-/workspaces/silentorb-workbench/.mnt}/imp-cypher:cached
   - ${TOME_NEO4J_REPO:-../../tome-neo4j}:${MNT:-/workspaces/silentorb-workbench/.mnt}/tome-neo4j:cached
+  - ${TOME_POSTGRES_REPO:-../../tome-postgres}:${MNT:-/workspaces/silentorb-workbench/.mnt}/tome-postgres:cached
   - tome-node-modules:${MNT:-/workspaces/silentorb-workbench/.mnt}/tome/node_modules
   - ${OPENCODE_CONFIG_DIR:-${HOME}/.config/opencode}:/home/vscode/.config/opencode
   - ${OPENCODE_DATA_DIR:-${HOME}/.local/share/opencode}:/home/vscode/.local/share/opencode
@@ -68,7 +69,8 @@ services:
       dockerfile: docker/Dockerfile.dev
     volumes: *tome-volumes
     environment:
-      # Default: solo Marloth corpus via package tome-server.json (legacy store+cache).
+      # Default: solo Marloth corpus via package tome-server.json (legacy store+cache;
+      # that file sets authorization allow-everything for local/dev).
       # Normalize auto-injects an FTS dataStore so typed search / @ mentions work.
       # Multi-corpus: set TOME_CORPORA (+ dedicated TOME_DB_PATH). Do not point
       # TOME_SERVER_CONFIG at a solo-only dataStores file or corpora env is ignored.

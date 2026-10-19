@@ -14,9 +14,10 @@
 | `.mnt/imp-spec` | Standalone language-neutral Imp spec docs — graph IR, NodeLibrary catalogs, registry, typecheck, graph-resolve (optional; workbench only). Not imp-ts/packages/imp-core-types (TypeScript binding). Imp Translator and runtime specs live in `.mnt/imp-ts/docs/features/`. |
 | `.mnt/imp-cypher` | Imp → Cypher translator (optional mount; workbench only) |
 | `.mnt/tome-neo4j` | Neo4j graph backend packages for Tome (optional mount; workbench only) |
+| `.mnt/tome-postgres` | Postgres backend packages for Tome (optional mount; workbench only) |
 | `/workspaces/silentorb-workbench` | Devcontainer, scripts, this guide |
 
-**Prerequisite:** clone `tome` and `marloth-story` as siblings of this repo on the host (`../tome`, `../marloth-story`), or set `TOME_REPO` / `MARLOTH_REPO` when opening the devcontainer. Optionally clone `silentorb-web` (`../silentorb-web`, or `SILENTORB_WEB_REPO`), `translucence` (`../translucence`, or `TRANSLUCENCE_REPO`), `imp-cypher` (`../imp-cypher`, or `IMP_CYPHER_REPO`), and `tome-neo4j` (`../tome-neo4j`, or `TOME_NEO4J_REPO`). Mount `imp-ts` (`../imp-ts`, or `IMP_REPO`) — required for the **`tome` Compose service** because tome’s Bun workspaces include `../imp-ts/packages/*` (`tome-query`). **Tome** owns package dependencies (`.mnt/tome/bun.lock`, `.mnt/tome/node_modules`). The workbench root orchestrates dev scripts and the devcontainer.
+**Prerequisite:** clone `tome` and `marloth-story` as siblings of this repo on the host (`../tome`, `../marloth-story`), or set `TOME_REPO` / `MARLOTH_REPO` when opening the devcontainer. Optionally clone `silentorb-web` (`../silentorb-web`, or `SILENTORB_WEB_REPO`), `translucence` (`../translucence`, or `TRANSLUCENCE_REPO`), `imp-cypher` (`../imp-cypher`, or `IMP_CYPHER_REPO`), `tome-neo4j` (`../tome-neo4j`, or `TOME_NEO4J_REPO`), and `tome-postgres` (`../tome-postgres`, or `TOME_POSTGRES_REPO`). Mount `imp-ts` (`../imp-ts`, or `IMP_REPO`) — required for the **`tome` Compose service** because tome’s Bun workspaces include `../imp-ts/packages/*` (`tome-query`). **Tome** owns package dependencies (`.mnt/tome/bun.lock`, `.mnt/tome/node_modules`). The workbench root orchestrates dev scripts and the devcontainer.
 
 Scripts resolve mount paths via [`scripts/mnt-paths.sh`](./scripts/mnt-paths.sh).
 
@@ -48,6 +49,7 @@ For Imp (universal DAG transmission format; successor to [imp-kotlin](https://gi
 - Run Tome package commands with `bash scripts/run-in-tome.sh …`, VS Code tasks, or from `.mnt/tome/` — not `bun run` at the workbench root.
 - **imp-cypher:** optional mount; `bash scripts/run-in-imp-cypher.sh …` (requires sibling `.mnt/imp-ts`). Compile-only tests — no Neo4j.
 - **tome-neo4j:** optional mount; `bash scripts/run-in-tome-neo4j.sh …` (requires siblings `.mnt/tome`, `.mnt/imp-ts`, `.mnt/imp-cypher`). Local Neo4j Community via that repo’s `docker compose`; not started by default workbench `runServices`.
+- **tome-postgres:** optional mount; `bash scripts/run-in-tome-postgres.sh …` (requires siblings `.mnt/tome`, `.mnt/imp-ts`). Local Postgres via that repo’s `docker compose`; not started by default workbench `runServices`.
 
 ## Terminology
 
@@ -98,6 +100,7 @@ Full verify for a repo is that row’s command (not a surgical subset). **Verify
 | `.mnt/imp-ts` | `cd .mnt/imp-ts && bun run test` | tome (and thus tome CI / corpora when tome verify runs) |
 | `.mnt/imp-cypher` | `bash scripts/run-in-imp-cypher.sh run test` (skip if unmounted; needs sibling imp-ts) | none (light CI: `.mnt/imp-cypher/.github/workflows/ci.yml` — no Neo4j) |
 | `.mnt/tome-neo4j` | `bash scripts/run-in-tome-neo4j.sh run test` (skip if unmounted; needs siblings tome, imp-ts, imp-cypher) | none (heavy Neo4j CI lives in that repo: `.mnt/tome-neo4j/.github/workflows/ci.yml`) |
+| `.mnt/tome-postgres` | `bash scripts/run-in-tome-postgres.sh run test` (skip if unmounted; needs siblings tome, imp-ts) | none (heavy Postgres CI lives in that repo: `.mnt/tome-postgres/.github/workflows/ci.yml`) |
 | `.mnt/marloth-story` | `bash scripts/build-static-site.sh` | **CI:** `.mnt/marloth-story/.github/workflows/deploy-static-site.yml` |
 | `.mnt/silentorb-web` | `bash scripts/build-silentorb-web.sh` | **CI:** `.mnt/silentorb-web/.github/workflows/deploy-static-site.yml` |
 | `.mnt/translucence` | `cd .mnt/translucence && bun run validate:workspace` | any translucence workflow if present |
@@ -137,6 +140,7 @@ For **design data** (what nodes mean, how they relate conceptually), read `.mnt/
 | Imp Translators and runtime (SQL, React Flow, execution) | `.mnt/imp-ts/docs/features/` |
 | Imp → Cypher | `.mnt/imp-cypher/docs/features/cypher.md` |
 | Imp → Cypher (Tome Neo4j binder) | `.mnt/tome-neo4j/packages/tome-imp-cypher/` |
+| Imp → SQL (Tome Postgres binder) | `.mnt/tome-postgres/packages/tome-imp-postgres/` |
 | Imp TypeScript binding | `.mnt/imp-ts/AGENTS.md` + package `AGENTS.md` |
 | Imp-backed custom query table block | `.mnt/tome/docs/features/tome-query.md` |
 | Relative event sequencing / timeline | `.mnt/tome/docs/features/tome-sequencing.md` |

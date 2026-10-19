@@ -21,6 +21,7 @@ parent/
   imp-spec/              # optional
   imp-cypher/            # optional — Imp → Cypher translator
   tome-neo4j/            # optional — Neo4j graph backend packages for Tome
+  tome-postgres/         # optional — Postgres backend packages for Tome
 ```
 
 | Host path | Mounted as (container) |
@@ -33,9 +34,10 @@ parent/
 | `../imp-spec` (sibling) | `.mnt/imp-spec` (optional; language-neutral Imp specs for agents) |
 | `../imp-cypher` (sibling) | `.mnt/imp-cypher` (optional; Imp → Cypher translator) |
 | `../tome-neo4j` (sibling) | `.mnt/tome-neo4j` (optional) |
+| `../tome-postgres` (sibling) | `.mnt/tome-postgres` (optional) |
 | this repo | `/workspaces/silentorb-workbench` |
 
-Compose defaults use `../../tome`, `../../marloth-story`, `../../silentorb-web`, `../../translucence`, and `../../imp-ts` relative to `.devcontainer/`. Override mount sources with `TOME_REPO`, `MARLOTH_REPO`, `SILENTORB_WEB_REPO`, `TRANSLUCENCE_REPO`, `IMP_REPO`, `IMP_SPEC_REPO`, `IMP_CYPHER_REPO`, and `TOME_NEO4J_REPO` when opening the devcontainer.
+Compose defaults use `../../tome`, `../../marloth-story`, `../../silentorb-web`, `../../translucence`, and `../../imp-ts` relative to `.devcontainer/`. Override mount sources with `TOME_REPO`, `MARLOTH_REPO`, `SILENTORB_WEB_REPO`, `TRANSLUCENCE_REPO`, `IMP_REPO`, `IMP_SPEC_REPO`, `IMP_CYPHER_REPO`, `TOME_NEO4J_REPO`, and `TOME_POSTGRES_REPO` when opening the devcontainer.
 
 Clone silentorb-web: `git clone git@github.com:silentorb/silentorb-web.git`
 
