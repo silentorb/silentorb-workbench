@@ -150,6 +150,7 @@ For **design data** (what nodes mean, how they relate conceptually), read `.mnt/
 | Imp sync wiring + dataStores | `.mnt/tome/docs/features/tome-sync.md` |
 | Node search (searchers / FTS) | `.mnt/tome/docs/features/search.md` |
 | Graph store API (Base / Queryable, executeImp) | `.mnt/tome/docs/features/graph-store.md` |
+| SQL graph store (SQLite as canonical candidate vs Postgres; LCD + capabilities) | `.mnt/tome/docs/features/sql-graph-store.md` |
 | Tome dev / release containers (GHCR) | `.mnt/tome/docs/features/container.md` |
 | Test tiers and weighted gating | `.mnt/tome/docs/features/testing.md` |
 | Backwards compatibility, dual-support, legacy removal registry | `.mnt/tome/docs/features/compatibility.md` |
