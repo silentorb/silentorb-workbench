@@ -139,12 +139,15 @@ When the user says **bump** (tome release; today the only taggable repo):
 1. Require **clean** working trees in every repo that will receive a version commit (at least `.mnt/tome`; also `.mnt/imp-ts` when imp packages will bump). If dirty, refuse and tell the user to **commit** or **commit and bump** first.
 2. Find the latest local tome tag matching `v*` (e.g. `git describe --tags --match 'v*' --abbrev=0` in `.mnt/tome`). If none, treat the full history / settled range as in-scope.
 3. Classify packages touched **since that tag…HEAD** in `.mnt/tome` and `.mnt/imp-ts` (`minor` vs `patch` per 0.x rules). Do **not** require a prior **preview bump**; if one was printed earlier, still re-classify from current HEAD.
-4. Run `bash scripts/bump-version.sh <package> <level>` for each touched **workspace** package (cascades/ranges as the script already does), then bump root `tome` (`minor` if any workspace minor / release-worthy API epoch; else `patch`). Refresh lockfiles as in **Version bumps** below.
-5. Commit **version + lockfile only** changes — one commit per affected repo — with messages matching recent `git log` style (why-focused).
-6. Create a **local** annotated tag: `bash scripts/git-tag-version.sh tome` (`v<version>` matching root `package.json`).
-7. **Do not push** the commit(s) or the tag. Report the tag name so the user can push when ready (e.g. for GHCR semver).
+4. **Tome full-suite gate (required):** run `bash scripts/run-in-tome.sh run test` (weighted full suite from workbench root). If it fails, **cancel the bump** — do not run `bump-version`, refresh lockfiles for versioning, commit version changes, or create a tag. Report the failure and stop; the user must fix tests (or explicitly waive) before retrying **bump**.
+5. Run `bash scripts/bump-version.sh <package> <level>` for each touched **workspace** package (cascades/ranges as the script already does), then bump root `tome` (`minor` if any workspace minor / release-worthy API epoch; else `patch`). Refresh lockfiles as in **Version bumps** below.
+6. Commit **version + lockfile only** changes — one commit per affected repo — with messages matching recent `git log` style (why-focused).
+7. Create a **local** annotated tag: `bash scripts/git-tag-version.sh tome` (`v<version>` matching root `package.json`).
+8. **Do not push** the commit(s) or the tag. Report the tag name so the user can push when ready (e.g. for GHCR semver).
 
 Supported tag repos today: `tome` → `.mnt/tome`.
+
+**Preview bump** does not run this suite (advisory only). **Commit and bump** inherits the gate via step 2 → **bump**.
 
 ## Commit and bump
 
