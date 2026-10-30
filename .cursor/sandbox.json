@@ -1,0 +1,13 @@
+{
+  "networkPolicy": {
+    "default": "deny",
+    "allow": [
+      "tome",
+      "workbench",
+      "localhost",
+      "127.0.0.0/8",
+      "172.18.0.0/16",
+      "host.docker.internal"
+    ]
+  }
+}
