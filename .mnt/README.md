@@ -7,6 +7,7 @@ Host sibling repos are mounted here by [`.devcontainer/docker-compose.yml`](../.
 | `tome/` | `../tome` |
 | `marloth-story/` | `../marloth-story` |
 | `silentorb-web/` | `../silentorb-web` |
+| `silentorb-cursor/` | `../silentorb-cursor` |
 | `translucence/` | `../translucence` |
 | `imp-ts/` | `../imp-ts` |
 | `imp-spec/` | `../imp-spec` |
@@ -14,7 +15,7 @@ Host sibling repos are mounted here by [`.devcontainer/docker-compose.yml`](../.
 | `tome-neo4j/` | `../tome-neo4j` |
 | `tome-postgres/` | `../tome-postgres` |
 
-Override mount sources with `TOME_REPO`, `MARLOTH_REPO`, `SILENTORB_WEB_REPO`, `TRANSLUCENCE_REPO`, `IMP_REPO`, `IMP_SPEC_REPO`, `IMP_CYPHER_REPO`, `TOME_NEO4J_REPO`, and `TOME_POSTGRES_REPO` when opening the devcontainer.
+Override mount sources with `TOME_REPO`, `MARLOTH_REPO`, `SILENTORB_WEB_REPO`, `SILENTORB_CURSOR_REPO`, `TRANSLUCENCE_REPO`, `IMP_REPO`, `IMP_SPEC_REPO`, `IMP_CYPHER_REPO`, `TOME_NEO4J_REPO`, and `TOME_POSTGRES_REPO` when opening the devcontainer.
 
 **imp-cypher:** optional Imp → Cypher translator at `imp-cypher/`. Run `bash scripts/run-in-imp-cypher.sh run test` from the workbench root (requires sibling `imp-ts/`). Compile-only — no Neo4j.
 

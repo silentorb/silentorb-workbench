@@ -116,6 +116,7 @@ push_named "imp-spec"
 push_named "imp-cypher"
 push_named "tome-neo4j"
 push_named "tome-postgres"
+push_named "silentorb-cursor"
 
 if [[ "$INCLUDE_WEB" -eq 1 ]]; then
   push_named "marloth-story"
