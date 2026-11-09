@@ -16,9 +16,10 @@
 | `.mnt/imp-cypher` | Imp → Cypher translator (optional mount; workbench only) |
 | `.mnt/tome-neo4j` | Neo4j graph backend packages for Tome (optional mount; workbench only) |
 | `.mnt/tome-postgres` | Postgres backend packages for Tome (optional mount; workbench only) |
+| `.mnt/mir` | Mir / Miro language-neutral sync-spec docs (optional mount; workbench only). Mir = Imp-configured multi-store sync fabric; Miro = text→database→pull app-memory profile. Start at `.mnt/mir/AGENTS.md`. |
 | `/workspaces/silentorb-workbench` | Devcontainer, scripts, this guide |
 
-**Prerequisite:** clone `tome` and `marloth-story` as siblings of this repo on the host (`../tome`, `../marloth-story`), or set `TOME_REPO` / `MARLOTH_REPO` when opening the devcontainer. Optionally clone `silentorb-web` (`../silentorb-web`, or `SILENTORB_WEB_REPO`), `silentorb-cursor` (`../silentorb-cursor`, or `SILENTORB_CURSOR_REPO`), `translucence` (`../translucence`, or `TRANSLUCENCE_REPO`), `imp-cypher` (`../imp-cypher`, or `IMP_CYPHER_REPO`), `tome-neo4j` (`../tome-neo4j`, or `TOME_NEO4J_REPO`), and `tome-postgres` (`../tome-postgres`, or `TOME_POSTGRES_REPO`). Mount `imp-ts` (`../imp-ts`, or `IMP_REPO`) — required for the **`tome` Compose service** because tome’s Bun workspaces include `../imp-ts/packages/*` (`tome-query`). **Tome** owns package dependencies (`.mnt/tome/bun.lock`, `.mnt/tome/node_modules`). The workbench root orchestrates dev scripts and the devcontainer.
+**Prerequisite:** clone `tome` and `marloth-story` as siblings of this repo on the host (`../tome`, `../marloth-story`), or set `TOME_REPO` / `MARLOTH_REPO` when opening the devcontainer. Optionally clone `silentorb-web` (`../silentorb-web`, or `SILENTORB_WEB_REPO`), `silentorb-cursor` (`../silentorb-cursor`, or `SILENTORB_CURSOR_REPO`), `translucence` (`../translucence`, or `TRANSLUCENCE_REPO`), `imp-cypher` (`../imp-cypher`, or `IMP_CYPHER_REPO`), `tome-neo4j` (`../tome-neo4j`, or `TOME_NEO4J_REPO`), `tome-postgres` (`../tome-postgres`, or `TOME_POSTGRES_REPO`), and `mir` (`../mir`, or `MIR_REPO`). Mount `imp-ts` (`../imp-ts`, or `IMP_REPO`) — required for the **`tome` Compose service** because tome’s Bun workspaces include `../imp-ts/packages/*` (`tome-query`). **Tome** owns package dependencies (`.mnt/tome/bun.lock`, `.mnt/tome/node_modules`). The workbench root orchestrates dev scripts and the devcontainer.
 
 Scripts resolve mount paths via [`scripts/mnt-paths.sh`](./scripts/mnt-paths.sh).
 
@@ -148,7 +149,7 @@ For **design data** (what nodes mean, how they relate conceptually), read `.mnt/
 | Sequencing constraint resolution | `.mnt/tome/docs/features/tome-sequencing-resolution.md` |
 | Multi-corpus editor sessions | `.mnt/tome/docs/features/multi-corpus.md` |
 | Multi-user (use cases, Account/authn/authz charter, user corpora + local flatfile identity / remote Neo4j + auth specialty store) | `.mnt/tome/docs/features/multi-user.md` |
-| Imp sync wiring + dataStores | `.mnt/tome/docs/features/tome-sync.md` |
+| Imp sync wiring + dataStores (`tome-mir` fabric, `tome-db/sync-session` host) | `.mnt/tome/docs/features/tome-sync.md` |
 | Node search (searchers / FTS) | `.mnt/tome/docs/features/search.md` |
 | Graph store API (Base / Queryable, executeImp) | `.mnt/tome/docs/features/graph-store.md` |
 | Tome dev / release containers (GHCR) | `.mnt/tome/docs/features/container.md` |

@@ -23,6 +23,7 @@ parent/
   imp-cypher/            # optional — Imp → Cypher translator
   tome-neo4j/            # optional — Neo4j graph backend packages for Tome
   tome-postgres/         # optional — Postgres backend packages for Tome
+  mir/                   # optional — workbench only
 ```
 
 | Host path | Mounted as (container) |
@@ -37,9 +38,10 @@ parent/
 | `../imp-cypher` (sibling) | `.mnt/imp-cypher` (optional; Imp → Cypher translator) |
 | `../tome-neo4j` (sibling) | `.mnt/tome-neo4j` (optional) |
 | `../tome-postgres` (sibling) | `.mnt/tome-postgres` (optional) |
+| `../mir` (sibling) | `.mnt/mir` (optional; workbench only) |
 | this repo | `/workspaces/silentorb-workbench` |
 
-Compose defaults use `../../tome`, `../../marloth-story`, `../../silentorb-web`, `../../silentorb-cursor`, `../../translucence`, and `../../imp-ts` relative to `.devcontainer/`. Override mount sources with `TOME_REPO`, `MARLOTH_REPO`, `SILENTORB_WEB_REPO`, `SILENTORB_CURSOR_REPO`, `TRANSLUCENCE_REPO`, `IMP_REPO`, `IMP_SPEC_REPO`, `IMP_CYPHER_REPO`, `TOME_NEO4J_REPO`, and `TOME_POSTGRES_REPO` when opening the devcontainer.
+Compose defaults use `../../tome`, `../../marloth-story`, `../../silentorb-web`, `../../silentorb-cursor`, `../../translucence`, and `../../imp-ts` relative to `.devcontainer/`. Override mount sources with `TOME_REPO`, `MARLOTH_REPO`, `SILENTORB_WEB_REPO`, `SILENTORB_CURSOR_REPO`, `TRANSLUCENCE_REPO`, `IMP_REPO`, `IMP_SPEC_REPO`, `IMP_CYPHER_REPO`, `TOME_NEO4J_REPO`, `TOME_POSTGRES_REPO`, and `MIR_REPO` when opening the devcontainer.
 
 Clone silentorb-web: `git clone git@github.com:silentorb/silentorb-web.git`
 

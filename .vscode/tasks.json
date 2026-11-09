@@ -115,6 +115,19 @@
       "problemMatcher": []
     },
     {
+      "label": "Tome: sync session cache (multi-corpus)",
+      "type": "shell",
+      "command": "bash scripts/session-content-sync.sh",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
       "label": "Silentorb Web: build",
       "type": "shell",
       "command": "bash scripts/build-silentorb-web.sh",
