@@ -9,7 +9,7 @@
 | `.mnt/tome` | Domain-agnostic Tome packages (`tome-db`, `tome-flatfile`, `tome-sqlite`, `tome-server`, `tome-http`, `tome-editor`, `tome-static-site`) and tooling docs |
 | `.mnt/marloth-story` | Marloth design corpus (`content/`, domain ontology, migrations, deploy) |
 | `.mnt/silentorb-web` | Silent Orb corporate website (Tome static site; optional mount) |
-| `.mnt/silentorb-cursor` | Silent Orb Cursor tooling (optional mount; workbench only). Enable the local **silentorb-cursor** Cursor plugin for shared plan-commit rules (see that repo’s README); do not paste those workflows into this file. |
+| `.mnt/silentorb-cursor` | Silent Orb Cursor tooling (optional mount; workbench only). Devcontainer start/attach copies it into `~/.cursor/plugins/local/silentorb-cursor` for remote Cursor sessions (`scripts/install-silentorb-cursor-plugin.sh`); do not paste those workflows into this file. |
 | `.mnt/translucence` | Translucence Bible-article corpus (`content/`; optional mount) |
 | `.mnt/imp-ts` | Imp DAG transmission format (TypeScript; required by `tome` service) |
 | `.mnt/imp-spec` | Standalone language-neutral Imp spec docs — graph IR, NodeLibrary catalogs, registry, typecheck, graph-resolve (optional; workbench only). Not imp-ts/packages/imp-core-types (TypeScript binding). Imp Translator and runtime specs live in `.mnt/imp-ts/docs/features/`. |
