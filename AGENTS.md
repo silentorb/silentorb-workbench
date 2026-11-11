@@ -9,7 +9,7 @@
 | `.mnt/tome` | Domain-agnostic Tome packages (`tome-db`, `tome-flatfile`, `tome-sqlite`, `tome-server`, `tome-http`, `tome-editor`, `tome-static-site`) and tooling docs |
 | `.mnt/marloth-story` | Marloth design corpus (`content/`, domain ontology, migrations, deploy) |
 | `.mnt/silentorb-web` | Silent Orb corporate website (Tome static site; optional mount) |
-| `.mnt/silentorb-agents` | Silent Orb agent skill library (optional mount; workbench only). Packages such as `silentorb-agents-publishing` and `silentorb-agents-planning`; consumed via [`.agents/skills`](./.agents/skills/) symlinks into `.mnt/silentorb-agents/packages/…`. |
+| `.mnt/silentorb-agents` | Silent Orb agent skill library (optional mount; workbench only). Packages such as `silentorb-agents-publishing`, `silentorb-agents-planning`, and `silentorb-agents-workbench`; consumed via [`.agents/skills`](./.agents/skills/) symlinks into `.mnt/silentorb-agents/packages/…`. |
 | `.mnt/translucence` | Translucence Bible-article corpus (`content/`; optional mount) |
 | `.mnt/imp-ts` | Imp DAG transmission format (TypeScript; required by `tome` service) |
 | `.mnt/imp-spec` | Standalone language-neutral Imp spec docs — graph IR, NodeLibrary catalogs, registry, typecheck, graph-resolve (optional; workbench only). Not imp-ts/packages/imp-core-types (TypeScript binding). Imp Translator and runtime specs live in `.mnt/imp-ts/docs/features/`. |
@@ -34,8 +34,9 @@ local library development):
 | --- | --- |
 | plan-commit | [`.mnt/silentorb-agents/packages/silentorb-agents-publishing`](./.mnt/silentorb-agents/packages/silentorb-agents-publishing/) → [`.agents/skills/plan-commit`](./.agents/skills/plan-commit) |
 | plan-design | [`.mnt/silentorb-agents/packages/silentorb-agents-planning`](./.mnt/silentorb-agents/packages/silentorb-agents-planning/) → [`.agents/skills/plan-design`](./.agents/skills/plan-design) |
+| workbench-env | [`.mnt/silentorb-agents/packages/silentorb-agents-workbench`](./.mnt/silentorb-agents/packages/silentorb-agents-workbench/) → [`.agents/skills/workbench-env`](./.agents/skills/workbench-env) |
 
-Follow each package’s `AGENTS.md` for triggers and routing.
+Follow each package’s `AGENTS.md` for triggers and routing. The workbench package’s `AGENTS.md` also sets standing defaults for Compose + `.mnt/` and agent-doc routing when that package is installed.
 
 Workbench-local skills (not in silentorb-agents):
 
