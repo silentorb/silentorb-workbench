@@ -107,7 +107,8 @@ push_named() {
   push_repo "$name" "$path" "$follow_tags"
 }
 
-# Always: tooling / non-deploying repos
+# Always: tooling / non-deploying repos (keep in sync with scripts/mnt-paths.sh
+# and .devcontainer/docker-compose.yml workbench mounts).
 push_repo "silentorb-workbench" "$WORKBENCH_ROOT"
 # tome: branch + annotated v* tags (from git-tag-version) for GHCR
 push_named "tome" 1
@@ -117,6 +118,8 @@ push_named "imp-cypher"
 push_named "tome-neo4j"
 push_named "tome-postgres"
 push_named "silentorb-agents"
+push_named "translucence"
+push_named "mir"
 
 if [[ "$INCLUDE_WEB" -eq 1 ]]; then
   push_named "marloth-story"
