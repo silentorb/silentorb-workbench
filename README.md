@@ -16,7 +16,7 @@ parent/
   tome/
   marloth-story/
   silentorb-web/         # optional — corporate website
-  silentorb-cursor/      # optional — Cursor tooling (workbench only)
+  silentorb-agents/      # optional — agent skill library (workbench only)
   translucence/          # optional — Bible-article corpus
   imp-ts/                # Imp (DAG transmission; required by tome service / tome-query)
   imp-spec/              # optional
@@ -31,7 +31,7 @@ parent/
 | `../tome` (sibling) | `.mnt/tome` |
 | `../marloth-story` (sibling) | `.mnt/marloth-story` |
 | `../silentorb-web` (sibling) | `.mnt/silentorb-web` (optional) |
-| `../silentorb-cursor` (sibling) | `.mnt/silentorb-cursor` (optional; workbench only) |
+| `../silentorb-agents` (sibling) | `.mnt/silentorb-agents` (optional; workbench only) |
 | `../translucence` (sibling) | `.mnt/translucence` (optional) |
 | `../imp-ts` (sibling) | `.mnt/imp-ts` (required by `tome` service) |
 | `../imp-spec` (sibling) | `.mnt/imp-spec` (optional; language-neutral Imp specs for agents) |
@@ -41,7 +41,7 @@ parent/
 | `../mir` (sibling) | `.mnt/mir` (optional; workbench only) |
 | this repo | `/workspaces/silentorb-workbench` |
 
-Compose defaults use `../../tome`, `../../marloth-story`, `../../silentorb-web`, `../../silentorb-cursor`, `../../translucence`, and `../../imp-ts` relative to `.devcontainer/`. Override mount sources with `TOME_REPO`, `MARLOTH_REPO`, `SILENTORB_WEB_REPO`, `SILENTORB_CURSOR_REPO`, `TRANSLUCENCE_REPO`, `IMP_REPO`, `IMP_SPEC_REPO`, `IMP_CYPHER_REPO`, `TOME_NEO4J_REPO`, `TOME_POSTGRES_REPO`, and `MIR_REPO` when opening the devcontainer.
+Compose defaults use `../../tome`, `../../marloth-story`, `../../silentorb-web`, `../../silentorb-agents`, `../../translucence`, and `../../imp-ts` relative to `.devcontainer/`. Override mount sources with `TOME_REPO`, `MARLOTH_REPO`, `SILENTORB_WEB_REPO`, `SILENTORB_AGENTS_REPO`, `TRANSLUCENCE_REPO`, `IMP_REPO`, `IMP_SPEC_REPO`, `IMP_CYPHER_REPO`, `TOME_NEO4J_REPO`, `TOME_POSTGRES_REPO`, and `MIR_REPO` when opening the devcontainer.
 
 Clone silentorb-web: `git clone git@github.com:silentorb/silentorb-web.git`
 

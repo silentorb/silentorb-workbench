@@ -9,7 +9,7 @@
 | `.mnt/tome` | Domain-agnostic Tome packages (`tome-db`, `tome-flatfile`, `tome-sqlite`, `tome-server`, `tome-http`, `tome-editor`, `tome-static-site`) and tooling docs |
 | `.mnt/marloth-story` | Marloth design corpus (`content/`, domain ontology, migrations, deploy) |
 | `.mnt/silentorb-web` | Silent Orb corporate website (Tome static site; optional mount) |
-| `.mnt/silentorb-cursor` | Silent Orb Cursor tooling (optional mount; workbench only). Devcontainer start/attach copies it into `~/.cursor/plugins/local/silentorb-cursor` for remote Cursor sessions (`scripts/install-silentorb-cursor-plugin.sh`); do not paste those workflows into this file. |
+| `.mnt/silentorb-agents` | Silent Orb agent skill library (optional mount; workbench only). Packages such as `silentorb-agents-publishing` and `silentorb-agents-planning`; consumed via [`.agents/skills`](./.agents/skills/) symlinks into `.mnt/silentorb-agents/packages/…`. |
 | `.mnt/translucence` | Translucence Bible-article corpus (`content/`; optional mount) |
 | `.mnt/imp-ts` | Imp DAG transmission format (TypeScript; required by `tome` service) |
 | `.mnt/imp-spec` | Standalone language-neutral Imp spec docs — graph IR, NodeLibrary catalogs, registry, typecheck, graph-resolve (optional; workbench only). Not imp-ts/packages/imp-core-types (TypeScript binding). Imp Translator and runtime specs live in `.mnt/imp-ts/docs/features/`. |
@@ -19,9 +19,31 @@
 | `.mnt/mir` | Mir / Miro language-neutral sync-spec docs (optional mount; workbench only). Mir = Imp-configured multi-store sync fabric; Miro = text→database→pull app-memory profile. Start at `.mnt/mir/AGENTS.md`. |
 | `/workspaces/silentorb-workbench` | Devcontainer, scripts, this guide |
 
-**Prerequisite:** clone `tome` and `marloth-story` as siblings of this repo on the host (`../tome`, `../marloth-story`), or set `TOME_REPO` / `MARLOTH_REPO` when opening the devcontainer. Optionally clone `silentorb-web` (`../silentorb-web`, or `SILENTORB_WEB_REPO`), `silentorb-cursor` (`../silentorb-cursor`, or `SILENTORB_CURSOR_REPO`), `translucence` (`../translucence`, or `TRANSLUCENCE_REPO`), `imp-cypher` (`../imp-cypher`, or `IMP_CYPHER_REPO`), `tome-neo4j` (`../tome-neo4j`, or `TOME_NEO4J_REPO`), `tome-postgres` (`../tome-postgres`, or `TOME_POSTGRES_REPO`), and `mir` (`../mir`, or `MIR_REPO`). Mount `imp-ts` (`../imp-ts`, or `IMP_REPO`) — required for the **`tome` Compose service** because tome’s Bun workspaces include `../imp-ts/packages/*` (`tome-query`). **Tome** owns package dependencies (`.mnt/tome/bun.lock`, `.mnt/tome/node_modules`). The workbench root orchestrates dev scripts and the devcontainer.
+**Prerequisite:** clone `tome` and `marloth-story` as siblings of this repo on the host (`../tome`, `../marloth-story`), or set `TOME_REPO` / `MARLOTH_REPO` when opening the devcontainer. Optionally clone `silentorb-web` (`../silentorb-web`, or `SILENTORB_WEB_REPO`), `silentorb-agents` (`../silentorb-agents`, or `SILENTORB_AGENTS_REPO`), `translucence` (`../translucence`, or `TRANSLUCENCE_REPO`), `imp-cypher` (`../imp-cypher`, or `IMP_CYPHER_REPO`), `tome-neo4j` (`../tome-neo4j`, or `TOME_NEO4J_REPO`), `tome-postgres` (`../tome-postgres`, or `TOME_POSTGRES_REPO`), and `mir` (`../mir`, or `MIR_REPO`). Mount `imp-ts` (`../imp-ts`, or `IMP_REPO`) — required for the **`tome` Compose service** because tome’s Bun workspaces include `../imp-ts/packages/*` (`tome-query`). **Tome** owns package dependencies (`.mnt/tome/bun.lock`, `.mnt/tome/node_modules`). The workbench root orchestrates dev scripts and the devcontainer.
 
 Scripts resolve mount paths via [`scripts/mnt-paths.sh`](./scripts/mnt-paths.sh).
+
+## Agent skills
+
+This workbench consumes Silent Orb agent packages from the
+[`.mnt/silentorb-agents`](./.mnt/silentorb-agents) mount by symlinking their
+skills under [`.agents/skills/`](./.agents/skills/) (no vendor/oras install for
+local library development):
+
+| Skill | Source |
+| --- | --- |
+| plan-commit | [`.mnt/silentorb-agents/packages/silentorb-agents-publishing`](./.mnt/silentorb-agents/packages/silentorb-agents-publishing/) → [`.agents/skills/plan-commit`](./.agents/skills/plan-commit) |
+| plan-design | [`.mnt/silentorb-agents/packages/silentorb-agents-planning`](./.mnt/silentorb-agents/packages/silentorb-agents-planning/) → [`.agents/skills/plan-design`](./.agents/skills/plan-design) |
+
+Follow each package’s `AGENTS.md` for triggers and routing.
+
+Workbench-local skills (not in silentorb-agents):
+
+| Skill | Path |
+| --- | --- |
+| plan-bump | [`.agents/skills/plan-bump/SKILL.md`](./.agents/skills/plan-bump/SKILL.md) |
+
+Verify matrix for plan-commit: § **Plan verification / test commands** below.
 
 For Marloth-specific writing goals, graph editing workflow, and design corpus conventions, read `.mnt/marloth-story/AGENTS.md` after cloning.
 
@@ -82,14 +104,14 @@ For Imp (universal DAG transmission format; successor to [imp-kotlin](https://gi
 - **Regression tests:** When fixing a bug in table views (database tables, relation tables, Properties section, composed/grouped table presentations, dynamic fields, or related API endpoints), add a regression test in the same change that would have failed before the fix. Seed test relationships using **relationship types** from `content/model/associations.json` (via `ContentStore` / `seedTestCompositeRelationships`) when the bug involves graph traversals — do not rely only on direct `db.upsertRelationship` with legacy unidirectional types. Do not close a bug fix without a test unless the user explicitly waives it.
 - **UI tests (Tome React):** New or changed React UI in `.mnt/tome` (editor, interactive page blocks, extension components) should use **`bun:test` + `@testing-library/react` + happy-dom** — prefer essential, durable tests; see `.mnt/tome/AGENTS.md` § Robust UI testing and `.mnt/tome/docs/features/testing.md`.
 - **Script language:** agentic scripts should use **TypeScript** (Bun) by default — place durable tooling under `.mnt/tome/packages/` with tests and a shell wrapper in `scripts/` when appropriate. **One-off temporary scripts** (exploratory, throwaway, not intended to be maintained) may still be written in Python.
-- **Package versioning:** Run `bash scripts/bump-version.sh <package> <minor|patch> [--install]` from the workbench root (scans `.mnt/imp-ts` and `.mnt/tome` packages, refreshes both lockfiles with `--install`). Reconcile bump levels at **bump** time — not on plain **commit** — see [plan-bump-workflow.mdc](./.cursor/rules/plan-bump-workflow.mdc). Root `tome` version is the container/release version — bump workspace packages + root and create a local `v*` tag only on **bump** / **commit and bump** (`bash scripts/git-tag-version.sh tome`; no push); see `.mnt/tome/AGENTS.md` § Versioning and `.mnt/tome/docs/features/container.md`.
+- **Package versioning:** Run `bash scripts/bump-version.sh <package> <minor|patch> [--install]` from the workbench root (scans `.mnt/imp-ts` and `.mnt/tome` packages, refreshes both lockfiles with `--install`). Reconcile bump levels at **bump** time — not on plain **commit** — see [`.agents/skills/plan-bump/SKILL.md`](./.agents/skills/plan-bump/SKILL.md). Root `tome` version is the container/release version — bump workspace packages + root and create a local `v*` tag only on **bump** / **commit and bump** (`bash scripts/git-tag-version.sh tome`; no push); see `.mnt/tome/AGENTS.md` § Versioning and `.mnt/tome/docs/features/container.md`.
 
 ## Implementation expectations
 
 - Read existing files before editing to preserve intent and style.
 - Keep assumptions explicit in commit or PR notes when behavior is unclear.
 - **Tests while iterating:** surgical / package-scoped checks are fine during development.
-- **Plan / change completion:** treating work as done requires the full verify set in § Plan verification (affected repos + direct dependents, including CI considered). Cursor plans enforce this via [plan-commit-workflow.mdc](./.cursor/rules/plan-commit-workflow.mdc) before `commit-await-approval`.
+- **Plan / change completion:** treating work as done requires the full verify set in § Plan verification (affected repos + direct dependents, including CI considered). Plans enforce this via `silentorb-agents-publishing` (plan-commit, linked under `.agents/skills`) before `commit-await-approval`.
 - Add self-documentation to files under `.mnt/tome/docs/`, `.mnt/marloth-story/docs/`, or `.mnt/translucence/docs/` when making agent-relevant updates.
 
 ## Plan verification / test commands
@@ -98,6 +120,7 @@ Full verify for a repo is that row’s command (not a surgical subset). **Verify
 
 | Repo | Full verify (from workbench root unless noted) | Direct dependents to also verify |
 | --- | --- | --- |
+| `.mnt/silentorb-agents` | `cd .mnt/silentorb-agents && DRY_RUN=1 bash pack/pack.sh` | none; **CI:** `.mnt/silentorb-agents/.github/workflows/ci.yml` (+ release on `v*` tags) |
 | `.mnt/tome` | `bash scripts/run-in-tome.sh run test` (weighted full suite; includes typecheck — same entrypoint release CI runs in-container) | marloth-story, silentorb-web, translucence (if mounted); **CI:** `.mnt/tome/.github/workflows/container.yml` |
 | `.mnt/imp-ts` | `cd .mnt/imp-ts && bun run test` | tome (and thus tome CI / corpora when tome verify runs) |
 | `.mnt/imp-cypher` | `bash scripts/run-in-imp-cypher.sh run test` (skip if unmounted; needs sibling imp-ts) | none (light CI: `.mnt/imp-cypher/.github/workflows/ci.yml` — no Neo4j) |

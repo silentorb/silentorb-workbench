@@ -15,8 +15,6 @@
         8080
     ],
     "remoteUser": "vscode",
-    "postStartCommand": "bash scripts/install-silentorb-cursor-plugin.sh",
-    "postAttachCommand": "bash scripts/install-silentorb-cursor-plugin.sh",
     "features": {
         "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
             "moby": false

@@ -7,7 +7,7 @@
  *   bash scripts/bump-version.sh --baseline [--install]
  *
  * Agents run this on **bump** / **commit and bump** only — not on plain **commit**.
- * See `.cursor/rules/plan-commit-workflow.mdc`.
+ * See .agents/skills/plan-commit and .agents/skills/plan-bump.
  *
  * Workspace packages (`packages/*`) rewrite dependents' `workspace:` ranges and
  * cascade on minor. Repo-root packages (e.g. `tome`) bump version only — no

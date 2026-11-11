@@ -8,7 +8,7 @@ x-workbench-volumes: &workbench-volumes
   - ${MARLOTH_REPO:-../../marloth-story}:${MNT:-/workspaces/silentorb-workbench/.mnt}/marloth-story:cached
   - ${TRANSLUCENCE_REPO:-../../translucence}:${MNT:-/workspaces/silentorb-workbench/.mnt}/translucence:cached
   - ${SILENTORB_WEB_REPO:-../../silentorb-web}:${MNT:-/workspaces/silentorb-workbench/.mnt}/silentorb-web:cached
-  - ${SILENTORB_CURSOR_REPO:-../../silentorb-cursor}:${MNT:-/workspaces/silentorb-workbench/.mnt}/silentorb-cursor:cached
+  - ${SILENTORB_AGENTS_REPO:-../../silentorb-agents}:${MNT:-/workspaces/silentorb-workbench/.mnt}/silentorb-agents:cached
   - ${IMP_REPO:-../../imp-ts}:${MNT:-/workspaces/silentorb-workbench/.mnt}/imp-ts:cached
   - ${IMP_SPEC_REPO:-../../imp-spec}:${MNT:-/workspaces/silentorb-workbench/.mnt}/imp-spec:cached
   - ${IMP_CYPHER_REPO:-../../imp-cypher}:${MNT:-/workspaces/silentorb-workbench/.mnt}/imp-cypher:cached

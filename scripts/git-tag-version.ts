@@ -10,7 +10,7 @@
  *
  * Agents run this as the last step of **bump** / **commit and bump** after the
  * dedicated version commit — not on plain **commit**.
- * See `.cursor/rules/plan-commit-workflow.mdc`.
+ * See .agents/skills/plan-commit and .agents/skills/plan-bump.
  */
 
 import { readFileSync } from "node:fs";
