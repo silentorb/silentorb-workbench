@@ -12,13 +12,16 @@ Host sibling repos are mounted here by [`.devcontainer/docker-compose.yml`](../.
 | `imp-ts/` | `../imp-ts` |
 | `imp-spec/` | `../imp-spec` |
 | `imp-cypher/` | `../imp-cypher` |
+| `imp-graph-view/` | `../imp-graph-view` |
 | `tome-neo4j/` | `../tome-neo4j` |
 | `tome-postgres/` | `../tome-postgres` |
 | `mir/` | `../mir` |
 
-Override mount sources with `TOME_REPO`, `MARLOTH_REPO`, `SILENTORB_WEB_REPO`, `SILENTORB_AGENTS_REPO`, `TRANSLUCENCE_REPO`, `IMP_REPO`, `IMP_SPEC_REPO`, `IMP_CYPHER_REPO`, `TOME_NEO4J_REPO`, `TOME_POSTGRES_REPO`, and `MIR_REPO` when opening the devcontainer.
+Override mount sources with `TOME_REPO`, `MARLOTH_REPO`, `SILENTORB_WEB_REPO`, `SILENTORB_AGENTS_REPO`, `TRANSLUCENCE_REPO`, `IMP_REPO`, `IMP_SPEC_REPO`, `IMP_CYPHER_REPO`, `IMP_GRAPH_VIEW_REPO`, `TOME_NEO4J_REPO`, `TOME_POSTGRES_REPO`, and `MIR_REPO` when opening the devcontainer.
 
 **imp-cypher:** optional Imp → Cypher translator at `imp-cypher/`. Run `bash scripts/run-in-imp-cypher.sh run test` from the workbench root (requires sibling `imp-ts/`). Compile-only — no Neo4j.
+
+**imp-graph-view:** optional Imp ↔ React Flow / Precise graph canvas at `imp-graph-view/`. Run `bash scripts/run-in-imp-graph-view.sh run test` from the workbench root (requires sibling `imp-ts/`).
 
 **tome-neo4j:** optional Neo4j graph backend packages at `tome-neo4j/`. Run `bash scripts/run-in-tome-neo4j.sh run test` from the workbench root (requires siblings `tome/`, `imp-ts/`, `imp-cypher/`). Neo4j Community sidecar: `docker compose` inside that repo — not part of default workbench `runServices`.
 

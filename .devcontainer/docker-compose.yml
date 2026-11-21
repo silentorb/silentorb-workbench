@@ -12,6 +12,7 @@ x-workbench-volumes: &workbench-volumes
   - ${IMP_REPO:-../../imp-ts}:${MNT:-/workspaces/silentorb-workbench/.mnt}/imp-ts:cached
   - ${IMP_SPEC_REPO:-../../imp-spec}:${MNT:-/workspaces/silentorb-workbench/.mnt}/imp-spec:cached
   - ${IMP_CYPHER_REPO:-../../imp-cypher}:${MNT:-/workspaces/silentorb-workbench/.mnt}/imp-cypher:cached
+  - ${IMP_GRAPH_VIEW_REPO:-../../imp-graph-view}:${MNT:-/workspaces/silentorb-workbench/.mnt}/imp-graph-view:cached
   - ${TOME_NEO4J_REPO:-../../tome-neo4j}:${MNT:-/workspaces/silentorb-workbench/.mnt}/tome-neo4j:cached
   - ${TOME_POSTGRES_REPO:-../../tome-postgres}:${MNT:-/workspaces/silentorb-workbench/.mnt}/tome-postgres:cached
   - ${MIR_REPO:-../../mir}:${MNT:-/workspaces/silentorb-workbench/.mnt}/mir:cached
@@ -25,6 +26,7 @@ x-tome-volumes: &tome-volumes
   - ${TRANSLUCENCE_REPO:-../../translucence}:${MNT:-/workspaces/silentorb-workbench/.mnt}/translucence:cached
   - ${SILENTORB_WEB_REPO:-../../silentorb-web}:${MNT:-/workspaces/silentorb-workbench/.mnt}/silentorb-web:cached
   - ${IMP_REPO:-../../imp-ts}:${MNT:-/workspaces/silentorb-workbench/.mnt}/imp-ts:cached
+  - ${IMP_GRAPH_VIEW_REPO:-../../imp-graph-view}:${MNT:-/workspaces/silentorb-workbench/.mnt}/imp-graph-view:cached
   - tome-node-modules:${MNT:-/workspaces/silentorb-workbench/.mnt}/tome/node_modules
 
 services:

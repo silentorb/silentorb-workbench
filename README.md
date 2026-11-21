@@ -21,6 +21,7 @@ parent/
   imp-ts/                # Imp (DAG transmission; required by tome service / tome-query)
   imp-spec/              # optional
   imp-cypher/            # optional — Imp → Cypher translator
+  imp-graph-view/        # optional — Imp ↔ React Flow / Precise graph canvas
   tome-neo4j/            # optional — Neo4j graph backend packages for Tome
   tome-postgres/         # optional — Postgres backend packages for Tome
   mir/                   # optional — workbench only
@@ -36,12 +37,13 @@ parent/
 | `../imp-ts` (sibling) | `.mnt/imp-ts` (required by `tome` service) |
 | `../imp-spec` (sibling) | `.mnt/imp-spec` (optional; language-neutral Imp specs for agents) |
 | `../imp-cypher` (sibling) | `.mnt/imp-cypher` (optional; Imp → Cypher translator) |
+| `../imp-graph-view` (sibling) | `.mnt/imp-graph-view` (optional; Imp ↔ React Flow canvas) |
 | `../tome-neo4j` (sibling) | `.mnt/tome-neo4j` (optional) |
 | `../tome-postgres` (sibling) | `.mnt/tome-postgres` (optional) |
 | `../mir` (sibling) | `.mnt/mir` (optional; workbench only) |
 | this repo | `/workspaces/silentorb-workbench` |
 
-Compose defaults use `../../tome`, `../../marloth-story`, `../../silentorb-web`, `../../silentorb-agents`, `../../translucence`, and `../../imp-ts` relative to `.devcontainer/`. Override mount sources with `TOME_REPO`, `MARLOTH_REPO`, `SILENTORB_WEB_REPO`, `SILENTORB_AGENTS_REPO`, `TRANSLUCENCE_REPO`, `IMP_REPO`, `IMP_SPEC_REPO`, `IMP_CYPHER_REPO`, `TOME_NEO4J_REPO`, `TOME_POSTGRES_REPO`, and `MIR_REPO` when opening the devcontainer.
+Compose defaults use `../../tome`, `../../marloth-story`, `../../silentorb-web`, `../../silentorb-agents`, `../../translucence`, and `../../imp-ts` relative to `.devcontainer/`. Override mount sources with `TOME_REPO`, `MARLOTH_REPO`, `SILENTORB_WEB_REPO`, `SILENTORB_AGENTS_REPO`, `TRANSLUCENCE_REPO`, `IMP_REPO`, `IMP_SPEC_REPO`, `IMP_CYPHER_REPO`, `IMP_GRAPH_VIEW_REPO`, `TOME_NEO4J_REPO`, `TOME_POSTGRES_REPO`, and `MIR_REPO` when opening the devcontainer.
 
 Clone silentorb-web: `git clone git@github.com:silentorb/silentorb-web.git`
 
